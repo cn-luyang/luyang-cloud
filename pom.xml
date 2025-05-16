@@ -23,12 +23,16 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <modules>
+        <module>luyang-cloud-platform-open</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.github.cn-luyang</groupId>
                 <artifactId>dependencies</artifactId>
-                <version>0.0.2-SNAPSH0T</version>
+                <version>0.0.7-SNAPSH0T</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
