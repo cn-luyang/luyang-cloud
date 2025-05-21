@@ -1,5 +1,6 @@
 package io.github.luyang.platform.open.model;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.open.enums.ClientError;
 
 import java.util.function.Supplier;
@@ -15,5 +16,11 @@ public record ClientName(String value) {
 
 	public void checkUnique(Supplier<Boolean> conditionSupplier) {
 		ClientError.CLIENT_NAME_EXISTS.isFalse(conditionSupplier.get());
+	}
+
+	public void checkUnique(String clientName, Supplier<Boolean> conditionSupplier) {
+		if (StrUtil.equals(clientName, value)) {
+			checkUnique(conditionSupplier);
+		}
 	}
 }

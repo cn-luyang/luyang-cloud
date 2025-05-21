@@ -1,6 +1,7 @@
 package io.github.luyang.platform.open.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.github.luyang.platform.open.model.ClientId;
 import io.github.luyang.platform.open.model.ClientName;
 import io.github.luyang.platform.open.model.entity.ClientEntity;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,9 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientEntity> {
 
 	public boolean unique(ClientName clientName) {
 		return this.baseMapper.exists(ClientEntity::getClientName, clientName.value());
+	}
+
+	public ClientEntity find(ClientId clientId) {
+		return this.baseMapper.selectOne(ClientEntity::getClientId, clientId.value());
 	}
 }

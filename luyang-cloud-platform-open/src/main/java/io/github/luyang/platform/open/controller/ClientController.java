@@ -1,12 +1,14 @@
 package io.github.luyang.platform.open.controller;
 
 import io.github.luyang.platform.open.model.dto.CreateClientDTO;
+import io.github.luyang.platform.open.model.dto.UpdateClientDTO;
 import io.github.luyang.platform.open.model.vo.CreateClientVO;
 import io.github.luyang.platform.open.service.ClientService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,5 +27,11 @@ public class ClientController {
 	public Result<CreateClientVO> create(@Valid @RequestBody CreateClientDTO createClientDTO) {
 		CreateClientVO createClientVO = clientService.create(createClientDTO);
 		return Result.success(createClientVO);
+	}
+
+	@PutMapping
+	public Result<Void> update(@Valid @RequestBody UpdateClientDTO updateClientDTO) {
+		clientService.update(updateClientDTO);
+		return Result.success();
 	}
 }

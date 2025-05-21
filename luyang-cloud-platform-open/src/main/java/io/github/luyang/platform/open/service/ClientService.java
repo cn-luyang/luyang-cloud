@@ -1,8 +1,11 @@
 package io.github.luyang.platform.open.service;
 
 import io.github.luyang.platform.open.convert.ClientConvert;
+import io.github.luyang.platform.open.enums.ClientError;
+import io.github.luyang.platform.open.model.ClientId;
 import io.github.luyang.platform.open.model.ClientName;
 import io.github.luyang.platform.open.model.dto.CreateClientDTO;
+import io.github.luyang.platform.open.model.dto.UpdateClientDTO;
 import io.github.luyang.platform.open.model.entity.ClientEntity;
 import io.github.luyang.platform.open.model.vo.CreateClientVO;
 import io.github.luyang.platform.open.repository.ClientRepository;
@@ -35,5 +38,15 @@ public class ClientService {
 			.clientId(clientId)
 			.clientSecretPlain(clientSecret)
 			.build();
+	}
+
+	public void update(UpdateClientDTO updateClientDTO) {
+
+		ClientId clientId = ClientId.build(updateClientDTO.getClientId());
+		ClientEntity entity = clientRepository.find(clientId);
+		ClientError.CLIENT_INVALID.notNull(entity);
+
+		ClientName clientName = ClientName.build(updateClientDTO.getClientName());
+		clientName.checkUnique(entity.getClientName(), () -> clientRepository.unique(clientName));
 	}
 }
