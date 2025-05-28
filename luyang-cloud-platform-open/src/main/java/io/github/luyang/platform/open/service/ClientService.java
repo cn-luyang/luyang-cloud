@@ -24,29 +24,33 @@ public class ClientService {
 
 	public CreateClientVO create(CreateClientDTO createClientDTO) {
 
+		// 构建并校验客户端名称唯一性
 		ClientName clientName = ClientName.build(createClientDTO.getClientName());
 		clientName.checkUnique(() -> clientRepository.unique(clientName));
 
+		// 将 DTO 转换为实体并保存至数据库
 		ClientEntity entity = clientConvert.dtoToEntity(createClientDTO);
 		clientRepository.save(entity);
 
+		// 获取客户端 ID 和明文密钥
 		String clientId = entity.getClientId();
-		String clientSecret = entity.getClientId();
+		String clientSecret = entity.getClientSecretPlain();
 
-		return CreateClientVO
-			.builder()
-			.clientId(clientId)
-			.clientSecretPlain(clientSecret)
-			.build();
+		// 构造返回对象，包含 clientId 和明文密钥
+		return CreateClientVO.builder().clientId(clientId).clientSecretPlain(clientSecret).build();
 	}
 
 	public void update(UpdateClientDTO updateClientDTO) {
 
+		// 构建 ClientId 并查找客户端实体
 		ClientId clientId = ClientId.build(updateClientDTO.getClientId());
 		ClientEntity entity = clientRepository.find(clientId);
+
+		// 如果客户端不存在，则抛出异常
 		ClientError.CLIENT_INVALID.notNull(entity);
 
+		// 构建 ClientName 并在名称变更时校验唯一性
 		ClientName clientName = ClientName.build(updateClientDTO.getClientName());
-		clientName.checkUnique(entity.getClientName(), () -> clientRepository.unique(clientName));
+		clientName.checkUniqueIfChanged(entity.getClientName(), () -> clientRepository.unique(clientName));
 	}
 }

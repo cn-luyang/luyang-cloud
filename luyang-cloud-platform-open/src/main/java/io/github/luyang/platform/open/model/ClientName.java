@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 /**
  * @author yang.lu
  */
+
 public record ClientName(String value) {
 
 	public static ClientName build(String clientName) {
@@ -18,8 +19,8 @@ public record ClientName(String value) {
 		ClientError.CLIENT_NAME_EXISTS.isFalse(conditionSupplier.get());
 	}
 
-	public void checkUnique(String clientName, Supplier<Boolean> conditionSupplier) {
-		if (StrUtil.equals(clientName, value)) {
+	public void checkUniqueIfChanged(String clientName, Supplier<Boolean> conditionSupplier) {
+		if (!StrUtil.equals(clientName, value)) {
 			checkUnique(conditionSupplier);
 		}
 	}
