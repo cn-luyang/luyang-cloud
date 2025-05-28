@@ -6,6 +6,8 @@ import lombok.Setter;
 import java.util.List;
 
 /**
+ * 获取客户端响应体
+ *
  * @author yang.lu
  */
 @Getter

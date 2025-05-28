@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 客户端相关控制器
+ *
  * @author yang.lu
  */
 @RestController

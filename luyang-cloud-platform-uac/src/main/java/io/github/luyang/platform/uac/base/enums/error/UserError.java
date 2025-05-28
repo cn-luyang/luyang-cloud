@@ -5,6 +5,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 用户相关错误枚举
+ *
+ * @author yang.lu
+ */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum UserError implements ExceptionAssert<String> {

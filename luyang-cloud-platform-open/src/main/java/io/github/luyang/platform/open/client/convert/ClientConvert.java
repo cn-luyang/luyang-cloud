@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * 客户端相关实体转换
+ *
+ * @author yang.lu
+ */
 @Mapper(
 	componentModel = "spring",
 	imports = {

@@ -15,16 +15,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
+ * 客户端服务类
+ *
  * @author yang.lu
  */
 @Service
 @RequiredArgsConstructor
 public class ClientService {
 
-	private final ClientRepository clientRepository;
 	private final ClientConvert clientConvert;
 	private final PasswordEncoder passwordEncoder;
+	private final ClientRepository clientRepository;
 
+	/**
+	 * 创建客户端
+	 *
+	 * @param createClientRequest 创建客户端请求体
+	 * @return 创建客户端响应体
+	 * @author yang.lu
+	 */
 	public CreateClientResponse createClient(CreateClientRequest createClientRequest) {
 
 		// 构建并校验客户端名称唯一性
@@ -47,6 +56,12 @@ public class ClientService {
 		clientRepository.remove(ClientId.build(clientId));
 	}
 
+	/**
+	 * 更新客户端
+	 *
+	 * @param updateClientRequest 更新客户端请求体
+	 * @author yang.lu
+	 */
 	public void updateClient(UpdateClientRequest updateClientRequest) {
 
 		// 构建 ClientId 并查找客户端实体
@@ -65,6 +80,13 @@ public class ClientService {
 		clientEntity.updateById();
 	}
 
+	/**
+	 * 获取客户端信息
+	 *
+	 * @param clientId 客户端 ID
+	 * @return 客户端信息响应体
+	 * @author yang.lu
+	 */
 	public GetClientResponse getClient(String clientId) {
 		ClientEntity clientEntity = clientRepository.find(ClientId.build(clientId));
 		if (null == clientEntity) {

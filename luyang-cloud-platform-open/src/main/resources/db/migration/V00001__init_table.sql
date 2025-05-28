@@ -17,7 +17,6 @@ CREATE TABLE `t_open_client`
     `updated_by`             VARCHAR(64)   DEFAULT NULL COMMENT '更新人',
     `updated_time`           DATETIME(3)  DEFAULT NULL COMMENT '更新时间',
     `deleted`                BIT(1)        DEFAULT b'0' COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
-    `deleted_time`           DATETIME(3)  DEFAULT NULL COMMENT '删除时间',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `uniq_client_id` (`client_id` ASC) USING BTREE COMMENT '客户端ID唯一索引'
 ) ENGINE = INNODB

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 创建用户响应体
+ *
  * @author yang.lu
  */
 @Getter

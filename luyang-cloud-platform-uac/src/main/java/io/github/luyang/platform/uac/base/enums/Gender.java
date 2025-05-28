@@ -4,6 +4,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 性别枚举
+ *
+ * @author yang.lu
+ */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum Gender {

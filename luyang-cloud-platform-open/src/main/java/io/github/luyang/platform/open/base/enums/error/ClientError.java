@@ -5,6 +5,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 客户端错误枚举
+ *
+ * @author yang.lu
+ */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ClientError implements ExceptionAssert<String> {

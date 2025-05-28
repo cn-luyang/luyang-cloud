@@ -6,6 +6,11 @@ import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+/**
+ * 用户相关实体转换
+ *
+ * @author yang.lu
+ */
 @Mapper(
 	componentModel = "spring",
 	imports = {IdUtil.class}

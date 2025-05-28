@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
+ * 用户相关服务类
+ *
  * @author yang.lu
  */
 @Service
@@ -19,6 +21,13 @@ public class UserService {
 	private final UserConvert userConvert;
 	private final UserRepository userRepository;
 
+	/**
+	 * 创建用户
+	 *
+	 * @param createUserRequest 创建用户请求体
+	 * @return 创建用户请求体
+	 * @author yang.lu
+	 */
 	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
 
 		// 构建并校验 Email 唯一性

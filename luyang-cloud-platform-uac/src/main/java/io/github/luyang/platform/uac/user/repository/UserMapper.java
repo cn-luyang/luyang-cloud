@@ -4,6 +4,11 @@ import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
 import io.github.luyang.starter.mybatis.support.DataBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * 用户相关 Mapper
+ *
+ * @author yang.lu
+ */
 @Mapper
 public interface UserMapper extends DataBaseMapper<UserEntity> {
 }

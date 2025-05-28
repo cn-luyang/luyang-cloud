@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
+ * 授权类型相关枚举
+ *
  * @author yang.lu
  */
 @Getter

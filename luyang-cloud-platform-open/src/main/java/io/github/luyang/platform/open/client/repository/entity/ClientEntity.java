@@ -10,6 +10,8 @@ import lombok.Setter;
 import java.util.List;
 
 /**
+ * 客户端实体
+ *
  * @author yang.lu
  */
 @Getter
@@ -17,35 +19,55 @@ import java.util.List;
 @TableName(value = "t_open_client", autoResultMap = true)
 public class ClientEntity extends BaseEntity<ClientEntity, Long> {
 
-	/** 客户端ID */
+	/**
+	 * 客户端ID
+	 */
 	private String clientId;
 
-	/** 客户端名称 */
+	/**
+	 * 客户端名称
+	 */
 	private String clientName;
 
-	/** 客户端密钥 */
+	/**
+	 * 客户端密钥
+	 */
 	private String clientSecret;
 
-	/** 客户端密钥明文(仅初始化时使用) */
+	/**
+	 * 客户端密钥明文(仅初始化时使用)
+	 */
 	private String clientSecretPlain;
 
-	/** 访问令牌有效期(秒) */
+	/**
+	 * 访问令牌有效期(秒)
+	 */
 	private Integer accessTokenValidity;
 
-	/** 刷新令牌有效期(秒) */
+	/**
+	 * 刷新令牌有效期(秒)
+	 */
 	private Integer refreshTokenValidity;
 
-	/** 授权类型 */
+	/**
+	 * 授权类型
+	 */
 	@TableField(typeHandler = StringListTypeHandler.class)
 	private List<String> grantTypes;
 
-	/** 重定向URI */
+	/**
+	 * 重定向URI
+	 */
 	@TableField(typeHandler = StringListTypeHandler.class)
 	private List<String> redirectUris;
 
-	/** 是否自动批准 */
+	/**
+	 * 是否自动批准
+	 */
 	private Boolean autoApprove;
 
-	/** 描述 */
+	/**
+	 * 描述
+	 */
 	private String description;
 }

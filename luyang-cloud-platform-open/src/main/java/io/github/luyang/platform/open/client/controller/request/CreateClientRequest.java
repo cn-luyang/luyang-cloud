@@ -12,6 +12,8 @@ import org.hibernate.validator.constraints.URL;
 import java.util.Set;
 
 /**
+ * 创建客户端请求体
+ *
  * @author yang.lu
  */
 @Getter

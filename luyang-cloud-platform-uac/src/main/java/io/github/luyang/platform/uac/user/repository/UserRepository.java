@@ -7,6 +7,8 @@ import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 /**
+ * 用户相关 Repository
+ *
  * @author yang.lu
  */
 @Repository
