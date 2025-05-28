@@ -5,64 +5,67 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.enums.ClientError;
 import io.github.luyang.platform.open.enums.GrantType;
 import io.github.luyang.platform.open.model.dto.CreateClientDTO;
+import io.github.luyang.platform.open.model.dto.UpdateClientDTO;
 import io.github.luyang.platform.open.model.entity.ClientEntity;
-import io.github.luyang.starter.web.util.SpringUtil;
-import org.hibernate.validator.constraints.URL;
+import io.github.luyang.platform.open.model.vo.GetClientVO;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+	componentModel = "spring",
+	imports = {
+		RandomUtil.class, IdUtil.class, StrUtil.class, ListUtil.class, CollUtil.class
+	}
+)
 public interface ClientConvert {
 
-	default ClientEntity dtoToEntity(CreateClientDTO clientDTO) {
-		if (null == clientDTO) {
+	@Mapping(target = "clientId", expression = "java(\"cli_\" + RandomUtil.randomString(16))")
+	@Mapping(target = "clientSecretPlain", expression = "java(IdUtil.simpleUUID())")
+	@Mapping(target = "clientSecret", expression = "java(passwordEncoder.encode(IdUtil.simpleUUID()))")
+	@Mapping(target = "grantTypes", source = "grantTypes", qualifiedByName = "mapGrantTypes")
+	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
+	ClientEntity createDtoToEntity(CreateClientDTO dto, @Context PasswordEncoder passwordEncoder);
+
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+	@Mapping(target = "clientId", ignore = true)
+	@Mapping(target = "clientSecretPlain", ignore = true)
+	@Mapping(target = "clientSecret", ignore = true)
+	@Mapping(target = "grantTypes", source = "grantTypes", qualifiedByName = "mapGrantTypes")
+	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
+	void updateDtoToEntity(UpdateClientDTO dto, @MappingTarget ClientEntity entity);
+
+	GetClientVO entityToGetVO(ClientEntity clientEntity);
+
+	@Named("mapGrantTypes")
+	static List<String> mapGrantTypes(Set<GrantType> grantTypes) {
+		if (grantTypes == null) {
 			return null;
 		}
 
-		ClientEntity clientEntity = new ClientEntity();
-
-		clientEntity.setClientId("cli_" + RandomUtil.randomString(16));
-		clientEntity.setClientName(clientDTO.getClientName());
-
-		String clientSecretPlain = IdUtil.simpleUUID();
-		clientEntity.setClientSecretPlain(clientSecretPlain);
-
-		PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
-		clientEntity.setClientSecret(passwordEncoder.encode(clientSecretPlain));
-
-		Integer accessTokenValidity = clientDTO.getAccessTokenValidity();
-		Integer refreshTokenValidity = clientDTO.getRefreshTokenValidity();
-
-		if (null != accessTokenValidity && null != refreshTokenValidity) {
-			if (Integer.compare(accessTokenValidity, refreshTokenValidity) == 1) {
-				ClientError.TOKEN_VALIDITY_INVALID.exception();
-			}
-		}
-
-		clientEntity.setAccessTokenValidity(accessTokenValidity);
-		clientEntity.setRefreshTokenValidity(refreshTokenValidity);
-
-		List<String> grantTypes = clientDTO.getGrantTypes()
-			.stream()
+		return grantTypes.stream()
 			.filter(Objects::nonNull)
 			.map(GrantType::getCode)
 			.toList();
-		clientEntity.setGrantTypes(grantTypes);
+	}
 
-		Set<@URL String> uris = clientDTO.getRedirectUris();
-		List<String> redirectUris = CollUtil.isEmpty(uris) ? null : ListUtil.of(StrUtil.join(",", uris));
-		clientEntity.setRedirectUris(redirectUris);
+	@Named("mapRedirectUris")
+	static List<String> mapRedirectUris(Set<String> uris) {
+		if (CollUtil.isEmpty(uris)) {
+			return null;
+		}
 
-		clientEntity.setAutoApprove(clientDTO.getAutoApprove());
-		clientEntity.setDescription(clientDTO.getDescription());
-
-		return clientEntity;
+		return ListUtil.of(StrUtil.join(",", uris));
 	}
 }

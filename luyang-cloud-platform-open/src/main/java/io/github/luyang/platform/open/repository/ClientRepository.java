@@ -19,4 +19,8 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientEntity> {
 	public ClientEntity find(ClientId clientId) {
 		return this.baseMapper.selectOne(ClientEntity::getClientId, clientId.value());
 	}
+
+	public boolean remove(ClientId clientId) {
+		return this.baseMapper.delete(ClientEntity::getClientId, clientId.value());
+	}
 }
