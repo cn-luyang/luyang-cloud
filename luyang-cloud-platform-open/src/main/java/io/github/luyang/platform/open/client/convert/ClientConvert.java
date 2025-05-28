@@ -1,15 +1,15 @@
-package io.github.luyang.platform.open.convert;
+package io.github.luyang.platform.open.client.convert;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.enums.GrantType;
-import io.github.luyang.platform.open.model.dto.CreateClientDTO;
-import io.github.luyang.platform.open.model.dto.UpdateClientDTO;
-import io.github.luyang.platform.open.model.entity.ClientEntity;
-import io.github.luyang.platform.open.model.vo.GetClientVO;
+import io.github.luyang.platform.open.base.enums.GrantType;
+import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
+import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
+import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
+import io.github.luyang.platform.open.client.repository.entity.ClientEntity;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
@@ -36,7 +36,7 @@ public interface ClientConvert {
 	@Mapping(target = "clientSecret", expression = "java(passwordEncoder.encode(IdUtil.simpleUUID()))")
 	@Mapping(target = "grantTypes", source = "grantTypes", qualifiedByName = "mapGrantTypes")
 	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
-	ClientEntity createDtoToEntity(CreateClientDTO dto, @Context PasswordEncoder passwordEncoder);
+	ClientEntity toEntity(CreateClientRequest createClientRequest, @Context PasswordEncoder passwordEncoder);
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "clientId", ignore = true)
@@ -44,9 +44,9 @@ public interface ClientConvert {
 	@Mapping(target = "clientSecret", ignore = true)
 	@Mapping(target = "grantTypes", source = "grantTypes", qualifiedByName = "mapGrantTypes")
 	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
-	void updateDtoToEntity(UpdateClientDTO dto, @MappingTarget ClientEntity entity);
+	void toEntity(UpdateClientRequest updateClientRequest, @MappingTarget ClientEntity entity);
 
-	GetClientVO entityToGetVO(ClientEntity clientEntity);
+	GetClientResponse toGetClientResponse(ClientEntity clientEntity);
 
 	@Named("mapGrantTypes")
 	static List<String> mapGrantTypes(Set<GrantType> grantTypes) {

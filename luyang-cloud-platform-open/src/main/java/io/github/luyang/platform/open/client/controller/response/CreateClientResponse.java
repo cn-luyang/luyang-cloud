@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.model.vo;
+package io.github.luyang.platform.open.client.controller.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CreateClientVO {
+public class CreateClientResponse {
 
 	/** 客户端 ID */
 	private String clientId;

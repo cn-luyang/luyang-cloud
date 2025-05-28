@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.model.entity;
+package io.github.luyang.platform.open.client.repository.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;

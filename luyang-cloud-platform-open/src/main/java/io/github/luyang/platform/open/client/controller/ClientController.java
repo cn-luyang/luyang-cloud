@@ -1,10 +1,10 @@
-package io.github.luyang.platform.open.controller;
+package io.github.luyang.platform.open.client.controller;
 
-import io.github.luyang.platform.open.model.dto.CreateClientDTO;
-import io.github.luyang.platform.open.model.dto.UpdateClientDTO;
-import io.github.luyang.platform.open.model.vo.CreateClientVO;
-import io.github.luyang.platform.open.model.vo.GetClientVO;
-import io.github.luyang.platform.open.service.ClientService;
+import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
+import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
+import io.github.luyang.platform.open.client.controller.response.CreateClientResponse;
+import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
+import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,8 @@ public class ClientController {
 	private final ClientService clientService;
 
 	@PostMapping
-	public Result<CreateClientVO> create(@Valid @RequestBody CreateClientDTO createClientDTO) {
-		CreateClientVO createClientVO = clientService.createClient(createClientDTO);
-		return Result.success(createClientVO);
+	public Result<CreateClientResponse> create(@Valid @RequestBody CreateClientRequest createClientRequest) {
+		return Result.success(clientService.createClient(createClientRequest));
 	}
 
 	@DeleteMapping("/{clientId}")
@@ -40,13 +39,13 @@ public class ClientController {
 	}
 
 	@PutMapping
-	public Result<Void> update(@Valid @RequestBody UpdateClientDTO updateClientDTO) {
-		clientService.updateClient(updateClientDTO);
+	public Result<Void> update(@Valid @RequestBody UpdateClientRequest updateClientRequest) {
+		clientService.updateClient(updateClientRequest);
 		return Result.success();
 	}
 
 	@GetMapping("/{clientId}")
-	public Result<GetClientVO> get(@PathVariable("clientId") String clientId) {
+	public Result<GetClientResponse> get(@PathVariable("clientId") String clientId) {
 		return Result.success(clientService.getClient(clientId));
 	}
 }

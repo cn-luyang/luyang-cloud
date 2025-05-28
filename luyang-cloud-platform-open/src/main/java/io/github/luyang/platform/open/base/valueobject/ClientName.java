@@ -1,7 +1,7 @@
-package io.github.luyang.platform.open.model;
+package io.github.luyang.platform.open.base.valueobject;
 
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.enums.ClientError;
+import io.github.luyang.platform.open.base.enums.error.ClientError;
 
 import java.util.function.Supplier;
 

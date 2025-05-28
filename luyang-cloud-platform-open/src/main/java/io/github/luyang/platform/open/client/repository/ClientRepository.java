@@ -1,9 +1,9 @@
-package io.github.luyang.platform.open.repository;
+package io.github.luyang.platform.open.client.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.open.model.ClientId;
-import io.github.luyang.platform.open.model.ClientName;
-import io.github.luyang.platform.open.model.entity.ClientEntity;
+import io.github.luyang.platform.open.base.valueobject.ClientId;
+import io.github.luyang.platform.open.base.valueobject.ClientName;
+import io.github.luyang.platform.open.client.repository.entity.ClientEntity;
 import org.springframework.stereotype.Repository;
 
 /**

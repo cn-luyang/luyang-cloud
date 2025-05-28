@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.enums;
+package io.github.luyang.platform.open.base.enums.error;
 
 import io.github.luyang.starter.base.error.ExceptionAssert;
 import lombok.AccessLevel;

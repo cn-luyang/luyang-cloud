@@ -1,6 +1,6 @@
-package io.github.luyang.platform.open.model.dto;
+package io.github.luyang.platform.open.client.controller.request;
 
-import io.github.luyang.platform.open.enums.GrantType;
+import io.github.luyang.platform.open.base.enums.GrantType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
@@ -16,7 +16,11 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class CreateClientDTO {
+public class UpdateClientRequest {
+
+	@NotBlank(message = "{validation.notBlank.clientId}")
+	@Size(max = 64, message = "{validation.size.clientId}")
+	private String clientId;
 
 	@NotBlank(message = "{validation.notBlank.clientName}")
 	@Size(max = 64, message = "{validation.size.clientName}")
