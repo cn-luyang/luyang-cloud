@@ -52,8 +52,8 @@ public class ClientService {
 		return CreateClientResponse.builder().clientId(clientId).clientSecretPlain(clientSecret).build();
 	}
 
-	public void deleteClient(String clientId) {
-		clientRepository.remove(ClientId.build(clientId));
+	public void deleteClient(ClientId clientId) {
+		clientRepository.remove(clientId);
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class ClientService {
 	 * @return 客户端信息响应体
 	 * @author yang.lu
 	 */
-	public GetClientResponse getClient(String clientId) {
-		ClientEntity clientEntity = clientRepository.find(ClientId.build(clientId));
+	public GetClientResponse getClient(ClientId clientId) {
+		ClientEntity clientEntity = clientRepository.find(clientId);
 		if (null == clientEntity) {
 			return null;
 		}

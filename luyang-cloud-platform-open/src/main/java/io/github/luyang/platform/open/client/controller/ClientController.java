@@ -1,5 +1,6 @@
 package io.github.luyang.platform.open.client.controller;
 
+import io.github.luyang.platform.open.base.valueobject.ClientId;
 import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
 import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
 import io.github.luyang.platform.open.client.controller.response.CreateClientResponse;
@@ -36,7 +37,7 @@ public class ClientController {
 
 	@DeleteMapping("/{clientId}")
 	public Result<Void> delete(@PathVariable("clientId") String clientId) {
-		clientService.deleteClient(clientId);
+		clientService.deleteClient(ClientId.build(clientId));
 		return Result.success();
 	}
 
@@ -48,6 +49,6 @@ public class ClientController {
 
 	@GetMapping("/{clientId}")
 	public Result<GetClientResponse> get(@PathVariable("clientId") String clientId) {
-		return Result.success(clientService.getClient(clientId));
+		return Result.success(clientService.getClient(ClientId.build(clientId)));
 	}
 }
