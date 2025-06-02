@@ -1,0 +1,22 @@
+package io.github.luyang.platform.open.base.enums;
+
+import io.github.luyang.starter.base.enums.IBaseEnum;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * 登录类型相关枚举
+ *
+ * @author yang.lu
+ */
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public enum LoginType implements IBaseEnum<String> {
+
+	PASSWORD("password", "密码登录"),
+	SMS("sms", "短信登录");
+
+	private final String code;
+	private final String message;
+}

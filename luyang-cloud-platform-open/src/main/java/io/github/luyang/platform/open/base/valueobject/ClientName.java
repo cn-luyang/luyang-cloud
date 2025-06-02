@@ -6,9 +6,10 @@ import io.github.luyang.platform.open.base.enums.error.ClientError;
 import java.util.function.Supplier;
 
 /**
+ * 客户端名
+ *
  * @author yang.lu
  */
-
 public record ClientName(String value) {
 
 	public static ClientName build(String clientName) {
@@ -16,7 +17,7 @@ public record ClientName(String value) {
 	}
 
 	public void checkUnique(Supplier<Boolean> conditionSupplier) {
-		ClientError.CLIENT_NAME_EXISTS.isFalse(conditionSupplier.get());
+		ClientError.EXISTS_CLIENT_NAME.isFalse(conditionSupplier.get());
 	}
 
 	public void checkUniqueIfChanged(String clientName, Supplier<Boolean> conditionSupplier) {

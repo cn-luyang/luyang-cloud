@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
+ * 密码登录实现
+ *
  * @author yang.lu
  */
 @Component

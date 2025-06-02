@@ -69,7 +69,7 @@ public class ClientService {
 		ClientEntity clientEntity = clientRepository.find(clientId);
 
 		// 如果客户端不存在，则抛出异常
-		ClientError.CLIENT_INVALID.notNull(clientEntity);
+		ClientError.INVALID_CLIENT.notNull(clientEntity);
 
 		// 构建 ClientName 并在名称变更时校验唯一性
 		ClientName clientName = ClientName.build(updateClientRequest.getClientName());

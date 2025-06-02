@@ -5,6 +5,8 @@ import io.github.luyang.platform.open.base.enums.error.ClientError;
 import java.util.function.Supplier;
 
 /**
+ * 客户端ID
+ *
  * @author yang.lu
  */
 public record ClientId(String value) {
@@ -14,6 +16,6 @@ public record ClientId(String value) {
 	}
 
 	public void checkEmpty(Supplier<Boolean> conditionSupplier) {
-		ClientError.CLIENT_INVALID.isFalse(conditionSupplier.get());
+		ClientError.INVALID_CLIENT.isFalse(conditionSupplier.get());
 	}
 }

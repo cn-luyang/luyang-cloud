@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>io.github.cn-luyang</groupId>
                 <artifactId>dependencies</artifactId>
-                <version>0.0.8-SNAPSH0T</version>
+                <version>0.0.9-SNAPSH0T</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

@@ -1,6 +1,10 @@
 spring:
   application:
     name: luyang-cloud-platform-auth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver

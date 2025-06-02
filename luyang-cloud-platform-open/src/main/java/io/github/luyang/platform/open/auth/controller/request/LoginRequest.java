@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 登录请求体
+ *
  * @author yang.lu
  */
 @Getter
 @Setter
 public class LoginRequest {
 
-	private String clientId;
 	private String account;
 	private String password;
-	private String grantType;
+	private String loginType;
 }
