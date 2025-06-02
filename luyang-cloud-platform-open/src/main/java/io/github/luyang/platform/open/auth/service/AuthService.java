@@ -5,6 +5,7 @@ import io.github.luyang.platform.open.auth.controller.response.LoginResponse;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.enums.LoginType;
+import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+
+	private final ClientService clientService;
 
 	/**
 	 * 登录

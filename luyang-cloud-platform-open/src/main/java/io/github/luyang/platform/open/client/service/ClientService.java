@@ -95,4 +95,8 @@ public class ClientService {
 
 		return clientConvert.toGetClientResponse(clientEntity);
 	}
+
+	public boolean existClient(ClientId clientId) {
+		return null != getClient(clientId);
+	}
 }

@@ -1,8 +1,7 @@
 package io.github.luyang.platform.open.base.valueobject;
 
 import io.github.luyang.platform.open.base.enums.error.ClientError;
-
-import java.util.function.Supplier;
+import io.github.luyang.platform.open.client.service.ClientService;
 
 /**
  * 客户端ID
@@ -15,7 +14,7 @@ public record ClientId(String value) {
 		return new ClientId(clientId);
 	}
 
-	public void checkEmpty(Supplier<Boolean> conditionSupplier) {
-		ClientError.INVALID_CLIENT.isFalse(conditionSupplier.get());
+	public void assertExists(ClientService clientService) {
+		ClientError.INVALID_CLIENT.isTrue(clientService.existClient(this));
 	}
 }
