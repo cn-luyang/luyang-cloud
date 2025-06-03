@@ -1,4 +1,4 @@
-create table `t_login_token`
+create table `t_authorize_log`
 (
     `id`          BIGINT       not null COMMENT '主键ID',
     `client_id`   VARCHAR(128) not null COMMENT '客户端ID',
