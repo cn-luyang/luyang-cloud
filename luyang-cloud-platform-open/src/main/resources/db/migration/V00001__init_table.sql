@@ -1,3 +1,17 @@
+create table `t_authorize_request`
+(
+    `id`                    BIGINT not null COMMENT '主键ID',
+    `client_id`             VARCHAR(128) default null COMMENT '客户端ID',
+    `response_type`         VARCHAR(64)  default null COMMENT '授权类型',
+    `redirect_uri`          VARCHAR(512) default null COMMENT '重定向URI',
+    `scope`                 VARCHAR(512  default null COMMENT '权限范围',
+    `state`                 VARCHAR(64)  default null COMMENT '防止CSRF攻击的状态参数',
+    `code_challenge`        VARCHAR(255) default null COMMENT 'PKCE 码',
+    `code_challenge_method` VARCHAR(16)  default null COMMENT 'PKCE 码，加密方式',
+    primary key (`id`) using BTREE,
+    unique index `uniq_client_id` (`client_id` asc) using BTREE COMMENT '客户端ID唯一索引'
+) ENGINE = INNODB default CHARSET = utf8mb4 collate = utf8mb4_general_ci ROW_FORMAT = dynamic COMMENT = '授权请求参数表';
+
 create table `t_authorize_log`
 (
     `id`          BIGINT       not null COMMENT '主键ID',
