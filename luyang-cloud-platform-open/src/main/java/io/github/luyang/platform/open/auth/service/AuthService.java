@@ -17,6 +17,7 @@ import io.github.luyang.platform.open.base.valueobject.ClientId;
 import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.enums.IBaseEnum;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 认证服务类
@@ -41,7 +44,6 @@ public class AuthService {
 
 	private final AuthConvert authConvert;
 	private final ClientService clientService;
-	private final HttpServletRequest httpServletRequest;
 	private final HttpServletResponse httpServletResponse;
 	private final AuthorizeRequestRepository authorizeRequestRepository;
 
@@ -82,21 +84,18 @@ public class AuthService {
 			client.getRedirectUris().contains(authorizeRequest.getRedirectUri())
 		);
 
-		// 检查是否登录（通过 login_token 判断），后续改用从Cookie中获取
-		String loginToken = httpServletRequest.getHeader(AuthConstant.LOGIN_TOKEN);
-		if (StrUtil.isBlank(loginToken)) {
+		// 检查是否登录（通过 login_token 判断）
+		if (StrUtil.isBlank(authorizeRequest.getLoginToken())) {
 			// 保存授权请求，方便登录完成后恢复原始请求流程
 			AuthorizeRequestEntity authorizeRequestEntity = authConvert.toAuthorizeRequestEntity(authorizeRequest);
 			authorizeRequestRepository.save(authorizeRequestEntity);
 			// 构造登录页面地址，并附带当前授权请求 ID（用于登录后继续授权流程）
 			String loginUri = UriComponentsBuilder.fromPath("https://xxx/login")
-				.queryParam(AuthConstant.AUTH_REQUEST_ID, authorizeRequestEntity.getId())
+				.queryParam(AuthConstant.AUTHORIZE_REQUEST_ID, authorizeRequestEntity.getId())
 				.build()
 				.toUriString();
 			httpServletResponse.sendRedirect(loginUri);
 			return;
 		}
-
-		// TODO: 不想动了，怎么办，谁来帮我写...
 	}
 }

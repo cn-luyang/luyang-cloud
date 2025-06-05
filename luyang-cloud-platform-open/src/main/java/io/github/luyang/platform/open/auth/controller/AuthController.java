@@ -8,6 +8,7 @@ import io.github.luyang.platform.open.auth.service.AuthService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,10 +39,12 @@ public class AuthController {
 						  @RequestParam(value = "scope", required = false) String scope,
 						  @RequestParam(value = "state", required = false) String state,
 						  @RequestParam(value = "code_challenge", required = false) String code_challenge,
-						  @RequestParam(value = "code_challenge_method", required = false) String code_challenge_method
+						  @RequestParam(value = "code_challenge_method", required = false) String code_challenge_method,
+						  @RequestParam(value = "login_token", required = false) String login_token
 	) {
 
 		AuthorizeRequest authorizeRequest = new AuthorizeRequest();
+		authorizeRequest.setLoginToken(login_token);
 		authorizeRequest.setResponseType(response_type);
 		authorizeRequest.setClientId(client_id);
 		authorizeRequest.setRedirectUri(redirect_uri);
