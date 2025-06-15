@@ -3,13 +3,12 @@ package io.github.luyang.platform.open.auth.service;
 import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.open.auth.controller.request.AuthorizeRequest;
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
-import io.github.luyang.platform.open.auth.controller.response.AuthorizeResponse;
 import io.github.luyang.platform.open.auth.controller.response.LoginResponse;
 import io.github.luyang.platform.open.auth.convert.AuthConvert;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
-import io.github.luyang.platform.open.auth.repository.AuthorizeRequestRepository;
-import io.github.luyang.platform.open.auth.repository.entity.AuthorizeRequestEntity;
+import io.github.luyang.platform.open.auth.repository.AuthRequestRepository;
+import io.github.luyang.platform.open.auth.repository.entity.AuthRequestEntity;
 import io.github.luyang.platform.open.base.constant.AuthConstant;
 import io.github.luyang.platform.open.base.enums.LoginType;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
@@ -17,21 +16,11 @@ import io.github.luyang.platform.open.base.valueobject.ClientId;
 import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.enums.IBaseEnum;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 认证服务类
@@ -45,7 +34,7 @@ public class AuthService {
 	private final AuthConvert authConvert;
 	private final ClientService clientService;
 	private final HttpServletResponse httpServletResponse;
-	private final AuthorizeRequestRepository authorizeRequestRepository;
+	private final AuthRequestRepository authRequestRepository;
 
 	/**
 	 * 登录
@@ -87,11 +76,11 @@ public class AuthService {
 		// 检查是否登录（通过 login_token 判断）
 		if (StrUtil.isBlank(authorizeRequest.getLoginToken())) {
 			// 保存授权请求，方便登录完成后恢复原始请求流程
-			AuthorizeRequestEntity authorizeRequestEntity = authConvert.toAuthorizeRequestEntity(authorizeRequest);
-			authorizeRequestRepository.save(authorizeRequestEntity);
+			AuthRequestEntity authRequestEntity = authConvert.toAuthRequestEntity(authorizeRequest);
+			authRequestRepository.save(authRequestEntity);
 			// 构造登录页面地址，并附带当前授权请求 ID（用于登录后继续授权流程）
 			String loginUri = UriComponentsBuilder.fromPath("https://xxx/login")
-				.queryParam(AuthConstant.AUTHORIZE_REQUEST_ID, authorizeRequestEntity.getId())
+				.queryParam(AuthConstant.AUTHORIZE_REQUEST_ID, authRequestEntity.getId())
 				.build()
 				.toUriString();
 			httpServletResponse.sendRedirect(loginUri);

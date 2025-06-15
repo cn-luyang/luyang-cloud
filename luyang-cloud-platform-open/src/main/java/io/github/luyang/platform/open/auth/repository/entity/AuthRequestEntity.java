@@ -5,13 +5,15 @@ import io.github.luyang.starter.mybatis.beans.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 /**
  * @author yang.lu
  */
 @Getter
 @Setter
-@TableName(value = "t_authorize_request", autoResultMap = true)
-public class AuthorizeRequestEntity extends BaseEntity<AuthorizeRequestEntity, Long> {
+@TableName(value = "t_auth_request", autoResultMap = true)
+public class AuthRequestEntity extends BaseEntity<AuthRequestEntity, Long> {
 
 	private String clientId;
 	private String responseType;
@@ -20,4 +22,5 @@ public class AuthorizeRequestEntity extends BaseEntity<AuthorizeRequestEntity, L
 	private String state;
 	private String codeChallenge;
 	private String codeChallengeMethod;
+	private LocalDateTime expireTime;
 }

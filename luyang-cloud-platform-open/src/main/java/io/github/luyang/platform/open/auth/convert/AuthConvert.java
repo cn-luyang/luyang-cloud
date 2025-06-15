@@ -1,7 +1,7 @@
 package io.github.luyang.platform.open.auth.convert;
 
 import io.github.luyang.platform.open.auth.controller.request.AuthorizeRequest;
-import io.github.luyang.platform.open.auth.repository.entity.AuthorizeRequestEntity;
+import io.github.luyang.platform.open.auth.repository.entity.AuthRequestEntity;
 import org.mapstruct.Mapper;
 
 /**
@@ -13,5 +13,5 @@ import org.mapstruct.Mapper;
 public interface AuthConvert {
 
 
-	AuthorizeRequestEntity toAuthorizeRequestEntity(AuthorizeRequest authorizeRequest);
+	AuthRequestEntity toAuthRequestEntity(AuthorizeRequest authorizeRequest);
 }
