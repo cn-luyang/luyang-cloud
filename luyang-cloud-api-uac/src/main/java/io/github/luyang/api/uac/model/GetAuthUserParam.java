@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class GetAuthUserDTO {
+public class GetAuthUserParam {
 
 	/** 用户名/邮箱/手机号 */
 	private String account;

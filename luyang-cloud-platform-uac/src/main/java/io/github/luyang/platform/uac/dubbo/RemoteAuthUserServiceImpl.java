@@ -2,7 +2,7 @@ package io.github.luyang.platform.uac.dubbo;
 
 import cn.hutool.core.bean.BeanUtil;
 import io.github.luyang.api.uac.RemoteAuthUserService;
-import io.github.luyang.api.uac.model.GetAuthUserDTO;
+import io.github.luyang.api.uac.model.GetAuthUserParam;
 import io.github.luyang.api.uac.model.GetAuthUserResult;
 import io.github.luyang.platform.uac.base.valueobject.Email;
 import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
@@ -23,16 +23,16 @@ public class RemoteAuthUserServiceImpl implements RemoteAuthUserService {
 	private final PasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public Result<GetAuthUserResult> getAuthUser(GetAuthUserDTO getAuthUserDTO) {
+	public Result<GetAuthUserResult> getAuthUser(GetAuthUserParam getAuthUserParam) {
 
-		Email email = Email.build(getAuthUserDTO.getAccount());
+		Email email = Email.build(getAuthUserParam.getAccount());
 		UserEntity userEntity = null;
 		if (email.checkFormat()) {
 			userEntity = userService.getUser(email);
 		}
 
-		if (null != userEntity && getAuthUserDTO.isVerifySecret()) {
-			bCryptPasswordEncoder.matches(getAuthUserDTO.getSecret(), userEntity.getPassword());
+		if (null != userEntity && getAuthUserParam.isVerifySecret()) {
+			bCryptPasswordEncoder.matches(getAuthUserParam.getSecret(), userEntity.getPassword());
 		}
 
 		String userIdStr = BeanUtil.isEmpty(userEntity) ? null : userEntity.getUserId();
@@ -40,11 +40,5 @@ public class RemoteAuthUserServiceImpl implements RemoteAuthUserService {
 		return Result.success(GetAuthUserResult.builder()
 			.userId(userIdStr)
 			.build());
-	}
-
-	@Override
-	public String getStr(String name) {
-		System.out.println("0-------");
-		return name;
 	}
 }

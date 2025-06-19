@@ -10,6 +10,9 @@ import io.github.luyang.platform.open.base.enums.error.ClientError;
 import io.github.luyang.platform.open.base.valueobject.ClientId;
 import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
 import io.github.luyang.platform.open.client.service.ClientService;
+import io.github.luyang.platform.open.token.service.TokenService;
+import io.github.luyang.platform.open.token.service.bo.CreateTokenBO;
+import io.github.luyang.platform.open.token.service.dto.CreateTokenDTO;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AuthService {
 
 	private final ClientService clientService;
+	private final TokenService tokenService;
 
 	/**
 	 * 登录
@@ -57,11 +61,19 @@ public class AuthService {
 		// 执行认证逻辑
 		authenticatorHandler.authenticate(loginRequest);
 
+		// 创建Token
+		CreateTokenBO createTokenBO = new CreateTokenBO();
+		createTokenBO.setClientId(clientId.value());
+		createTokenBO.setClientAuth(false);
+		createTokenBO.setAccessTokenValidity(client.getAccessTokenValidity());
+		createTokenBO.setRefreshTokenValidity(client.getRefreshTokenValidity());
+		CreateTokenDTO createTokenDTO = tokenService.createToken(createTokenBO);
+
 		// 构建重定向 URI
 		String loginUri = UriComponentsBuilder
 			.fromUriString(loginRequest.getRedirectUri())
-			.queryParam("access_token", "accessToken")
-			.queryParam("refresh_token", "refreshToken")
+			.queryParam("access_token", createTokenDTO.getAccessToken())
+			.queryParam("refresh_token", createTokenDTO.getRefreshToken())
 			.build()
 			.toUriString();
 
