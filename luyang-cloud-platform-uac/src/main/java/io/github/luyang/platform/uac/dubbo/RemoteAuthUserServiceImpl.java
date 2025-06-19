@@ -9,12 +9,13 @@ import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
 import io.github.luyang.platform.uac.user.service.UserService;
 import io.github.luyang.starter.base.api.Result;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author yang.lu
  */
-//@DubboService
+@DubboService
 @RequiredArgsConstructor
 public class RemoteAuthUserServiceImpl implements RemoteAuthUserService {
 
@@ -39,5 +40,11 @@ public class RemoteAuthUserServiceImpl implements RemoteAuthUserService {
 		return Result.success(GetAuthUserResult.builder()
 			.userId(userIdStr)
 			.build());
+	}
+
+	@Override
+	public String getStr(String name) {
+		System.out.println("0-------");
+		return name;
 	}
 }

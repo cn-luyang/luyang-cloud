@@ -1,10 +1,12 @@
+server:
+  port: 0
 spring:
   application:
     name: luyang-cloud-platform-auth
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: ${NACOS_HOST}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST}
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -28,3 +30,15 @@ spring:
       timeout: 10s
   messages:
     basename: i18n/validation
+
+dubbo:
+  registry:
+    address: nacos://${NACOS_HOST}
+    username: ${NACOS_USERNAME}
+    password: ${NACOS_PASSWORD}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: -1
+  application:
+    name: ${spring.application.name}

@@ -12,7 +12,11 @@ import lombok.Setter;
 @Setter
 public class LoginRequest {
 
-	private String authorizeRequestId;
+	/** 客户端ID */
+	private String clientId;
+
+	/** 重定向 Uri */
+	private String redirectUri;
 
 	/** 用户名/邮箱/手机号 */
 	private String account;
