@@ -10,8 +10,7 @@ import lombok.Setter;
 @Setter
 public class AuthorizeRequest {
 
-	private String loginToken;
-	private String responseType;
+	private String loginId;
 	private String clientId;
 	private String redirectUri;
 	private String scope;

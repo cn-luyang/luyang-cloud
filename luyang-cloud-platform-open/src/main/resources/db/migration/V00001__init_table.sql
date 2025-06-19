@@ -1,4 +1,4 @@
-create table `t_auth_request`
+create table `t_authorize_request`
 (
     `id`                    BIGINT not null COMMENT '主键ID',
     `client_id`             VARCHAR(128) default null COMMENT '客户端ID',
@@ -8,20 +8,18 @@ create table `t_auth_request`
     `state`                 VARCHAR(64)  default null COMMENT '防止CSRF攻击的状态参数',
     `code_challenge`        VARCHAR(255) default null COMMENT 'PKCE 码',
     `code_challenge_method` VARCHAR(16)  default null COMMENT 'PKCE 码，加密方式',
-    `expires_time`          DATETIME (3) default null COMMENT '过期时间',
-    primary key (`id`) using BTREE
-) ENGINE = INNODB default CHARSET = utf8mb4 collate = utf8mb4_general_ci ROW_FORMAT = dynamic COMMENT = '认证请求表';
+    `expire_time`           DATETIME (3) default null COMMENT '过期时间',
 
-create table `t_login_token`
+    primary key (`id`) using BTREE
+) ENGINE = INNODB default CHARSET = utf8mb4 collate = utf8mb4_general_ci ROW_FORMAT = dynamic COMMENT = '授权请求表';
+
+create table `t_login_request`
 (
-    `id`                   BIGINT       not null COMMENT '主键ID',
-    `authorize_request_id` VARCHAR(128) not null COMMENT '授权请求ID t_authorize_request.authorize_request_id',
-    `user_id`              VARCHAR(64)  not null COMMENT '用户ID',
-    `login_token`          VARCHAR(64)  not null COMMENT '登录Token',
-    `expires_at`           DATETIME (3) default null COMMENT '登录Token过期时间',
-    `ip_address`           VARCHAR(128) not null COMMENT '登录IP',
-    `user_agent`           VARCHAR(255) default 3600 COMMENT '浏览器 UA 信息',
-    `deleted`              BIT(1)       default b '0' COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
+    `id`                   BIGINT      not null COMMENT '主键ID',
+    `authorize_request_id` BIGINT      not null COMMENT '授权请求ID (t_authorize_request.id)',
+    `user_id`              VARCHAR(64) not null COMMENT '用户ID',
+    `expire_time`          DATETIME (3) default null COMMENT '过期时间',
+    `deleted`              BIT(1) default b '0' COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
     primary key (`id`) using BTREE,
     unique index `uniq_client_id` (`client_id` asc) using BTREE COMMENT '客户端ID唯一索引'
 ) ENGINE = INNODB default CHARSET = utf8mb4 collate = utf8mb4_general_ci ROW_FORMAT = dynamic COMMENT = '登录Token表';

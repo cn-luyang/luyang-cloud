@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 public class LoginResponse {
 
 	/** 登录 Token */
-	private String loginToken;
+	private String loginId;
 
 	/** 登录 Token 到期时间 */
-	private LocalDateTime expiresTime;
+	private LocalDateTime expireTime;
 }

@@ -12,15 +12,10 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@TableName(value = "t_auth_request", autoResultMap = true)
-public class AuthRequestEntity extends BaseEntity<AuthRequestEntity, Long> {
+@TableName(value = "t_login_request", autoResultMap = true)
+public class LoginRequestEntity extends BaseEntity<LoginRequestEntity, Long> {
 
-	private String clientId;
-	private String responseType;
-	private String redirectUri;
-	private String scope;
-	private String state;
-	private String codeChallenge;
-	private String codeChallengeMethod;
+	private Long authorizeRequestId;
+	private String userId;
 	private LocalDateTime expireTime;
 }

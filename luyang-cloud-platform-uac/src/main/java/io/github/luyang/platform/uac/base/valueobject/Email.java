@@ -11,12 +11,16 @@ public record Email(String value) {
 		return new Email(userId);
 	}
 
-	public void checkUnique(Supplier<Boolean> conditionSupplier) {
-		checkEmailFormat();
+	public void assertUnique(Supplier<Boolean> conditionSupplier) {
+		assertFormat();
 		UserError.EMAIL_EXISTS.isFalse(conditionSupplier.get());
 	}
 
-	public void checkEmailFormat() {
-		UserError.EMAIL_INVALID.isTrue(Validator.isEmail(this.value));
+	public void assertFormat() {
+		UserError.EMAIL_INVALID.isTrue(checkFormat());
+	}
+
+	public boolean checkFormat() {
+		return Validator.isEmail(this.value);
 	}
 }

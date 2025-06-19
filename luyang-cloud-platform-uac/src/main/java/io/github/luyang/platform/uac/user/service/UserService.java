@@ -32,12 +32,16 @@ public class UserService {
 
 		// 构建并校验 Email 唯一性
 		Email email = Email.build(createUserRequest.getEmail());
-		email.checkUnique(() -> userRepository.unique(email));
+		email.assertUnique(() -> userRepository.unique(email));
 
 		// 将 Request 请求转换为实体并保存至数据库
 		UserEntity userEntity = userConvert.createUserRequestToEntity(createUserRequest);
 		userRepository.save(userEntity);
 
 		return CreateUserResponse.builder().userId(userEntity.getUserId()).build();
+	}
+
+	public UserEntity getUser(Email email) {
+		return userRepository.find(email);
 	}
 }

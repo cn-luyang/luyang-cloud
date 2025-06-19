@@ -13,7 +13,13 @@ import lombok.Setter;
 public class LoginRequest {
 
 	private String authorizeRequestId;
+
+	/** 用户名/邮箱/手机号 */
 	private String account;
-	private String password;
+
+	/** 密码或其他凭证 */
+	private String secret;
+
+	/** 认证类型(密码/短信等) */
 	private String loginType;
 }

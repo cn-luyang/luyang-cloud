@@ -21,4 +21,8 @@ public class UserRepository extends ServiceImpl<UserMapper, UserEntity> {
 	public boolean unique(Email email) {
 		return this.baseMapper.exists(UserEntity::getEmail, email.value());
 	}
+
+	public UserEntity find(Email email) {
+		return this.baseMapper.selectOne(UserEntity::getEmail, email.value());
+	}
 }

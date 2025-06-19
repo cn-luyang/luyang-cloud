@@ -24,6 +24,7 @@
     </properties>
 
     <modules>
+        <module>luyang-cloud-api-uac</module>
         <module>luyang-cloud-platform-open</module>
         <module>luyang-cloud-platform-uac</module>
     </modules>
