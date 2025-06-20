@@ -11,7 +11,7 @@ import lombok.Setter;
 public class CreateTokenBO {
 
 	private String clientId;
-	private boolean clientAuth;
+	private String userId;
 	private Integer accessTokenValidity;
 	private Integer refreshTokenValidity;
 }

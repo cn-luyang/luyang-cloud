@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-@TableName(value = "t_open_client", autoResultMap = true)
+@TableName(value = "t_client", autoResultMap = true)
 public class ClientEntity extends BaseEntity<ClientEntity, Long> {
 
 	/**

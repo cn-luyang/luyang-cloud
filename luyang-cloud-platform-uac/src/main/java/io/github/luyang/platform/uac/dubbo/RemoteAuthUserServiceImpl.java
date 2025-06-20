@@ -1,9 +1,11 @@
 package io.github.luyang.platform.uac.dubbo;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.Validator;
 import io.github.luyang.api.uac.RemoteAuthUserService;
-import io.github.luyang.api.uac.model.GetAuthUserParam;
-import io.github.luyang.api.uac.model.GetAuthUserResult;
+import io.github.luyang.api.uac.model.VerifyAccountParam;
+import io.github.luyang.api.uac.model.VerifyAccountResult;
+import io.github.luyang.platform.uac.base.enums.error.UserError;
 import io.github.luyang.platform.uac.base.valueobject.Email;
 import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
 import io.github.luyang.platform.uac.user.service.UserService;
@@ -23,22 +25,25 @@ public class RemoteAuthUserServiceImpl implements RemoteAuthUserService {
 	private final PasswordEncoder bCryptPasswordEncoder;
 
 	@Override
-	public Result<GetAuthUserResult> getAuthUser(GetAuthUserParam getAuthUserParam) {
+	public Result<VerifyAccountResult> verifyAccount(VerifyAccountParam verifyAccountParam) {
 
-		Email email = Email.build(getAuthUserParam.getAccount());
-		UserEntity userEntity = null;
-		if (email.checkFormat()) {
-			userEntity = userService.getUser(email);
+		String account = verifyAccountParam.getAccount();
+		if (!Validator.isEmail(account)) {
+			return Result.failure(UserError.INVALID_EMAIL_FORMAT);
 		}
 
-		if (null != userEntity && getAuthUserParam.isVerifySecret()) {
-			bCryptPasswordEncoder.matches(getAuthUserParam.getSecret(), userEntity.getPassword());
+		UserEntity userEntity = userService.getUser(Email.build(account));
+		if (BeanUtil.isEmpty(userEntity)) {
+			return Result.failure(UserError.NOT_FOUND_USER);
 		}
 
-		String userIdStr = BeanUtil.isEmpty(userEntity) ? null : userEntity.getUserId();
+//		boolean matches = bCryptPasswordEncoder.matches(verifyAccountParam.getSecret(), userEntity.getPassword());
+//		if (!matches) {
+//			return Result.failure(UserError.INVALID_PASSWORD);
+//		}
 
-		return Result.success(GetAuthUserResult.builder()
-			.userId(userIdStr)
+		return Result.success(VerifyAccountResult.builder()
+			.userId(userEntity.getUserId())
 			.build());
 	}
 }

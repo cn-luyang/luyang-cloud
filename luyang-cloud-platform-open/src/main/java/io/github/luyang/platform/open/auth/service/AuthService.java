@@ -43,13 +43,13 @@ public class AuthService {
 
 		// 客户端校验
 		ClientId clientId = ClientId.build(loginRequest.getClientId());
-		GetClientResponse client = clientService.getClient(clientId);
-		ClientError.INVALID_CLIENT.notNull(client);
+		GetClientResponse getClientResponse = clientService.getClient(clientId);
+		ClientError.INVALID_CLIENT.notNull(getClientResponse);
 
 		// 校验 redirect_uri
 		String redirectUri = loginRequest.getRedirectUri();
 		String redirectHost = UrlBuilder.of(redirectUri).getHost();
-		boolean validRedirect = client.getRedirectUris().stream()
+		boolean validRedirect = getClientResponse.getRedirectUris().stream()
 			.map(uri -> UrlBuilder.of(uri).getHost())
 			.anyMatch(host -> StrUtil.equals(host, redirectHost));
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirect);
@@ -59,14 +59,14 @@ public class AuthService {
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginType);
 
 		// 执行认证逻辑
-		authenticatorHandler.authenticate(loginRequest);
+		String userId = authenticatorHandler.authenticate(loginRequest);
 
 		// 创建Token
 		CreateTokenBO createTokenBO = new CreateTokenBO();
-		createTokenBO.setClientId(clientId.value());
-		createTokenBO.setClientAuth(false);
-		createTokenBO.setAccessTokenValidity(client.getAccessTokenValidity());
-		createTokenBO.setRefreshTokenValidity(client.getRefreshTokenValidity());
+		createTokenBO.setUserId(userId);
+		createTokenBO.setClientId(getClientResponse.getClientId());
+		createTokenBO.setAccessTokenValidity(getClientResponse.getAccessTokenValidity());
+		createTokenBO.setRefreshTokenValidity(getClientResponse.getRefreshTokenValidity());
 		CreateTokenDTO createTokenDTO = tokenService.createToken(createTokenBO);
 
 		// 构建重定向 URI

@@ -14,10 +14,14 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum UserError implements ExceptionAssert<String> {
 
-	USER_ID_DUPLICATE("user_id_duplicate", "重复的用户ID"),
+	DUPLICATE_USER_ID("duplicate_user_id", "重复的用户ID"),
 
-	EMAIL_INVALID("email_invalid", "无效 Email"),
-	EMAIL_EXISTS("email_exists", "Email 已存在"),
+	INVALID_EMAIL_FORMAT("invalid_email_format", "无效的邮箱格式"),
+	INVALID_PASSWORD("invalid_password", "无效密码"),
+
+	EXISTS_EMAIL("exists_email", "邮箱已存在"),
+
+	NOT_FOUND_USER("not_found_user", "未找到用户信息"),
 	;
 
 	private final String code;

@@ -13,11 +13,11 @@ public record Email(String value) {
 
 	public void assertUnique(Supplier<Boolean> conditionSupplier) {
 		assertFormat();
-		UserError.EMAIL_EXISTS.isFalse(conditionSupplier.get());
+		UserError.EXISTS_EMAIL.isFalse(conditionSupplier.get());
 	}
 
 	public void assertFormat() {
-		UserError.EMAIL_INVALID.isTrue(checkFormat());
+		UserError.INVALID_EMAIL_FORMAT.isTrue(checkFormat());
 	}
 
 	public boolean checkFormat() {
