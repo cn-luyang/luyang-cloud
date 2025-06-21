@@ -17,7 +17,7 @@ public class TokenEntity extends BaseEntity<TokenEntity, Long> {
 
 	private String clientId;
 	private String userId;
-	private String userInfo;
+	private String attachedInfo;
 	private String accessToken;
 	private String refreshToken;
 	private LocalDateTime accessTokenExpiresTime;

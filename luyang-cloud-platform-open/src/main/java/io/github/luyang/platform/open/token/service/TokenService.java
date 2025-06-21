@@ -27,7 +27,7 @@ public class TokenService {
 		TokenEntity tokenEntity = new TokenEntity();
 		tokenEntity.setClientId(createTokenBO.getClientId());
 		tokenEntity.setUserId(createTokenBO.getUserId());
-		tokenEntity.setUserInfo(null);
+		tokenEntity.setAttachedInfo(null);
 		tokenEntity.setAccessToken(TokenUtil.generateToken(TokenStyle.ACCESS_TOKEN));
 		tokenEntity.setRefreshToken(TokenUtil.generateToken(TokenStyle.REFRESH_TOKEN));
 		LocalDateTime now = LocalDateTime.now();

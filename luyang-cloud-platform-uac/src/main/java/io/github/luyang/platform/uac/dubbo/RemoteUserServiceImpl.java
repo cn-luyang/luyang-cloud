@@ -2,7 +2,7 @@ package io.github.luyang.platform.uac.dubbo;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Validator;
-import io.github.luyang.api.uac.RemoteAuthUserService;
+import io.github.luyang.api.uac.RemoteUserService;
 import io.github.luyang.api.uac.model.VerifyAccountParam;
 import io.github.luyang.api.uac.model.VerifyAccountResult;
 import io.github.luyang.platform.uac.base.enums.error.UserError;
@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @DubboService
 @RequiredArgsConstructor
-public class RemoteAuthUserServiceImpl implements RemoteAuthUserService {
+public class RemoteUserServiceImpl implements RemoteUserService {
 
 	private final UserService userService;
 	private final PasswordEncoder bCryptPasswordEncoder;

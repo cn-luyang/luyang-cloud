@@ -1,6 +1,6 @@
 package io.github.luyang.platform.open.auth.mfa.authenticator;
 
-import io.github.luyang.api.uac.RemoteAuthUserService;
+import io.github.luyang.api.uac.RemoteUserService;
 import io.github.luyang.api.uac.model.VerifyAccountParam;
 import io.github.luyang.api.uac.model.VerifyAccountResult;
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class PasswordAuthenticatorHandler implements AuthenticatorHandler {
 
 	@DubboReference
-	private RemoteAuthUserService remoteAuthUserService;
+	private RemoteUserService remoteUserService;
 
 	@Override
 	public String authenticate(LoginRequest request) {
@@ -31,7 +31,7 @@ public class PasswordAuthenticatorHandler implements AuthenticatorHandler {
 			.secret(request.getSecret())
 			.build();
 
-		Result<VerifyAccountResult> verifyAccountResult = remoteAuthUserService.verifyAccount(verifyAccountParam);
+		Result<VerifyAccountResult> verifyAccountResult = remoteUserService.verifyAccount(verifyAccountParam);
 		return ResultOps.of(verifyAccountResult)
 			.assertSuccess(() -> new BusinessException(verifyAccountResult.getCode(), verifyAccountResult.getMessage()))
 			.getData()
