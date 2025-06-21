@@ -2,13 +2,13 @@ package io.github.luyang.platform.open.auth.service;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
+import io.github.luyang.platform.open.auth.controller.request.LoginReq;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.enums.LoginType;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
 import io.github.luyang.platform.open.base.valueobject.ClientId;
-import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
+import io.github.luyang.platform.open.client.controller.response.GetClientRes;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.platform.open.token.service.TokenService;
 import io.github.luyang.platform.open.token.service.bo.CreateTokenBO;
@@ -35,43 +35,43 @@ public class AuthService {
 	/**
 	 * 登录
 	 *
-	 * @param loginRequest 登录请求体
+	 * @param loginReq 登录请求体
 	 * @author yang.lu
 	 */
 	@SneakyThrows
-	public void login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
+	public void login(LoginReq loginReq, HttpServletResponse httpServletResponse) {
 
 		// 客户端校验
-		ClientId clientId = ClientId.build(loginRequest.getClientId());
-		GetClientResponse getClientResponse = clientService.getClient(clientId);
-		ClientError.INVALID_CLIENT.notNull(getClientResponse);
+		ClientId clientId = ClientId.build(loginReq.getClientId());
+		GetClientRes getClientRes = clientService.getClient(clientId);
+		ClientError.INVALID_CLIENT.notNull(getClientRes);
 
 		// 校验 redirect_uri
-		String redirectUri = loginRequest.getRedirectUri();
+		String redirectUri = loginReq.getRedirectUri();
 		String redirectHost = UrlBuilder.of(redirectUri).getHost();
-		boolean validRedirect = getClientResponse.getRedirectUris().stream()
+		boolean validRedirect = getClientRes.getRedirectUris().stream()
 			.map(uri -> UrlBuilder.of(uri).getHost())
 			.anyMatch(host -> StrUtil.equals(host, redirectHost));
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirect);
 
 		// 获取对应授权类型的认证处理器
-		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginRequest.getLoginType());
+		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginReq.getLoginType());
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginType);
 
 		// 执行认证逻辑
-		String userId = authenticatorHandler.authenticate(loginRequest);
+		String userId = authenticatorHandler.authenticate(loginReq);
 
 		// 创建Token
 		CreateTokenBO createTokenBO = new CreateTokenBO();
 		createTokenBO.setUserId(userId);
-		createTokenBO.setClientId(getClientResponse.getClientId());
-		createTokenBO.setAccessTokenValidity(getClientResponse.getAccessTokenValidity());
-		createTokenBO.setRefreshTokenValidity(getClientResponse.getRefreshTokenValidity());
+		createTokenBO.setClientId(getClientRes.getClientId());
+		createTokenBO.setAccessTokenValidity(getClientRes.getAccessTokenValidity());
+		createTokenBO.setRefreshTokenValidity(getClientRes.getRefreshTokenValidity());
 		CreateTokenDTO createTokenDTO = tokenService.createToken(createTokenBO);
 
 		// 构建重定向 URI
 		String loginUri = UriComponentsBuilder
-			.fromUriString(loginRequest.getRedirectUri())
+			.fromUriString(loginReq.getRedirectUri())
 			.queryParam("access_token", createTokenDTO.getAccessToken())
 			.queryParam("refresh_token", createTokenDTO.getRefreshToken())
 			.build()

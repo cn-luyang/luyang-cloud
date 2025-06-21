@@ -1,10 +1,10 @@
 package io.github.luyang.platform.open.client.controller;
 
 import io.github.luyang.platform.open.base.valueobject.ClientId;
-import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
-import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
-import io.github.luyang.platform.open.client.controller.response.CreateClientResponse;
-import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
+import io.github.luyang.platform.open.client.controller.request.CreateClientReq;
+import io.github.luyang.platform.open.client.controller.request.UpdateClientReq;
+import io.github.luyang.platform.open.client.controller.response.CreateClientRes;
+import io.github.luyang.platform.open.client.controller.response.GetClientRes;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.validation.Valid;
@@ -31,8 +31,8 @@ public class ClientController {
 	private final ClientService clientService;
 
 	@PostMapping
-	public Result<CreateClientResponse> create(@Valid @RequestBody CreateClientRequest createClientRequest) {
-		return Result.success(clientService.createClient(createClientRequest));
+	public Result<CreateClientRes> create(@Valid @RequestBody CreateClientReq createClientReq) {
+		return Result.success(clientService.createClient(createClientReq));
 	}
 
 	@DeleteMapping("/{clientId}")
@@ -42,13 +42,13 @@ public class ClientController {
 	}
 
 	@PutMapping
-	public Result<Void> update(@Valid @RequestBody UpdateClientRequest updateClientRequest) {
-		clientService.updateClient(updateClientRequest);
+	public Result<Void> update(@Valid @RequestBody UpdateClientReq updateClientReq) {
+		clientService.updateClient(updateClientReq);
 		return Result.success();
 	}
 
 	@GetMapping("/{clientId}")
-	public Result<GetClientResponse> get(@PathVariable("clientId") String clientId) {
+	public Result<GetClientRes> get(@PathVariable("clientId") String clientId) {
 		return Result.success(clientService.getClient(ClientId.build(clientId)));
 	}
 }

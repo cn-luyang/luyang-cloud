@@ -3,7 +3,7 @@ package io.github.luyang.platform.open.token.service;
 import io.github.luyang.platform.open.base.enums.TokenStyle;
 import io.github.luyang.platform.open.base.util.TokenUtil;
 import io.github.luyang.platform.open.token.repository.TokenRepository;
-import io.github.luyang.platform.open.token.repository.entity.TokenEntity;
+import io.github.luyang.platform.open.token.repository.entity.TokenDO;
 import io.github.luyang.platform.open.token.service.bo.CreateTokenBO;
 import io.github.luyang.platform.open.token.service.dto.CreateTokenDTO;
 import lombok.RequiredArgsConstructor;
@@ -24,20 +24,20 @@ public class TokenService {
 
 	public CreateTokenDTO createToken(CreateTokenBO createTokenBO) {
 
-		TokenEntity tokenEntity = new TokenEntity();
-		tokenEntity.setClientId(createTokenBO.getClientId());
-		tokenEntity.setUserId(createTokenBO.getUserId());
-		tokenEntity.setAttachedInfo(null);
-		tokenEntity.setAccessToken(TokenUtil.generateToken(TokenStyle.ACCESS_TOKEN));
-		tokenEntity.setRefreshToken(TokenUtil.generateToken(TokenStyle.REFRESH_TOKEN));
+		TokenDO tokenDO = new TokenDO();
+		tokenDO.setClientId(createTokenBO.getClientId());
+		tokenDO.setUserId(createTokenBO.getUserId());
+		tokenDO.setAttachedInfo(null);
+		tokenDO.setAccessToken(TokenUtil.generateToken(TokenStyle.ACCESS_TOKEN));
+		tokenDO.setRefreshToken(TokenUtil.generateToken(TokenStyle.REFRESH_TOKEN));
 		LocalDateTime now = LocalDateTime.now();
-		tokenEntity.setAccessTokenExpiresTime(now.plusSeconds(createTokenBO.getAccessTokenValidity()));
-		tokenEntity.setRefreshTokenExpiresTime(now.plusSeconds(createTokenBO.getRefreshTokenValidity()));
-		tokenRepository.save(tokenEntity);
+		tokenDO.setAccessTokenExpiresTime(now.plusSeconds(createTokenBO.getAccessTokenValidity()));
+		tokenDO.setRefreshTokenExpiresTime(now.plusSeconds(createTokenBO.getRefreshTokenValidity()));
+		tokenRepository.save(tokenDO);
 
 		return CreateTokenDTO.builder()
-			.accessToken(tokenEntity.getAccessToken())
-			.refreshToken(tokenEntity.getRefreshToken())
+			.accessToken(tokenDO.getAccessToken())
+			.refreshToken(tokenDO.getRefreshToken())
 			.build();
 	}
 }

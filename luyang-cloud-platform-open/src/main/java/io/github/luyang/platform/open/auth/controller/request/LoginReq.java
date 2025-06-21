@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class LoginRequest {
+public class LoginReq {
 
 	/** 客户端ID */
 	private String clientId;

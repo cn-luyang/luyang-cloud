@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @TableName(value = "t_token", autoResultMap = true)
-public class TokenEntity extends BaseEntity<TokenEntity, Long> {
+public class TokenDO extends BaseEntity<TokenDO, Long> {
 
 	private String clientId;
 	private String userId;

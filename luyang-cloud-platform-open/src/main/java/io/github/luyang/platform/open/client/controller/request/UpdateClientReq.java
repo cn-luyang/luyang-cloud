@@ -12,13 +12,17 @@ import org.hibernate.validator.constraints.URL;
 import java.util.Set;
 
 /**
- * 创建客户端请求体
+ * 更新客户端请求体
  *
  * @author yang.lu
  */
 @Getter
 @Setter
-public class CreateClientRequest {
+public class UpdateClientReq {
+
+	@NotBlank(message = "{validation.notBlank.clientId}")
+	@Size(max = 64, message = "{validation.size.clientId}")
+	private String clientId;
 
 	@NotBlank(message = "{validation.notBlank.clientName}")
 	@Size(max = 64, message = "{validation.size.clientName}")

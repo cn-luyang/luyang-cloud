@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @TableName(value = "t_client", autoResultMap = true)
-public class ClientEntity extends BaseEntity<ClientEntity, Long> {
+public class ClientDO extends BaseEntity<ClientDO, Long> {
 
 	/**
 	 * 客户端ID
