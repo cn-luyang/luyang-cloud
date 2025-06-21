@@ -51,7 +51,7 @@ public interface ClientConvert {
 	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
 	void toEntity(UpdateClientReq updateClientReq, @MappingTarget ClientDO clientDO);
 
-	GetClientRes toGetClientResponse(ClientDO clientDO);
+	GetClientRes toGetClientRes(ClientDO clientDO);
 
 	@Named("mapGrantTypes")
 	static List<String> mapGrantTypes(Set<GrantType> grantTypes) {

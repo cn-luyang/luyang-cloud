@@ -93,7 +93,7 @@ public class ClientService {
 			return null;
 		}
 
-		return clientConvert.toGetClientResponse(clientDO);
+		return clientConvert.toGetClientRes(clientDO);
 	}
 
 	public boolean existClient(ClientId clientId) {
