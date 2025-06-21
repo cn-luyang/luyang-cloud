@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CreateUserResponse {
+public class CreateUserRes {
 
 	private String userId;
 }

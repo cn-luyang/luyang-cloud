@@ -7,7 +7,7 @@ import io.github.luyang.api.uac.model.VerifyAccountParam;
 import io.github.luyang.api.uac.model.VerifyAccountResult;
 import io.github.luyang.platform.uac.base.enums.error.UserError;
 import io.github.luyang.platform.uac.base.valueobject.Email;
-import io.github.luyang.platform.uac.user.repository.entity.UserEntity;
+import io.github.luyang.platform.uac.user.repository.entity.UserDO;
 import io.github.luyang.platform.uac.user.service.UserService;
 import io.github.luyang.starter.base.api.Result;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +32,8 @@ public class RemoteUserServiceImpl implements RemoteUserService {
 			return Result.failure(UserError.INVALID_EMAIL_FORMAT);
 		}
 
-		UserEntity userEntity = userService.getUser(Email.build(account));
-		if (BeanUtil.isEmpty(userEntity)) {
+		UserDO userDO = userService.getUser(Email.build(account));
+		if (BeanUtil.isEmpty(userDO)) {
 			return Result.failure(UserError.NOT_FOUND_USER);
 		}
 
@@ -43,7 +43,7 @@ public class RemoteUserServiceImpl implements RemoteUserService {
 //		}
 
 		return Result.success(VerifyAccountResult.builder()
-			.userId(userEntity.getUserId())
+			.userId(userDO.getUserId())
 			.build());
 	}
 }

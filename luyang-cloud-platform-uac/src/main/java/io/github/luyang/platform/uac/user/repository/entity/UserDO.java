@@ -12,8 +12,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName(value = "t_uac_user", autoResultMap = true)
-public class UserEntity extends BaseEntity<UserEntity, String> {
+@TableName(value = "uac_user", autoResultMap = true)
+public class UserDO extends BaseEntity<UserDO, String> {
 
 	/** 用户 ID */
 	private String userId;
