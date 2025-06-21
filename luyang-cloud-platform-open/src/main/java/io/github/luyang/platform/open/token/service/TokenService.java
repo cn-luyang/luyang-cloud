@@ -1,19 +1,18 @@
 package io.github.luyang.platform.open.token.service;
 
-import io.github.luyang.platform.open.base.enums.TokenStyle;
-import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.base.util.TokenUtil;
-import io.github.luyang.platform.open.base.valueobject.ClientId;
-import io.github.luyang.platform.open.client.controller.response.GetClientRes;
-import io.github.luyang.platform.open.client.service.ClientService;
+import io.github.luyang.platform.open.token.convert.TokenConvert;
 import io.github.luyang.platform.open.token.repository.TokenRepository;
 import io.github.luyang.platform.open.token.repository.entity.TokenDO;
-import io.github.luyang.platform.open.token.service.bo.CreateTokenBO;
-import io.github.luyang.platform.open.token.service.dto.CreateTokenDTO;
+import io.github.luyang.platform.open.token.repository.model.TokenRenewalOps;
+import io.github.luyang.platform.open.token.repository.model.TokenRenewalQuery;
+import io.github.luyang.platform.open.token.service.model.CreateTokenBO;
+import io.github.luyang.platform.open.token.service.model.CreateTokenDTO;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Token 相关服务
@@ -24,24 +23,33 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class TokenService {
 
+	private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+
 	private final TokenRepository tokenRepository;
 
 	public CreateTokenDTO createToken(CreateTokenBO createTokenBO) {
 
-		TokenDO tokenDO = new TokenDO();
-		tokenDO.setClientId(createTokenBO.getClientId());
-		tokenDO.setUserId(createTokenBO.getUserId());
-		tokenDO.setAttachedInfo(null);
-		tokenDO.setAccessToken(TokenUtil.generateToken(TokenStyle.ACCESS_TOKEN));
-		tokenDO.setRefreshToken(TokenUtil.generateToken(TokenStyle.REFRESH_TOKEN));
-		LocalDateTime now = LocalDateTime.now();
-		tokenDO.setAccessTokenExpiresTime(now.plusSeconds(createTokenBO.getAccessTokenValidity()));
-		tokenDO.setRefreshTokenExpiresTime(now.plusSeconds(createTokenBO.getRefreshTokenValidity()));
-		tokenRepository.save(tokenDO);
+		// 构造续期查询参数，查询当前是否存在可续期的 Token
+		TokenRenewalQuery tokenRenewalQuery = TokenConvert.convertTokenRenewalQuery(createTokenBO);
+		Optional<TokenDO> tokenDOOpt = tokenRepository.find(tokenRenewalQuery);
+		if (tokenDOOpt.isPresent()) {
+			// 如果存在旧令牌，尝试进行续期操作
+			TokenDO tokenDO = tokenDOOpt.get();
+			TokenRenewalOps tokenRenewalOps = TokenConvert.convertTokenRenewalOps(createTokenBO, tokenDO);
+			boolean operationSuccess = tokenRepository.operation(tokenRenewalOps);
+			if (operationSuccess) {
+				logger.info("ClientId:[{}], UserId:[{}]令牌续期操作成功", tokenDO.getClientId(), tokenDO.getUserId());
+			}
 
-		return CreateTokenDTO.builder()
-			.accessToken(tokenDO.getAccessToken())
-			.refreshToken(tokenDO.getRefreshToken())
-			.build();
+			return TokenConvert.convertCreateTokenDTO(tokenDO);
+		}
+
+		TokenDO tokenDO = TokenConvert.convertTokenDO(createTokenBO);
+		boolean operationSuccess = tokenRepository.save(tokenDO);
+		if (operationSuccess) {
+			logger.info("ClientId:[{}], UserId:[{}]令牌创建成功", tokenDO.getClientId(), tokenDO.getUserId());
+		}
+
+		return TokenConvert.convertCreateTokenDTO(tokenDO);
 	}
 }

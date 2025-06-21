@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.token.service.bo;
+package io.github.luyang.platform.open.token.service.model;
 
 import lombok.Getter;
 import lombok.Setter;

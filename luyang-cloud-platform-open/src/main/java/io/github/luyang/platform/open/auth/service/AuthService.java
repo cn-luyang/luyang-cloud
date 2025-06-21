@@ -5,14 +5,15 @@ import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.open.auth.controller.request.LoginReq;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
+import io.github.luyang.platform.open.base.constant.AuthConstant;
 import io.github.luyang.platform.open.base.enums.LoginType;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
 import io.github.luyang.platform.open.base.valueobject.ClientId;
 import io.github.luyang.platform.open.client.controller.response.GetClientRes;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.platform.open.token.service.TokenService;
-import io.github.luyang.platform.open.token.service.bo.CreateTokenBO;
-import io.github.luyang.platform.open.token.service.dto.CreateTokenDTO;
+import io.github.luyang.platform.open.token.service.model.CreateTokenBO;
+import io.github.luyang.platform.open.token.service.model.CreateTokenDTO;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +73,8 @@ public class AuthService {
 		// 构建重定向 URI
 		String loginUri = UriComponentsBuilder
 			.fromUriString(loginReq.getRedirectUri())
-			.queryParam("access_token", createTokenDTO.getAccessToken())
-			.queryParam("refresh_token", createTokenDTO.getRefreshToken())
+			.queryParam(AuthConstant.ACCESS_TOKEN, createTokenDTO.getAccessToken())
+			.queryParam(AuthConstant.REFRESH_TOKEN, createTokenDTO.getRefreshToken())
 			.build()
 			.toUriString();
 
