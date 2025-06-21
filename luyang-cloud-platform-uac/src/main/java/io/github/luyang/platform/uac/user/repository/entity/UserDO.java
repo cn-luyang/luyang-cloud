@@ -12,7 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@TableName(value = "uac_user", autoResultMap = true)
+@TableName(value = "t_user", autoResultMap = true)
 public class UserDO extends BaseEntity<UserDO, String> {
 
 	/** 用户 ID */

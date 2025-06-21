@@ -1,4 +1,4 @@
-create table `uac_user`
+create table `t_user`
 (
     `id`           BIGINT       not null COMMENT '主键ID',
     `user_id`      VARCHAR(64)  not null COMMENT '用户ID',
