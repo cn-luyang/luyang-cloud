@@ -1,6 +1,6 @@
 package io.github.luyang.platform.open.auth.controller;
 
-import io.github.luyang.platform.open.auth.controller.request.LoginReq;
+import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,7 +21,7 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/login")
-	public void login(@Valid @RequestBody LoginReq loginReq, HttpServletResponse httpServletResponse) {
-		authService.login(loginReq, httpServletResponse);
+	public void login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
+		authService.login(loginRequest, httpServletResponse);
 	}
 }

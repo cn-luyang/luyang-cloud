@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.user.controller;
 
-import io.github.luyang.platform.uac.user.controller.request.CreateUserReq;
-import io.github.luyang.platform.uac.user.controller.response.CreateUserRes;
+import io.github.luyang.platform.uac.user.controller.request.CreateUserRequest;
+import io.github.luyang.platform.uac.user.controller.response.CreateUserResponse;
 import io.github.luyang.platform.uac.user.service.UserService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping
-	public Result<CreateUserRes> create(@Valid @RequestBody CreateUserReq createUserReq) {
-		return Result.success(userService.createUser(createUserReq));
+	public Result<CreateUserResponse> create(@Valid @RequestBody CreateUserRequest createUserRequest) {
+		return Result.success(userService.createUser(createUserRequest));
 	}
 }

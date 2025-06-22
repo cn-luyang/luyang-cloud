@@ -2,17 +2,17 @@ package io.github.luyang.platform.open.auth.service;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.auth.controller.request.LoginReq;
+import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.constant.AuthConstant;
 import io.github.luyang.platform.open.base.enums.LoginType;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.client.controller.response.GetClientRes;
+import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.platform.open.token.service.TokenService;
-import io.github.luyang.platform.open.token.service.model.CreateTokenBO;
-import io.github.luyang.platform.open.token.service.model.CreateTokenDTO;
+import io.github.luyang.platform.open.token.service.model.CreateUserTokenBO;
+import io.github.luyang.platform.open.token.service.model.CreateUserTokenDTO;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,44 +35,44 @@ public class AuthService {
 	/**
 	 * 登录
 	 *
-	 * @param loginReq 登录请求体
+	 * @param loginRequest 登录请求体
 	 * @author yang.lu
 	 */
 	@SneakyThrows
-	public void login(LoginReq loginReq, HttpServletResponse httpServletResponse) {
+	public void login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
 
 		// 客户端校验
-		GetClientRes getClientRes = clientService.getClient(loginReq.getClientId());
-		ClientError.INVALID_CLIENT.notNull(getClientRes);
+		GetClientResponse getClientResponse = clientService.getClient(loginRequest.getClientId());
+		ClientError.INVALID_CLIENT.notNull(getClientResponse);
 
 		// 校验 redirect_uri
-		String redirectUri = loginReq.getRedirectUri();
+		String redirectUri = loginRequest.getRedirectUri();
 		String redirectHost = UrlBuilder.of(redirectUri).getHost();
-		boolean validRedirect = getClientRes.getRedirectUris().stream()
+		boolean validRedirect = getClientResponse.getRedirectUris().stream()
 			.map(uri -> UrlBuilder.of(uri).getHost())
 			.anyMatch(host -> StrUtil.equals(host, redirectHost));
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirect);
 
 		// 获取对应授权类型的认证处理器
-		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginReq.getLoginType());
+		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginRequest.getLoginType());
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginType);
 
 		// 执行认证逻辑
-		String userId = authenticatorHandler.authenticate(loginReq);
+		String userId = authenticatorHandler.authenticate(loginRequest);
 
 		// 创建Token
-		CreateTokenBO createTokenBO = new CreateTokenBO();
-		createTokenBO.setUserId(userId);
-		createTokenBO.setClientId(getClientRes.getClientId());
-		createTokenBO.setAccessTokenValidity(getClientRes.getAccessTokenValidity());
-		createTokenBO.setRefreshTokenValidity(getClientRes.getRefreshTokenValidity());
-		CreateTokenDTO createTokenDTO = tokenService.createToken(createTokenBO);
+		CreateUserTokenBO createUserTokenBO = new CreateUserTokenBO();
+		createUserTokenBO.setUserId(userId);
+		createUserTokenBO.setClientId(getClientResponse.getClientId());
+		createUserTokenBO.setAccessTokenValidity(getClientResponse.getAccessTokenValidity());
+		createUserTokenBO.setRefreshTokenValidity(getClientResponse.getRefreshTokenValidity());
+		CreateUserTokenDTO createUserTokenDTO = tokenService.createUserToken(createUserTokenBO);
 
 		// 构建重定向 URI
 		String loginUri = UriComponentsBuilder
-			.fromUriString(loginReq.getRedirectUri())
-			.queryParam(AuthConstant.ACCESS_TOKEN, createTokenDTO.getAccessToken())
-			.queryParam(AuthConstant.REFRESH_TOKEN, createTokenDTO.getRefreshToken())
+			.fromUriString(loginRequest.getRedirectUri())
+			.queryParam(AuthConstant.ACCESS_TOKEN, createUserTokenDTO.getAccessToken())
+			.queryParam(AuthConstant.REFRESH_TOKEN, createUserTokenDTO.getRefreshToken())
 			.build()
 			.toUriString();
 

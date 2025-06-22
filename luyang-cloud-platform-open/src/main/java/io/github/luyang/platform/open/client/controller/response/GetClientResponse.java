@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class GetClientRes {
+public class GetClientResponse {
 
 	private String clientId;
 

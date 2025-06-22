@@ -16,11 +16,11 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 		return this.baseMapper.selectOne(ClientDO::getClientId, clientId);
 	}
 
-	public boolean existsByClientName(String clientName) {
+	public boolean existsClientName(String clientName) {
 		return this.baseMapper.exists(ClientDO::getClientName, clientName);
 	}
 
-	public boolean existsByClientId(String clientId) {
+	public boolean existsClientId(String clientId) {
 		return this.baseMapper.exists(ClientDO::getClientId, clientId);
 	}
 

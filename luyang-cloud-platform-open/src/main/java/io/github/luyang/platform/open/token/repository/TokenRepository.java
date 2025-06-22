@@ -6,20 +6,18 @@ import io.github.luyang.platform.open.token.repository.model.TokenRenewalOps;
 import io.github.luyang.platform.open.token.repository.model.TokenRenewalQuery;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 /**
  * @author yang.lu
  */
 @Repository
 public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 
-	public Optional<TokenDO> find(TokenRenewalQuery tokenRenewalQuery) {
+	public TokenDO find(TokenRenewalQuery tokenRenewalQuery) {
 		return this.lambdaQuery()
 			.eq(TokenDO::getClientId, tokenRenewalQuery.getClientId())
 			.eq(TokenDO::getUserId, tokenRenewalQuery.getUserId())
-			.le(TokenDO::getAccessTokenExpiresTime, tokenRenewalQuery.getNowTime())
-			.oneOpt();
+			.gt(TokenDO::getAccessTokenExpiresTime, tokenRenewalQuery.getNowTime())
+			.one();
 	}
 
 	public void modify(TokenRenewalOps tokenRenewalOps) {

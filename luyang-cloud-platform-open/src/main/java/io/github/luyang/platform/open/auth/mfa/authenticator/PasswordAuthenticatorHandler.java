@@ -1,9 +1,9 @@
 package io.github.luyang.platform.open.auth.mfa.authenticator;
 
 import io.github.luyang.api.uac.RemoteUserService;
-import io.github.luyang.api.uac.model.VerifyAccountParam;
-import io.github.luyang.api.uac.model.VerifyAccountResult;
-import io.github.luyang.platform.open.auth.controller.request.LoginReq;
+import io.github.luyang.api.uac.param.VerifyAccountParam;
+import io.github.luyang.api.uac.result.VerifyAccountResult;
+import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.enums.error.LoginError;
 import io.github.luyang.starter.base.api.Result;
@@ -24,11 +24,11 @@ public class PasswordAuthenticatorHandler implements AuthenticatorHandler {
 	private RemoteUserService remoteUserService;
 
 	@Override
-	public String authenticate(LoginReq loginReq) {
+	public String authenticate(LoginRequest loginRequest) {
 
 		VerifyAccountParam verifyAccountParam = VerifyAccountParam.builder()
-			.account(loginReq.getAccount())
-			.secret(loginReq.getSecret())
+			.account(loginRequest.getAccount())
+			.secret(loginRequest.getSecret())
 			.build();
 
 		Result<VerifyAccountResult> verifyAccountResult = remoteUserService.verifyAccount(verifyAccountParam);

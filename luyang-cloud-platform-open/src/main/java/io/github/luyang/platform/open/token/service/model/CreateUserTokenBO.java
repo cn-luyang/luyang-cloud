@@ -8,7 +8,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CreateTokenBO {
+public class CreateUserTokenBO {
 
 	private String clientId;
 	private String userId;

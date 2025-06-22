@@ -1,4 +1,4 @@
-package io.github.luyang.api.uac.model;
+package io.github.luyang.api.uac.param;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +13,11 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Builder
-public class VerifyAccountResult implements Serializable {
+public class GetUserParam implements Serializable {
 
 	@Serial
-	private static final long serialVersionUID = 1059260229535356569L;
+	private static final long serialVersionUID = 5360031135975232631L;
 
 	private String userId;
+	private String email;
 }

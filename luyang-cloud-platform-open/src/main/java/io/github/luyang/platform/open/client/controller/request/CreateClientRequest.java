@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class CreateClientReq {
+public class CreateClientRequest {
 
 	@NotBlank(message = "{validation.notBlank.clientName}")
 	@Size(max = 64, message = "{validation.size.clientName}")

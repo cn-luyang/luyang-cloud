@@ -2,10 +2,10 @@ package io.github.luyang.platform.open.client.service;
 
 import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.client.controller.request.CreateClientReq;
-import io.github.luyang.platform.open.client.controller.request.UpdateClientReq;
-import io.github.luyang.platform.open.client.controller.response.CreateClientRes;
-import io.github.luyang.platform.open.client.controller.response.GetClientRes;
+import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
+import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
+import io.github.luyang.platform.open.client.controller.response.CreateClientResponse;
+import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
 import io.github.luyang.platform.open.client.convert.ClientConvert;
 import io.github.luyang.platform.open.client.repository.ClientRepository;
 import io.github.luyang.platform.open.client.repository.entity.ClientDO;
@@ -29,18 +29,18 @@ public class ClientService {
 	/**
 	 * 创建客户端
 	 *
-	 * @param createClientReq 创建客户端请求体
+	 * @param createClientRequest 创建客户端请求体
 	 * @return 创建客户端响应体
 	 * @author yang.lu
 	 */
-	public CreateClientRes createClient(CreateClientReq createClientReq) {
+	public CreateClientResponse createClient(CreateClientRequest createClientRequest) {
 
 		// 检查客户端名称是否唯一
-		boolean hasClientName = clientRepository.existsByClientName(createClientReq.getClientName());
+		boolean hasClientName = clientRepository.existsClientName(createClientRequest.getClientName());
 		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
 		// 转换为实体并保存至数据库
-		ClientDO clientDO = clientConvert.convertToEntity(createClientReq, passwordEncoder);
+		ClientDO clientDO = clientConvert.convertToEntity(createClientRequest, passwordEncoder);
 		clientRepository.save(clientDO);
 
 		// 获取客户端 ID 和明文密钥
@@ -48,7 +48,7 @@ public class ClientService {
 		String clientSecret = clientDO.getClientSecretPlain();
 
 		// 构造返回对象，包含 clientId 和明文密钥
-		return CreateClientRes.builder().clientId(clientId).clientSecretPlain(clientSecret).build();
+		return CreateClientResponse.builder().clientId(clientId).clientSecretPlain(clientSecret).build();
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class ClientService {
 	 * @author yang.lu
 	 */
 	public void deleteClient(String clientId) {
-		boolean hasClientId = clientRepository.existsByClientId(clientId);
+		boolean hasClientId = clientRepository.existsClientId(clientId);
 		if (hasClientId) {
 			clientRepository.removeByClientId(clientId);
 		}
@@ -67,39 +67,39 @@ public class ClientService {
 	/**
 	 * 更新客户端
 	 *
-	 * @param updateClientReq 更新客户端请求体
+	 * @param updateClientRequest 更新客户端请求体
 	 * @author yang.lu
 	 */
-	public void updateClient(UpdateClientReq updateClientReq) {
+	public void updateClient(UpdateClientRequest updateClientRequest) {
 
 		// 检查客户端ID是否存在
-		ClientDO clientDO = clientRepository.findByClientId(updateClientReq.getClientId());
+		ClientDO clientDO = clientRepository.findByClientId(updateClientRequest.getClientId());
 		ClientError.INVALID_CLIENT.notNull(clientDO);
 
 		// 客户端名称变更时校验唯一性
-		String newClientName = updateClientReq.getClientName();
+		String newClientName = updateClientRequest.getClientName();
 		String oldClientName = clientDO.getClientId();
 		if (!StrUtil.equals(oldClientName, newClientName)) {
 			// 检查客户端名称是否唯一
-			boolean hasClientName = clientRepository.existsByClientName(newClientName);
+			boolean hasClientName = clientRepository.existsClientName(newClientName);
 			ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 		}
 
 		// 将 DTO 转换为实体并更新至数据库
-		clientConvert.convertToEntity(updateClientReq).updateById();
+		clientConvert.convertToEntity(updateClientRequest).updateById();
 	}
 
 	/**
-	 * 获取客户端信息
+	 * 获取客户端详情信息
 	 *
 	 * @param clientId 客户端 ID
 	 * @return 客户端信息响应体
 	 * @author yang.lu
 	 */
-	public GetClientRes getClient(String clientId) {
+	public GetClientResponse getClient(String clientId) {
 		ClientDO clientDO = clientRepository.findByClientId(clientId);
 		if (null == clientDO) {
-			return new GetClientRes();
+			return new GetClientResponse();
 		}
 
 		return clientConvert.convertToGetClientRes(clientDO);

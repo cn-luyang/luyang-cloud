@@ -1,4 +1,4 @@
-package io.github.luyang.api.uac.model;
+package io.github.luyang.api.uac.param;
 
 import lombok.Builder;
 import lombok.Getter;

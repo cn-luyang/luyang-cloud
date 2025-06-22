@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CreateClientRes {
+public class CreateClientResponse {
 
 	/**
 	 * 客户端 ID

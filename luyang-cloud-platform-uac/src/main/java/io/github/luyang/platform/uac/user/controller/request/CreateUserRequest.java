@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class CreateUserReq {
+public class CreateUserRequest {
 
 	@NotBlank(message = "{validation.notBlank.zhName}")
 	@Size(max = 64, message = "{validation.size.zhName}")
