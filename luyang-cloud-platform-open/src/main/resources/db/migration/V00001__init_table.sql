@@ -10,7 +10,7 @@ CREATE TABLE `t_client`
     `grant_types`            VARCHAR(256) NOT NULL COMMENT '支持的授权类型(authorization_code,password,client_credentials,refresh_token,sms)',
     `redirect_uris`          VARCHAR(2048) DEFAULT NULL COMMENT '重定向URI,多个URI用逗号分隔',
     `auto_approve`           BIT(1)        DEFAULT b'0' COMMENT '是否自动批准(跳过授权页面) {[1:是:true] [0:否:false]}',
-    `description`            VARCHAR(255)  DEFAULT NULL COMMENT '应用描述',
+    `description`            VARCHAR(256)  DEFAULT NULL COMMENT '应用描述',
     `created_by`             VARCHAR(64)   DEFAULT NULL COMMENT '创建人',
     `created_time`           DATETIME (3) DEFAULT NULL COMMENT '创建时间',
     `updated_by`             VARCHAR(64)   DEFAULT NULL COMMENT '更新人',

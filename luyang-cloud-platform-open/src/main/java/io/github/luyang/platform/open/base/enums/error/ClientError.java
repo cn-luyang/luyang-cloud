@@ -20,6 +20,8 @@ public enum ClientError implements ExceptionAssert<String> {
 	INVALID_RESPONSE_TYPE("invalid_response_type", "无效的响应类型"),
 	INVALID_TOKEN_VALIDITY("invalid_token_validity", "无效的Access Token有效期"),
 
+	NOT_FOUND_CLIENT("not_found_client", "客户端未找到或已删除"),
+
 	EXISTS_CLIENT_NAME("exists_client_name", "客户端名称已存在")
 	;
 

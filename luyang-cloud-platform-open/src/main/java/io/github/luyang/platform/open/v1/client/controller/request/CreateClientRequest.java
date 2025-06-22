@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.client.controller.request;
+package io.github.luyang.platform.open.v1.client.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,17 +11,13 @@ import org.hibernate.validator.constraints.URL;
 import java.util.Set;
 
 /**
- * 更新客户端请求体
+ * 创建客户端请求体
  *
  * @author yang.lu
  */
 @Getter
 @Setter
-public class UpdateClientRequest {
-
-	@NotBlank(message = "{validation.notBlank.clientId}")
-	@Size(max = 64, message = "{validation.size.clientId}")
-	private String clientId;
+public class CreateClientRequest {
 
 	@NotBlank(message = "{validation.notBlank.clientName}")
 	@Size(max = 64, message = "{validation.size.clientName}")

@@ -1,12 +1,12 @@
-package io.github.luyang.platform.open.client.convert;
+package io.github.luyang.platform.open.v1.client.convert;
 
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
-import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
-import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
-import io.github.luyang.platform.open.client.repository.entity.ClientDO;
+import io.github.luyang.platform.open.v1.client.controller.request.CreateClientRequest;
+import io.github.luyang.platform.open.v1.client.controller.request.UpdateClientRequest;
+import io.github.luyang.platform.open.v1.client.controller.response.GetClientResponse;
+import io.github.luyang.platform.open.v1.client.repository.entity.ClientDO;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.springframework.security.crypto.password.PasswordEncoder;

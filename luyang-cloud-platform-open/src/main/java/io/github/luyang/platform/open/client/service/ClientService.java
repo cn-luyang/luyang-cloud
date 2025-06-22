@@ -1,107 +1,47 @@
 package io.github.luyang.platform.open.client.service;
 
-import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.client.controller.request.CreateClientRequest;
-import io.github.luyang.platform.open.client.controller.request.UpdateClientRequest;
-import io.github.luyang.platform.open.client.controller.response.CreateClientResponse;
-import io.github.luyang.platform.open.client.controller.response.GetClientResponse;
-import io.github.luyang.platform.open.client.convert.ClientConvert;
-import io.github.luyang.platform.open.client.repository.ClientRepository;
-import io.github.luyang.platform.open.client.repository.entity.ClientDO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import io.github.luyang.platform.open.client.domain.ClientBO;
+import io.github.luyang.platform.open.client.domain.ClientCommand;
+
+import java.util.List;
 
 /**
- * 客户端服务类
+ * 客户端业务服务接口
  *
  * @author yang.lu
  */
-@Service
-@RequiredArgsConstructor
-public class ClientService {
-
-	private final ClientConvert clientConvert;
-	private final PasswordEncoder passwordEncoder;
-	private final ClientRepository clientRepository;
+public interface ClientService {
 
 	/**
-	 * 创建客户端
+	 * 创建新客户端
 	 *
-	 * @param createClientRequest 创建客户端请求体
-	 * @return 创建客户端响应体
+	 * @param command 客户端创建命令对象
+	 * @return 客户端业务对象
 	 * @author yang.lu
 	 */
-	public CreateClientResponse createClient(CreateClientRequest createClientRequest) {
-
-		// 检查客户端名称是否唯一
-		boolean hasClientName = clientRepository.existsClientName(createClientRequest.getClientName());
-		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
-
-		// 转换为实体并保存至数据库
-		ClientDO clientDO = clientConvert.convertToClientDO(createClientRequest, passwordEncoder);
-		clientRepository.save(clientDO);
-
-		// 获取客户端 ID 和明文密钥
-		String clientId = clientDO.getClientId();
-		String clientSecret = clientDO.getClientSecretPlain();
-
-		// 构造返回对象，包含 clientId 和明文密钥
-		return CreateClientResponse.builder().clientId(clientId).clientSecretPlain(clientSecret).build();
-	}
+	ClientBO createClient(ClientCommand command);
 
 	/**
-	 * 删除客户端
+	 * 根据客户端ID删除
 	 *
 	 * @param clientId 客户端ID
 	 * @author yang.lu
 	 */
-	public void deleteClient(String clientId) {
-		boolean hasClientId = clientRepository.existsClientId(clientId);
-		if (hasClientId) {
-			clientRepository.removeByClientId(clientId);
-		}
-	}
+	void deleteClient(String clientId);
 
 	/**
-	 * 更新客户端
+	 * 更新客户端信息
 	 *
-	 * @param updateClientRequest 更新客户端请求体
+	 * @param command 客户端更新命令对象
 	 * @author yang.lu
 	 */
-	public void updateClient(UpdateClientRequest updateClientRequest) {
-
-		// 检查客户端ID是否存在
-		ClientDO clientDO = clientRepository.findByClientId(updateClientRequest.getClientId());
-		ClientError.INVALID_CLIENT.notNull(clientDO);
-
-		// 客户端名称变更时校验唯一性
-		String newClientName = updateClientRequest.getClientName();
-		String oldClientName = clientDO.getClientId();
-		if (StrUtil.isNotEmpty(newClientName) && !StrUtil.equals(oldClientName, newClientName)) {
-			// 检查客户端名称是否唯一
-			boolean hasClientName = clientRepository.existsClientName(newClientName);
-			ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
-		}
-
-		// 将 DTO 转换为实体并更新至数据库
-		clientConvert.convertToEntity(updateClientRequest).updateById();
-	}
+	void updateClient(ClientCommand command);
 
 	/**
-	 * 获取客户端详情信息
+	 * 获取所有客户端列表
 	 *
-	 * @param clientId 客户端 ID
-	 * @return 客户端信息响应体
+	 * @return 所有客户端业务对象
 	 * @author yang.lu
 	 */
-	public GetClientResponse getClient(String clientId) {
-		ClientDO clientDO = clientRepository.findByClientId(clientId);
-		if (null == clientDO) {
-			return new GetClientResponse();
-		}
-
-		return clientConvert.convertToGetClientRes(clientDO);
-	}
+	List<ClientBO> getAllClients();
 }

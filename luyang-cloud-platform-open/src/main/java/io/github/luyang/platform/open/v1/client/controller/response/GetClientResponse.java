@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.client.controller.response;
+package io.github.luyang.platform.open.v1.client.controller.response;
 
 import lombok.Getter;
 import lombok.Setter;
