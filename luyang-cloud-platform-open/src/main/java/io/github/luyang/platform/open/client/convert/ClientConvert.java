@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Mapper(componentModel = "spring")
 public interface ClientConvert {
 
-	default ClientDO convertToEntity(CreateClientRequest createClientRequest, @Context PasswordEncoder passwordEncoder) {
+	default ClientDO convertToClientDO(CreateClientRequest createClientRequest, @Context PasswordEncoder passwordEncoder) {
 
 		String clientId = "cli_" + RandomUtil.randomString(16);
 		String clientSecret = IdUtil.simpleUUID();

@@ -39,11 +39,6 @@ public class RemoteUserServiceImpl implements RemoteUserService {
 			return Result.failure(UserError.NOT_FOUND_USER);
 		}
 
-//		boolean matches = bCryptPasswordEncoder.matches(verifyAccountParam.getSecret(), userEntity.getPassword());
-//		if (!matches) {
-//			return Result.failure(UserError.INVALID_PASSWORD);
-//		}
-
 		return Result.success(VerifyAccountResult.builder()
 			.userId(userDO.getUserId())
 			.build());

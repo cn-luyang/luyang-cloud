@@ -40,7 +40,7 @@ public class ClientService {
 		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
 		// 转换为实体并保存至数据库
-		ClientDO clientDO = clientConvert.convertToEntity(createClientRequest, passwordEncoder);
+		ClientDO clientDO = clientConvert.convertToClientDO(createClientRequest, passwordEncoder);
 		clientRepository.save(clientDO);
 
 		// 获取客户端 ID 和明文密钥
@@ -79,7 +79,7 @@ public class ClientService {
 		// 客户端名称变更时校验唯一性
 		String newClientName = updateClientRequest.getClientName();
 		String oldClientName = clientDO.getClientId();
-		if (!StrUtil.equals(oldClientName, newClientName)) {
+		if (StrUtil.isNotEmpty(newClientName) && !StrUtil.equals(oldClientName, newClientName)) {
 			// 检查客户端名称是否唯一
 			boolean hasClientName = clientRepository.existsClientName(newClientName);
 			ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);

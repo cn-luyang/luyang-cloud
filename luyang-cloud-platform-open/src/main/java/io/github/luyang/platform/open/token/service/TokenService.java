@@ -35,18 +35,21 @@ public class TokenService {
 
 	public CreateUserTokenDTO createUserToken(CreateUserTokenBO createUserTokenBO) {
 
-		// 构造续期查询参数，查询当前是否存在可续期的 Token
+		// 构造续期查询参数
 		TokenRenewalQuery tokenRenewalQuery = tokenConvert.convertTokenRenewalQuery(createUserTokenBO);
 		TokenDO tokenDO = tokenRepository.find(tokenRenewalQuery);
+
 		if (null != tokenDO) {
+			// 续期Token
 			TokenRenewalOps tokenRenewalOps = tokenConvert.convertTokenRenewalOps(createUserTokenBO, tokenDO);
 			tokenRepository.modify(tokenRenewalOps);
-			return tokenConvert.convertToCreateUserTokenDTO(tokenDO);
-		}
+		} else {
+			// 创建新Token
+			tokenDO = tokenConvert.convertTokenDO(createUserTokenBO);
+			this.buildAttachedInfo(tokenDO);
+			tokenRepository.save(tokenDO);
 
-		tokenDO = tokenConvert.convertTokenDO(createUserTokenBO);
-		this.buildAttachedInfo(tokenDO);
-		tokenRepository.save(tokenDO);
+		}
 
 		return tokenConvert.convertToCreateUserTokenDTO(tokenDO);
 	}
