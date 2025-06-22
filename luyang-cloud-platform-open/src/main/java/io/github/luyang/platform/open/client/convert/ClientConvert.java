@@ -1,76 +1,54 @@
 package io.github.luyang.platform.open.client.convert;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.open.base.enums.GrantType;
 import io.github.luyang.platform.open.client.controller.request.CreateClientReq;
 import io.github.luyang.platform.open.client.controller.request.UpdateClientReq;
 import io.github.luyang.platform.open.client.controller.response.GetClientRes;
 import io.github.luyang.platform.open.client.repository.entity.ClientDO;
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * 客户端相关实体转换
  *
  * @author yang.lu
  */
-@Mapper(
-	componentModel = "spring",
-	imports = {
-		RandomUtil.class, IdUtil.class, StrUtil.class, ListUtil.class, CollUtil.class
-	}
-)
+@Mapper(componentModel = "spring")
 public interface ClientConvert {
 
-	@Mapping(target = "clientId", expression = "java(\"cli_\" + RandomUtil.randomString(16))")
-	@Mapping(target = "clientSecretPlain", expression = "java(IdUtil.simpleUUID())")
-	@Mapping(target = "clientSecret", expression = "java(passwordEncoder.encode(IdUtil.simpleUUID()))")
-	@Mapping(target = "grantTypes", source = "grantTypes", qualifiedByName = "mapGrantTypes")
-	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
-	ClientDO toEntity(CreateClientReq createClientReq, @Context PasswordEncoder passwordEncoder);
+	default ClientDO convertToEntity(CreateClientReq createClientReq, @Context PasswordEncoder passwordEncoder) {
 
-	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "clientId", ignore = true)
-	@Mapping(target = "clientSecretPlain", ignore = true)
-	@Mapping(target = "clientSecret", ignore = true)
-	@Mapping(target = "grantTypes", source = "grantTypes", qualifiedByName = "mapGrantTypes")
-	@Mapping(target = "redirectUris", source = "redirectUris", qualifiedByName = "mapRedirectUris")
-	void toEntity(UpdateClientReq updateClientReq, @MappingTarget ClientDO clientDO);
+		String clientId = "cli_" + RandomUtil.randomString(16);
+		String clientSecret = IdUtil.simpleUUID();
 
-	GetClientRes toGetClientRes(ClientDO clientDO);
-
-	@Named("mapGrantTypes")
-	static List<String> mapGrantTypes(Set<GrantType> grantTypes) {
-		if (grantTypes == null) {
-			return null;
-		}
-
-		return grantTypes.stream()
-			.filter(Objects::nonNull)
-			.map(GrantType::getCode)
-			.toList();
+		return new ClientDO()
+			.setClientId(clientId)
+			.setClientName(createClientReq.getClientName())
+			.setClientSecret(passwordEncoder.encode(clientSecret))
+			.setClientSecretPlain(clientSecret)
+			.setAccessTokenValidity(createClientReq.getAccessTokenValidity())
+			.setRefreshTokenValidity(createClientReq.getRefreshTokenValidity())
+			.setGrantTypes(ListUtil.toList(createClientReq.getGrantTypes()))
+			.setRedirectUris(ListUtil.toList(createClientReq.getRedirectUris()))
+			.setAutoApprove(createClientReq.getAutoApprove())
+			.setDescription(createClientReq.getDescription());
 	}
 
-	@Named("mapRedirectUris")
-	static List<String> mapRedirectUris(Set<String> uris) {
-		if (CollUtil.isEmpty(uris)) {
-			return null;
-		}
+	default ClientDO convertToEntity(UpdateClientReq updateClientReq) {
 
-		return ListUtil.of(StrUtil.join(",", uris));
+		return new ClientDO()
+			.setClientId(updateClientReq.getClientId())
+			.setClientName(updateClientReq.getClientName())
+			.setAccessTokenValidity(updateClientReq.getAccessTokenValidity())
+			.setRefreshTokenValidity(updateClientReq.getRefreshTokenValidity())
+			.setGrantTypes(ListUtil.toList(updateClientReq.getGrantTypes()))
+			.setRedirectUris(ListUtil.toList(updateClientReq.getRedirectUris()))
+			.setAutoApprove(updateClientReq.getAutoApprove())
+			.setDescription(updateClientReq.getDescription());
 	}
+
+	GetClientRes convertToGetClientRes(ClientDO clientDO);
 }

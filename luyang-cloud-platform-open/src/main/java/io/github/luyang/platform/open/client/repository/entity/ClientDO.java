@@ -6,6 +6,7 @@ import io.github.luyang.starter.mybatis.beans.BaseEntity;
 import io.github.luyang.starter.mybatis.support.type.StringListTypeHandler;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Accessors(chain = true)
 @TableName(value = "t_client", autoResultMap = true)
 public class ClientDO extends BaseEntity<ClientDO, Long> {
 

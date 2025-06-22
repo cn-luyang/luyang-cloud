@@ -1,8 +1,7 @@
 package io.github.luyang.platform.open.client.service;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.base.valueobject.ClientId;
-import io.github.luyang.platform.open.base.valueobject.ClientName;
 import io.github.luyang.platform.open.client.controller.request.CreateClientReq;
 import io.github.luyang.platform.open.client.controller.request.UpdateClientReq;
 import io.github.luyang.platform.open.client.controller.response.CreateClientRes;
@@ -36,12 +35,12 @@ public class ClientService {
 	 */
 	public CreateClientRes createClient(CreateClientReq createClientReq) {
 
-		// 构建并校验客户端名称唯一性
-		ClientName clientName = ClientName.build(createClientReq.getClientName());
-		clientName.checkUnique(() -> clientRepository.unique(clientName));
+		// 检查客户端名称是否唯一
+		boolean hasClientName = clientRepository.existsByClientName(createClientReq.getClientName());
+		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
-		// 将 DTO 转换为实体并保存至数据库
-		ClientDO clientDO = clientConvert.toEntity(createClientReq, passwordEncoder);
+		// 转换为实体并保存至数据库
+		ClientDO clientDO = clientConvert.convertToEntity(createClientReq, passwordEncoder);
 		clientRepository.save(clientDO);
 
 		// 获取客户端 ID 和明文密钥
@@ -52,8 +51,17 @@ public class ClientService {
 		return CreateClientRes.builder().clientId(clientId).clientSecretPlain(clientSecret).build();
 	}
 
-	public void deleteClient(ClientId clientId) {
-		clientRepository.remove(clientId);
+	/**
+	 * 删除客户端
+	 *
+	 * @param clientId 客户端ID
+	 * @author yang.lu
+	 */
+	public void deleteClient(String clientId) {
+		boolean hasClientId = clientRepository.existsByClientId(clientId);
+		if (hasClientId) {
+			clientRepository.removeByClientId(clientId);
+		}
 	}
 
 	/**
@@ -64,20 +72,21 @@ public class ClientService {
 	 */
 	public void updateClient(UpdateClientReq updateClientReq) {
 
-		// 构建 ClientId 并查找客户端实体
-		ClientId clientId = ClientId.build(updateClientReq.getClientId());
-		ClientDO clientDO = clientRepository.find(clientId);
-
-		// 如果客户端不存在，则抛出异常
+		// 检查客户端ID是否存在
+		ClientDO clientDO = clientRepository.findByClientId(updateClientReq.getClientId());
 		ClientError.INVALID_CLIENT.notNull(clientDO);
 
-		// 构建 ClientName 并在名称变更时校验唯一性
-		ClientName clientName = ClientName.build(updateClientReq.getClientName());
-		clientName.checkUniqueIfChanged(clientDO.getClientName(), () -> clientRepository.unique(clientName));
+		// 客户端名称变更时校验唯一性
+		String newClientName = updateClientReq.getClientName();
+		String oldClientName = clientDO.getClientId();
+		if (!StrUtil.equals(oldClientName, newClientName)) {
+			// 检查客户端名称是否唯一
+			boolean hasClientName = clientRepository.existsByClientName(newClientName);
+			ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
+		}
 
 		// 将 DTO 转换为实体并更新至数据库
-		clientConvert.toEntity(updateClientReq, clientDO);
-		clientDO.updateById();
+		clientConvert.convertToEntity(updateClientReq).updateById();
 	}
 
 	/**
@@ -87,16 +96,12 @@ public class ClientService {
 	 * @return 客户端信息响应体
 	 * @author yang.lu
 	 */
-	public GetClientRes getClient(ClientId clientId) {
-		ClientDO clientDO = clientRepository.find(clientId);
+	public GetClientRes getClient(String clientId) {
+		ClientDO clientDO = clientRepository.findByClientId(clientId);
 		if (null == clientDO) {
-			return null;
+			return new GetClientRes();
 		}
 
-		return clientConvert.toGetClientRes(clientDO);
-	}
-
-	public boolean existClient(ClientId clientId) {
-		return null != getClient(clientId);
+		return clientConvert.convertToGetClientRes(clientDO);
 	}
 }

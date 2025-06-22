@@ -7,20 +7,23 @@ import io.github.luyang.platform.open.token.repository.model.TokenRenewalOps;
 import io.github.luyang.platform.open.token.repository.model.TokenRenewalQuery;
 import io.github.luyang.platform.open.token.service.model.CreateTokenBO;
 import io.github.luyang.platform.open.token.service.model.CreateTokenDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
 
-public class TokenConvert {
+@Mapper(
+	componentModel = "spring",
+	imports = {LocalDateTime.class}
+)
+public interface TokenConvert {
 
-	public static TokenRenewalQuery convertTokenRenewalQuery(CreateTokenBO createTokenBO) {
-		TokenRenewalQuery tokenRenewalQuery = new TokenRenewalQuery();
-		tokenRenewalQuery.setClientId(createTokenBO.getClientId());
-		tokenRenewalQuery.setUserId(createTokenBO.getUserId());
-		tokenRenewalQuery.setNowTime(LocalDateTime.now());
-		return tokenRenewalQuery;
-	}
+	@Mapping(target = "nowTime", expression = "java(LocalDateTime.now())")
+	TokenRenewalQuery convertTokenRenewalQuery(CreateTokenBO createTokenBO);
 
-	public static TokenRenewalOps convertTokenRenewalOps(CreateTokenBO createTokenBO, TokenDO tokenDO) {
+	CreateTokenDTO convertToCreateTokenDTO(TokenDO tokenDO);
+
+	default TokenRenewalOps convertTokenRenewalOps(CreateTokenBO createTokenBO, TokenDO tokenDO) {
 
 		TokenRenewalOps tokenRenewalOps = new TokenRenewalOps();
 		tokenRenewalOps.setId(tokenDO.getId());
@@ -36,14 +39,7 @@ public class TokenConvert {
 		return tokenRenewalOps;
 	}
 
-	public static CreateTokenDTO convertCreateTokenDTO(TokenDO tokenDO) {
-		CreateTokenDTO createTokenDTO = new CreateTokenDTO();
-		createTokenDTO.setAccessToken(tokenDO.getAccessToken());
-		createTokenDTO.setRefreshToken(tokenDO.getRefreshToken());
-		return createTokenDTO;
-	}
-
-	public static TokenDO convertTokenDO(CreateTokenBO createTokenBO) {
+	default TokenDO convertTokenDO(CreateTokenBO createTokenBO) {
 		TokenDO tokenDO = new TokenDO();
 		tokenDO.setClientId(createTokenBO.getClientId());
 		tokenDO.setUserId(createTokenBO.getUserId());

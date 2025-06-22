@@ -8,8 +8,6 @@ import io.github.luyang.platform.open.token.repository.model.TokenRenewalQuery;
 import io.github.luyang.platform.open.token.service.model.CreateTokenBO;
 import io.github.luyang.platform.open.token.service.model.CreateTokenDTO;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,33 +21,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TokenService {
 
-	private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
-
+	private final TokenConvert tokenConvert;
 	private final TokenRepository tokenRepository;
 
 	public CreateTokenDTO createToken(CreateTokenBO createTokenBO) {
 
 		// 构造续期查询参数，查询当前是否存在可续期的 Token
-		TokenRenewalQuery tokenRenewalQuery = TokenConvert.convertTokenRenewalQuery(createTokenBO);
+		TokenRenewalQuery tokenRenewalQuery = tokenConvert.convertTokenRenewalQuery(createTokenBO);
 		Optional<TokenDO> tokenDOOpt = tokenRepository.find(tokenRenewalQuery);
 		if (tokenDOOpt.isPresent()) {
 			// 如果存在旧令牌，尝试进行续期操作
 			TokenDO tokenDO = tokenDOOpt.get();
-			TokenRenewalOps tokenRenewalOps = TokenConvert.convertTokenRenewalOps(createTokenBO, tokenDO);
-			boolean operationSuccess = tokenRepository.operation(tokenRenewalOps);
-			if (operationSuccess) {
-				logger.info("ClientId:[{}], UserId:[{}]令牌续期操作成功", tokenDO.getClientId(), tokenDO.getUserId());
-			}
+			TokenRenewalOps tokenRenewalOps = tokenConvert.convertTokenRenewalOps(createTokenBO, tokenDO);
+			tokenRepository.modify(tokenRenewalOps);
 
-			return TokenConvert.convertCreateTokenDTO(tokenDO);
+			return tokenConvert.convertToCreateTokenDTO(tokenDO);
 		}
 
-		TokenDO tokenDO = TokenConvert.convertTokenDO(createTokenBO);
-		boolean operationSuccess = tokenRepository.save(tokenDO);
-		if (operationSuccess) {
-			logger.info("ClientId:[{}], UserId:[{}]令牌创建成功", tokenDO.getClientId(), tokenDO.getUserId());
-		}
+		TokenDO tokenDO = tokenConvert.convertTokenDO(createTokenBO);
+		tokenRepository.save(tokenDO);
 
-		return TokenConvert.convertCreateTokenDTO(tokenDO);
+		return tokenConvert.convertToCreateTokenDTO(tokenDO);
 	}
 }

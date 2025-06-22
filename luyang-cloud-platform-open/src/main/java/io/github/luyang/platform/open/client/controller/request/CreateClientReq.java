@@ -1,6 +1,5 @@
 package io.github.luyang.platform.open.client.controller.request;
 
-import io.github.luyang.platform.open.base.enums.GrantType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
@@ -31,7 +30,7 @@ public class CreateClientReq {
 	private Integer refreshTokenValidity;
 
 	@NotEmpty(message = "{validation.notEmpty.authorizedGrantTypes}")
-	private Set<GrantType> grantTypes;
+	private Set<String> grantTypes;
 
 	@Size(min = 1, max = 5, message = "{validation.size.redirectUris}")
 	private Set<@URL String> redirectUris;

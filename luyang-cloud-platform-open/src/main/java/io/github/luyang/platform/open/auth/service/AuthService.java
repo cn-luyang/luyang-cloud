@@ -8,7 +8,6 @@ import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.constant.AuthConstant;
 import io.github.luyang.platform.open.base.enums.LoginType;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.base.valueobject.ClientId;
 import io.github.luyang.platform.open.client.controller.response.GetClientRes;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.platform.open.token.service.TokenService;
@@ -43,8 +42,7 @@ public class AuthService {
 	public void login(LoginReq loginReq, HttpServletResponse httpServletResponse) {
 
 		// 客户端校验
-		ClientId clientId = ClientId.build(loginReq.getClientId());
-		GetClientRes getClientRes = clientService.getClient(clientId);
+		GetClientRes getClientRes = clientService.getClient(loginReq.getClientId());
 		ClientError.INVALID_CLIENT.notNull(getClientRes);
 
 		// 校验 redirect_uri

@@ -1,8 +1,6 @@
 package io.github.luyang.platform.open.client.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.open.base.valueobject.ClientId;
-import io.github.luyang.platform.open.base.valueobject.ClientName;
 import io.github.luyang.platform.open.client.repository.entity.ClientDO;
 import org.springframework.stereotype.Repository;
 
@@ -14,15 +12,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 
-	public boolean unique(ClientName clientName) {
-		return this.baseMapper.exists(ClientDO::getClientName, clientName.value());
+	public ClientDO findByClientId(String clientId) {
+		return this.baseMapper.selectOne(ClientDO::getClientId, clientId);
 	}
 
-	public ClientDO find(ClientId clientId) {
-		return this.baseMapper.selectOne(ClientDO::getClientId, clientId.value());
+	public boolean existsByClientName(String clientName) {
+		return this.baseMapper.exists(ClientDO::getClientName, clientName);
 	}
 
-	public boolean remove(ClientId clientId) {
-		return this.baseMapper.delete(ClientDO::getClientId, clientId.value());
+	public boolean existsByClientId(String clientId) {
+		return this.baseMapper.exists(ClientDO::getClientId, clientId);
+	}
+
+	public void removeByClientId(String clientId) {
+		this.baseMapper.delete(ClientDO::getClientId, clientId);
 	}
 }

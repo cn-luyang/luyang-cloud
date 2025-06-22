@@ -15,10 +15,6 @@ import java.util.Optional;
 public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 
 	public Optional<TokenDO> find(TokenRenewalQuery tokenRenewalQuery) {
-		if (null == tokenRenewalQuery) {
-			return Optional.empty();
-		}
-
 		return this.lambdaQuery()
 			.eq(TokenDO::getClientId, tokenRenewalQuery.getClientId())
 			.eq(TokenDO::getUserId, tokenRenewalQuery.getUserId())
@@ -26,7 +22,11 @@ public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 			.oneOpt();
 	}
 
-	public boolean operation(TokenRenewalOps tokenRenewalOps) {
-		return true;
+	public void modify(TokenRenewalOps tokenRenewalOps) {
+		this.lambdaUpdate()
+			.eq(TokenDO::getId, tokenRenewalOps.getId())
+			.set(TokenDO::getAccessTokenExpiresTime, tokenRenewalOps.getAccessTokenExpiresTime())
+			.set(TokenDO::getRefreshTokenExpiresTime, tokenRenewalOps.getRefreshTokenExpiresTime())
+			.update();
 	}
 }
