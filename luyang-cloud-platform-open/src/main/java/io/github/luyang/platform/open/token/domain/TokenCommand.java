@@ -1,6 +1,9 @@
 package io.github.luyang.platform.open.token.domain;
 
+import cn.hutool.core.map.MapUtil;
+
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Token命令对象 (Command)
@@ -25,12 +28,26 @@ public record TokenCommand(
 	Integer accessTokenValidity,
 	Integer refreshTokenValidity
 ) {
-	public TokenCommand(String clientId,
-						Map<String, Object> attachedInfoMap,
-						Integer accessTokenValidity,
-						Integer refreshTokenValidity) {
-		this(
-			clientId, null, attachedInfoMap, null, null, accessTokenValidity,
+	public static TokenCommand buildCreateUserTokenParam(String clientId,
+														 Map<String, Object> attachedInfoMap,
+														 Integer accessTokenValidity,
+														 Integer refreshTokenValidity) {
+
+		String userId = null;
+		if (MapUtil.isNotEmpty(attachedInfoMap)) {
+			attachedInfoMap.put("clientId", clientId);
+			userId = Optional.ofNullable(attachedInfoMap.get("userId"))
+				.map(Object::toString)
+				.orElse(null);
+		}
+
+		return new TokenCommand(
+			clientId,
+			userId,
+			attachedInfoMap,
+			null,
+			null,
+			accessTokenValidity,
 			refreshTokenValidity
 		);
 	}

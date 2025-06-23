@@ -42,7 +42,7 @@ public class AuthService {
 	@SneakyThrows
 	public void login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
 
-		ClientCommand command = new ClientCommand(loginRequest.clientId(), loginRequest.redirectUri());
+		ClientCommand command = ClientCommand.buildValidateClientParam(loginRequest.clientId(), loginRequest.redirectUri());
 		ClientDomain clientDomain = clientService.validate(command);
 
 		// 获取对应授权类型的认证处理器
@@ -53,7 +53,7 @@ public class AuthService {
 		Map<String, Object> accountAuthMap = authenticatorHandler.authenticate(loginRequest);
 
 		// 创建Token
-		TokenCommand tokenCommand = new TokenCommand(
+		TokenCommand tokenCommand = TokenCommand.buildCreateUserTokenParam(
 			clientDomain.clientId(),
 			accountAuthMap,
 			clientDomain.accessTokenValidity(),

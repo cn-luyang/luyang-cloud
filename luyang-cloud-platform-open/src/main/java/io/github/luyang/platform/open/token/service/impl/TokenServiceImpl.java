@@ -36,7 +36,6 @@ public class TokenServiceImpl implements TokenService {
 
 		// TokenCommand 转换为 TokenDO
 		TokenDO tokenDO = this.convert.toDO(command);
-		tokenDO.putAttachedInfo("clientId", command.clientId());
 		// 持久化到数据库
 		this.repository.save(tokenDO);
 

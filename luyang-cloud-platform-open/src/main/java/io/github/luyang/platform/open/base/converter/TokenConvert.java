@@ -21,7 +21,8 @@ public interface TokenConvert {
 		@Mapping(target = "accessTokenExpiresTime", expression = "java(LocalDateTime.now().plusSeconds(command.accessTokenValidity()))"),
 		@Mapping(target = "refreshTokenExpiresTime", expression = "java(LocalDateTime.now().plusSeconds(command.refreshTokenValidity()))"),
 		@Mapping(target = "accessToken", expression = "java(TokenUtil.generateToken(TokenStyle.ACCESS_TOKEN))"),
-		@Mapping(target = "refreshToken", expression = "java(TokenUtil.generateToken(TokenStyle.REFRESH_TOKEN))")
+		@Mapping(target = "refreshToken", expression = "java(TokenUtil.generateToken(TokenStyle.REFRESH_TOKEN))"),
+		@Mapping(target = "attachedInfo", source = "attachedInfoMap")
 	})
 	TokenDO toDO(TokenCommand command);
 

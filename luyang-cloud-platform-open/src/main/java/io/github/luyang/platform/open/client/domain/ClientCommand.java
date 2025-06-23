@@ -36,8 +36,8 @@ public record ClientCommand(
 	String description
 ) {
 
-	public ClientCommand(String clientId, String redirectUri) {
-		this(
+	public static ClientCommand buildValidateClientParam(String clientId, String redirectUri) {
+		return new ClientCommand(
 			null, clientId, null, null, null,
 			null, null, null, ListUtil.of(redirectUri), false, null
 		);

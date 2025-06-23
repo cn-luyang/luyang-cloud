@@ -26,8 +26,4 @@ public class TokenDO extends BaseEntity<TokenDO, Long> {
 	private String refreshToken;
 	private LocalDateTime accessTokenExpiresTime;
 	private LocalDateTime refreshTokenExpiresTime;
-
-	public void putAttachedInfo(String key, Object value) {
-		this.attachedInfo.put(key, value);
-	}
 }
