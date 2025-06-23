@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PasswordAuthenticatorHandler implements AuthenticatorHandler {
 
-	@DubboReference
+	@DubboReference(check = false)
 	private UserServiceRpc userServiceRpc;
 
 	@Override
