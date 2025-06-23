@@ -3,17 +3,19 @@ package io.github.luyang.platform.open.base.converter;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import io.github.luyang.platform.open.client.controller.request.ClientCreateRequest;
+import io.github.luyang.platform.open.client.controller.request.ClientQueryRequest;
 import io.github.luyang.platform.open.client.controller.request.ClientUpdateRequest;
 import io.github.luyang.platform.open.client.controller.response.ClientResponse;
-import io.github.luyang.platform.open.client.domain.ClientBO;
 import io.github.luyang.platform.open.client.domain.ClientCommand;
+import io.github.luyang.platform.open.client.domain.ClientDomain;
+import io.github.luyang.platform.open.client.domain.ClientQuery;
 import io.github.luyang.platform.open.client.repository.model.ClientDO;
-import jakarta.validation.Valid;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -36,7 +38,7 @@ public interface ClientConverter {
 	 * @return 客户端命令对象
 	 * @author yang.lu
 	 */
-	ClientCommand toCommand(@Valid ClientCreateRequest request);
+	ClientCommand toCommand(ClientCreateRequest request);
 
 	/**
 	 * ClientUpdateRequest 转换为 ClientCommand
@@ -45,7 +47,7 @@ public interface ClientConverter {
 	 * @return 客户端命令对象
 	 * @author yang.lu
 	 */
-	ClientCommand toCommand(@Valid ClientUpdateRequest request);
+	ClientCommand toCommand(ClientUpdateRequest request);
 
 	/**
 	 * ClientCommand 转换为 ClientDO
@@ -76,25 +78,38 @@ public interface ClientConverter {
 	 */
 	@Mapping(target = "clientId", expression = "java(\"cli_\" + RandomUtil.randomString(16))")
 	@Mapping(target = "clientSecretPlain", expression = "java(IdUtil.simpleUUID())")
-	@Mapping(target = "clientSecret", expression = "java(passwordEncoder.encode(clientSecretPlain))")
+	@Mapping(target = "clientSecret", expression = "java(passwordEncoder.encode(clientDO.getClientSecretPlain()))")
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	ClientDO toDO(ClientCommand command, @Context PasswordEncoder passwordEncoder);
 
+	@Named("encodeClientSecret")
+	default String encodeClientSecret(String clientSecretPlain, @Context PasswordEncoder passwordEncoder) {
+		return passwordEncoder.encode(clientSecretPlain);
+	}
+
 	/**
-	 * ClientDO 转换为 ClientBO
+	 * ClientDO 转换为 ClientDomain
 	 *
 	 * @param clientDO 客户端DO对象
 	 * @return 客户端业务对象
 	 * @author yang.lu
 	 */
-	ClientBO toBO(ClientDO clientDO);
+	ClientDomain toDomain(ClientDO clientDO);
 
 	/**
-	 * ClientBO 转换为 ClientResponse
+	 * ClientDomain 转换为 ClientResponse
 	 *
-	 * @param clientBO 客户端业务对象
+	 * @param clientDomain 客户端业务对象
 	 * @return 客户端响应对象
 	 * @author yang.lu
 	 */
-	ClientResponse toResponse(ClientBO clientBO);
+	ClientResponse toResponse(ClientDomain clientDomain);
+
+	/**
+	 * ClientQueryRequest 转换为 ClientQuery
+	 *
+	 * @param request 客户端分页查询请求
+	 * @return 客户端查询对象
+	 */
+	ClientQuery toQuery(ClientQueryRequest request);
 }

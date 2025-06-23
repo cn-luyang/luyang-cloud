@@ -1,12 +1,15 @@
 package io.github.luyang.platform.open.client.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.github.luyang.platform.open.base.converter.ClientConverter;
 import io.github.luyang.platform.open.client.controller.request.ClientCreateRequest;
+import io.github.luyang.platform.open.client.controller.request.ClientQueryRequest;
 import io.github.luyang.platform.open.client.controller.request.ClientUpdateRequest;
 import io.github.luyang.platform.open.client.controller.response.ClientResponse;
-import io.github.luyang.platform.open.client.domain.ClientBO;
 import io.github.luyang.platform.open.client.domain.ClientCommand;
+import io.github.luyang.platform.open.client.domain.ClientDomain;
+import io.github.luyang.platform.open.client.domain.ClientQuery;
 import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.validation.Valid;
@@ -36,66 +39,52 @@ public class ClientController {
 	private final ClientConverter converter;
 	private final ClientService clientService;
 
-	/**
-	 * 创建新客户端
-	 *
-	 * @param request 客户端创建信息的请求体
-	 * @return 创建成功的客户端响应
-	 * @author yang.lu
-	 */
 	@PostMapping
-	public Result<ClientResponse> createClient(@Valid @RequestBody ClientCreateRequest request) {
-		// 转换为 ClientCommand，传递给 Service 层
+	public Result<ClientResponse> create(@Valid @RequestBody ClientCreateRequest request) {
 		ClientCommand command = this.converter.toCommand(request);
-		ClientBO clientBO = this.clientService.createClient(command);
-		return Result.success(this.converter.toResponse(clientBO));
+		ClientDomain clientDomain = this.clientService.create(command);
+		return Result.success(this.converter.toResponse(clientDomain));
 	}
 
-	/**
-	 * 根据 ClientId 删除客户端
-	 *
-	 * @param clientId 客户端ID
-	 * @return 无内容响应
-	 * @author yang.lu
-	 */
 	@DeleteMapping("/{clientId}")
-	public Result<Void> deleteClient(@PathVariable String clientId) {
-		clientService.deleteClient(clientId);
+	public Result<Void> delete(@PathVariable String clientId) {
+		clientService.delete(clientId);
 		return Result.success();
 	}
 
-	/**
-	 * 更新客户端信息
-	 *
-	 * @param request 客户端更新信息的请求体
-	 * @return 更新后的客户端响应
-	 * @author yang.lu
-	 */
-	@PutMapping("/{clientId}")
-	public Result<Void> updateClient(@Valid @RequestBody ClientUpdateRequest request) {
-		// 转换为 ClientCommand，传递给 Service 层
+	@PutMapping
+	public Result<Void> update(@Valid @RequestBody ClientUpdateRequest request) {
 		ClientCommand command = this.converter.toCommand(request);
-		clientService.updateClient(command);
+		clientService.update(command);
 		return Result.success();
 	}
 
-	/**
-	 * 获取所有客户端列表
-	 *
-	 * @return 所有客户端的响应列表
-	 * @author yang.lu
-	 */
-	@GetMapping("/all")
-	public Result<List<ClientResponse>> getAllClients() {
-		List<ClientBO> clientBOs = clientService.getAllClients();
-		if (CollUtil.isEmpty(clientBOs)) {
+	@GetMapping("/{clientId}")
+	public Result<ClientResponse> get(@PathVariable String clientId) {
+		ClientDomain clientDomain = this.clientService.get(clientId);
+		return Result.success(this.converter.toResponse(clientDomain));
+	}
+
+	@GetMapping
+	public Result<List<ClientResponse>> list() {
+		List<ClientDomain> clientDomains = clientService.list();
+		if (CollUtil.isEmpty(clientDomains)) {
 			return Result.success(Collections.emptyList());
 		}
 
-		List<ClientResponse> clientResponses = clientBOs.stream()
+		List<ClientResponse> clientResponses = clientDomains.stream()
 			.map(converter::toResponse)
 			.toList();
 
 		return Result.success(clientResponses);
+	}
+
+	@GetMapping("/page")
+	public Result<IPage<ClientResponse>> page(@Valid ClientQueryRequest request) {
+		ClientQuery clientQuery = this.converter.toQuery(request);
+		IPage<ClientDomain> clientDomainPage = clientService.page(clientQuery);
+
+		IPage<ClientResponse> responsePage = clientDomainPage.convert(this.converter::toResponse);
+		return Result.success(responsePage);
 	}
 }

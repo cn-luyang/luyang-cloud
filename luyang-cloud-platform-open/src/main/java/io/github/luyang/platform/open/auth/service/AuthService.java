@@ -1,24 +1,24 @@
 package io.github.luyang.platform.open.auth.service;
 
-import cn.hutool.core.net.url.UrlBuilder;
-import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.constant.AuthConstant;
 import io.github.luyang.platform.open.base.enums.LoginType;
-import io.github.luyang.platform.open.base.enums.error.ClientError;
+import io.github.luyang.platform.open.client.domain.ClientCommand;
+import io.github.luyang.platform.open.client.domain.ClientDomain;
+import io.github.luyang.platform.open.client.service.ClientService;
+import io.github.luyang.platform.open.token.domain.TokenCommand;
+import io.github.luyang.platform.open.token.domain.TokenDomain;
 import io.github.luyang.platform.open.token.service.TokenService;
-import io.github.luyang.platform.open.token.service.model.CreateUserTokenBO;
-import io.github.luyang.platform.open.token.service.model.CreateUserTokenDTO;
-import io.github.luyang.platform.open.v1.client.controller.response.GetClientResponse;
-import io.github.luyang.platform.open.v1.client.service.ClientService;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Map;
 
 /**
  * 认证服务类
@@ -33,7 +33,8 @@ public class AuthService {
 	private final TokenService tokenService;
 
 	/**
-	 * 登录
+	 * 用户登录
+	 * Token生成后重定向到指定URI
 	 *
 	 * @param loginRequest 登录请求体
 	 * @author yang.lu
@@ -41,38 +42,30 @@ public class AuthService {
 	@SneakyThrows
 	public void login(LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
 
-		// 客户端校验
-		GetClientResponse getClientResponse = clientService.getClient(loginRequest.getClientId());
-		ClientError.INVALID_CLIENT.notNull(getClientResponse);
-
-		// 校验 redirect_uri
-		String redirectUri = loginRequest.getRedirectUri();
-		String redirectHost = UrlBuilder.of(redirectUri).getHost();
-		boolean validRedirect = getClientResponse.getRedirectUris().stream()
-			.map(uri -> UrlBuilder.of(uri).getHost())
-			.anyMatch(host -> StrUtil.equals(host, redirectHost));
-		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirect);
+		ClientCommand command = new ClientCommand(loginRequest.clientId(), loginRequest.redirectUri());
+		ClientDomain clientDomain = clientService.validate(command);
 
 		// 获取对应授权类型的认证处理器
-		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginRequest.getLoginType());
+		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginRequest.loginType());
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginType);
 
 		// 执行认证逻辑
-		String userId = authenticatorHandler.authenticate(loginRequest);
+		Map<String, Object> accountAuthMap = authenticatorHandler.authenticate(loginRequest);
 
 		// 创建Token
-		CreateUserTokenBO createUserTokenBO = new CreateUserTokenBO();
-		createUserTokenBO.setUserId(userId);
-		createUserTokenBO.setClientId(getClientResponse.getClientId());
-		createUserTokenBO.setAccessTokenValidity(getClientResponse.getAccessTokenValidity());
-		createUserTokenBO.setRefreshTokenValidity(getClientResponse.getRefreshTokenValidity());
-		CreateUserTokenDTO createUserTokenDTO = tokenService.createUserToken(createUserTokenBO);
+		TokenCommand tokenCommand = new TokenCommand(
+			clientDomain.clientId(),
+			accountAuthMap,
+			clientDomain.accessTokenValidity(),
+			clientDomain.refreshTokenValidity()
+		);
+		TokenDomain tokenDomain = tokenService.createUserToken(tokenCommand);
 
 		// 构建重定向 URI
 		String loginUri = UriComponentsBuilder
-			.fromUriString(loginRequest.getRedirectUri())
-			.queryParam(AuthConstant.ACCESS_TOKEN, createUserTokenDTO.getAccessToken())
-			.queryParam(AuthConstant.REFRESH_TOKEN, createUserTokenDTO.getRefreshToken())
+			.fromUriString(loginRequest.redirectUri())
+			.queryParam(AuthConstant.ACCESS_TOKEN, tokenDomain.accessToken())
+			.queryParam(AuthConstant.REFRESH_TOKEN, tokenDomain.refreshToken())
 			.build()
 			.toUriString();
 

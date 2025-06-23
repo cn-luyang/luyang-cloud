@@ -2,10 +2,12 @@ package io.github.luyang.platform.open.auth.mfa;
 
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 
+import java.util.Map;
+
 /**
  * @author yang.lu
  */
 public interface AuthenticatorHandler {
 
-	String authenticate(LoginRequest loginRequest);
+	Map<String, Object> authenticate(LoginRequest loginRequest);
 }

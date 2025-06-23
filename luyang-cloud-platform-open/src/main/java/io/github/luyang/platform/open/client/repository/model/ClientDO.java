@@ -30,14 +30,14 @@ public class ClientDO extends BaseEntity<ClientDO, Long> {
 	private String clientName;
 
 	/**
-	 * 客户端密钥
-	 */
-	private String clientSecret;
-
-	/**
 	 * 客户端密钥明文(仅初始化时使用)
 	 */
 	private String clientSecretPlain;
+
+	/**
+	 * 客户端密钥
+	 */
+	private String clientSecret;
 
 	/**
 	 * 访问令牌有效期(秒)

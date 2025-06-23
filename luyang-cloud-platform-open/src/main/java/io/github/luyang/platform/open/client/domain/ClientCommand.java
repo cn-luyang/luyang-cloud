@@ -1,5 +1,7 @@
 package io.github.luyang.platform.open.client.domain;
 
+import cn.hutool.core.collection.ListUtil;
+
 import java.util.List;
 
 /**
@@ -33,4 +35,11 @@ public record ClientCommand(
 	Boolean autoApprove,
 	String description
 ) {
+
+	public ClientCommand(String clientId, String redirectUri) {
+		this(
+			null, clientId, null, null, null,
+			null, null, null, ListUtil.of(redirectUri), false, null
+		);
+	}
 }

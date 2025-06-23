@@ -2,7 +2,6 @@ package io.github.luyang.platform.open.client.controller.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
@@ -27,11 +26,9 @@ public record ClientCreateRequest(
 	@Size(max = 64, message = "应用名不能超过 64 个字符")
 	String clientName,
 
-	@NotNull(message = "访问令牌有效期不能为空")
 	@Positive(message = "访问令牌有效期必须为正数")
 	Integer accessTokenValidity,
 
-	@NotNull(message = "刷新令牌有效期不能为空")
 	@Positive(message = "刷新令牌有效期必须为正数")
 	Integer refreshTokenValidity,
 

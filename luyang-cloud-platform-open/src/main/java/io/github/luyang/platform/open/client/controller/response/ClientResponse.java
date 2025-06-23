@@ -1,5 +1,7 @@
 package io.github.luyang.platform.open.client.controller.response;
 
+import java.util.List;
+
 /**
  * 客户端响应 (Response)
  * 用于向客户端返回客户端信息
@@ -19,8 +21,8 @@ public record ClientResponse(
 	String clientName,
 	Integer accessTokenValidity,
 	Integer refreshTokenValidity,
-	String grantTypes,
-	String redirectUris,
+	List<String> grantTypes,
+	List<String> redirectUris,
 	Boolean autoApprove,
 	String description
 ) {

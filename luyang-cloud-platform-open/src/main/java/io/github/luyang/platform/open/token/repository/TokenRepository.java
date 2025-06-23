@@ -1,30 +1,34 @@
 package io.github.luyang.platform.open.token.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.open.token.repository.entity.TokenDO;
-import io.github.luyang.platform.open.token.repository.model.TokenRenewalOps;
-import io.github.luyang.platform.open.token.repository.model.TokenRenewalQuery;
+import io.github.luyang.platform.open.token.repository.model.TokenDO;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 /**
+ * Token 数据仓库
+ *
  * @author yang.lu
  */
 @Repository
 public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 
-	public TokenDO find(TokenRenewalQuery tokenRenewalQuery) {
-		return this.lambdaQuery()
-			.eq(TokenDO::getClientId, tokenRenewalQuery.getClientId())
-			.eq(TokenDO::getUserId, tokenRenewalQuery.getUserId())
-			.gt(TokenDO::getAccessTokenExpiresTime, tokenRenewalQuery.getNowTime())
-			.one();
+	public void removeByClientIdAndUserId(String clientId, String userId) {
+		this.lambdaUpdate()
+			.eq(TokenDO::getClientId, clientId)
+			.eq(TokenDO::getUserId, userId)
+			.remove();
 	}
 
-	public void modify(TokenRenewalOps tokenRenewalOps) {
-		this.lambdaUpdate()
-			.eq(TokenDO::getId, tokenRenewalOps.getId())
-			.set(TokenDO::getAccessTokenExpiresTime, tokenRenewalOps.getAccessTokenExpiresTime())
-			.set(TokenDO::getRefreshTokenExpiresTime, tokenRenewalOps.getRefreshTokenExpiresTime())
-			.update();
+	public TokenDO findValidToken(String clientId, String userId) {
+		return this.lambdaQuery()
+			.eq(TokenDO::getClientId, clientId)
+			.eq(TokenDO::getUserId, userId)
+			.and(wrapper -> wrapper
+				.gt(TokenDO::getAccessTokenExpiresTime, LocalDateTime.now())
+				.or()
+				.gt(TokenDO::getRefreshTokenExpiresTime, LocalDateTime.now()))
+			.one();
 	}
 }

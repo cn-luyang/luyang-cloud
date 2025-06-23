@@ -1,42 +1,30 @@
 package io.github.luyang.platform.uac.user.service;
 
-import io.github.luyang.platform.uac.base.enums.error.UserError;
-import io.github.luyang.platform.uac.user.controller.request.CreateUserRequest;
-import io.github.luyang.platform.uac.user.controller.response.CreateUserResponse;
-import io.github.luyang.platform.uac.user.convert.UserConvert;
-import io.github.luyang.platform.uac.user.repository.UserRepository;
-import io.github.luyang.platform.uac.user.repository.entity.UserDO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import io.github.luyang.platform.uac.user.domain.UserCommand;
+import io.github.luyang.platform.uac.user.domain.UserDomain;
 
 /**
- * 用户相关服务类
+ * 用户业务服务接口
  *
  * @author yang.lu
  */
-@Service
-@RequiredArgsConstructor
-public class UserService {
-
-	private final UserConvert userConvert;
-	private final UserRepository userRepository;
+public interface UserService {
 
 	/**
 	 * 创建用户
 	 *
-	 * @param createUserRequest 创建用户请求体
-	 * @return 创建用户请求体
+	 * @param command 用户创建命令对象
+	 * @return 用户业务对象
 	 * @author yang.lu
 	 */
-	public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
+	UserDomain create(UserCommand command);
 
-		boolean hasEmail = userRepository.existsEmail(createUserRequest.getEmail());
-		UserError.EXISTS_EMAIL.isFalse(hasEmail);
-
-		// 转换为实体并保存至数据库
-		UserDO userDO = userConvert.convertToUserDO(createUserRequest);
-		userRepository.save(userDO);
-
-		return CreateUserResponse.builder().userId(userDO.getUserId()).build();
-	}
+	/**
+	 * 通过邮箱号获取用户
+	 *
+	 * @param email 邮箱号
+	 * @return 用户业务对象
+	 * @author yang.lu
+	 */
+	UserDomain getUserByEmail(String email);
 }

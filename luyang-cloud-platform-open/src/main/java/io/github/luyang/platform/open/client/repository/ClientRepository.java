@@ -1,6 +1,10 @@
 package io.github.luyang.platform.open.client.repository;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.github.luyang.platform.open.client.domain.ClientQuery;
 import io.github.luyang.platform.open.client.repository.model.ClientDO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -8,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 客户端数据仓库实现类
+ * 客户端数据仓库
  *
  * @author yang.lu
  */
@@ -72,5 +76,20 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 	 */
 	public List<ClientDO> findAll() {
 		return this.lambdaQuery().orderByDesc(ClientDO::getCreatedTime).list();
+	}
+
+
+	/**
+	 * 分页查询客户端
+	 *
+	 * @return 客户端信息列表，按创建时间降序排列
+	 * @author yang.lu
+	 */
+	public IPage<ClientDO> findPage(ClientQuery query) {
+		return this.lambdaQuery()
+			.like(StrUtil.isNotBlank(query.clientId()), ClientDO::getClientId, query.clientId())
+			.like(StrUtil.isNotBlank(query.clientName()), ClientDO::getClientName, query.clientName())
+			.orderByDesc(ClientDO::getCreatedTime)
+			.page(new Page<>(query.pageNum(), query.pageSize()));
 	}
 }

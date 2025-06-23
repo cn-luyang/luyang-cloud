@@ -2,11 +2,14 @@ package io.github.luyang.platform.open.client.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.github.luyang.platform.open.base.converter.ClientConverter;
 import io.github.luyang.platform.open.base.enums.error.ClientError;
-import io.github.luyang.platform.open.client.domain.ClientBO;
 import io.github.luyang.platform.open.client.domain.ClientCommand;
+import io.github.luyang.platform.open.client.domain.ClientDomain;
+import io.github.luyang.platform.open.client.domain.ClientQuery;
 import io.github.luyang.platform.open.client.repository.ClientRepository;
 import io.github.luyang.platform.open.client.repository.model.ClientDO;
 import io.github.luyang.platform.open.client.service.ClientService;
@@ -45,7 +48,7 @@ public class ClientServiceImpl implements ClientService {
 	 */
 	@Override
 	@Transactional
-	public ClientBO createClient(ClientCommand command) {
+	public ClientDomain create(ClientCommand command) {
 
 		boolean hasClientName = this.repository.existsClientName(command.clientName());
 		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
@@ -53,7 +56,7 @@ public class ClientServiceImpl implements ClientService {
 		ClientDO clientDO = this.converter.toDO(command, passwordEncoder);
 		this.repository.save(clientDO);
 
-		return this.converter.toBO(clientDO);
+		return this.converter.toDomain(clientDO);
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class ClientServiceImpl implements ClientService {
 	 * @author yang.lu
 	 */
 	@Override
-	public void deleteClient(String clientId) {
+	public void delete(String clientId) {
 		// 校验客户端是否存在
 		ClientDO ClientDO = this.repository.findByClientId(clientId);
 		if (BeanUtil.isEmpty(ClientDO)) {
@@ -86,7 +89,7 @@ public class ClientServiceImpl implements ClientService {
 	 * @author yang.lu
 	 */
 	@Override
-	public void updateClient(ClientCommand command) {
+	public void update(ClientCommand command) {
 
 		String clientId = command.clientId();
 
@@ -116,13 +119,26 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	/**
+	 * 根据客户端ID获取客户端信息
+	 *
+	 * @param clientId 客户端ID
+	 * @return 客户端业务对象
+	 * @author yang.lu
+	 */
+	@Override
+	public ClientDomain get(String clientId) {
+		ClientDO clientDO = this.repository.findByClientId(clientId);
+		return this.converter.toDomain(clientDO);
+	}
+
+	/**
 	 * 获取所有客户端列表
 	 *
 	 * @return 所有客户端业务对象
 	 * @author yang.lu
 	 */
 	@Override
-	public List<ClientBO> getAllClients() {
+	public List<ClientDomain> list() {
 
 		List<ClientDO> clientDOs = this.repository.findAll();
 		if (CollUtil.isEmpty(clientDOs)) {
@@ -130,7 +146,46 @@ public class ClientServiceImpl implements ClientService {
 		}
 
 		return clientDOs.stream()
-			.map(converter::toBO)
+			.map(converter::toDomain)
 			.collect(Collectors.toList());
+	}
+
+	/**
+	 * 分页查询客户端列表
+	 *
+	 * @param query 客户端查询条件对象
+	 * @return 客户端业务对象的分页结果
+	 * @author yang.lu
+	 */
+	@Override
+	public IPage<ClientDomain> page(ClientQuery query) {
+		IPage<ClientDO> clientDOPage = this.repository.findPage(query);
+		return clientDOPage.convert(this.converter::toDomain);
+	}
+
+	/**
+	 * 客户端验证
+	 *
+	 * @param command 客户端验证命令对象
+	 * @return 客户端业务对象
+	 * @author yang.lu
+	 */
+	@Override
+	public ClientDomain validate(ClientCommand command) {
+
+		// 校验客户端是否存在
+		ClientDO clientDO = this.repository.findByClientId(command.clientId());
+		ClientError.NOT_FOUND_CLIENT.notNull(clientDO);
+
+		// 校验 redirect_uri
+		CollUtil.emptyIfNull(command.redirectUris()).forEach(uri -> {
+			String requestHost = UrlBuilder.of(uri).getHost();
+			boolean isValid = CollUtil.emptyIfNull(clientDO.getRedirectUris()).stream()
+				.map(allowedUri -> UrlBuilder.of(allowedUri).getHost())
+				.anyMatch(host -> StrUtil.equals(host, requestHost));
+			ClientError.INVALID_REDIRECT_URI.isTrue(isValid);
+		});
+
+		return this.converter.toDomain(clientDO);
 	}
 }

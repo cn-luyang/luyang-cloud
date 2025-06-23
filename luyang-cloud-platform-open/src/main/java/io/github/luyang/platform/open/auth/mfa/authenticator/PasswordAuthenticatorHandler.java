@@ -1,8 +1,9 @@
 package io.github.luyang.platform.open.auth.mfa.authenticator;
 
-import io.github.luyang.api.uac.RemoteUserService;
-import io.github.luyang.api.uac.param.VerifyAccountParam;
-import io.github.luyang.api.uac.result.VerifyAccountResult;
+import cn.hutool.core.bean.BeanUtil;
+import io.github.luyang.api.uac.UserServiceRpc;
+import io.github.luyang.api.uac.dto.AccountAuthDTO;
+import io.github.luyang.api.uac.param.AccountAuthParam;
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
 import io.github.luyang.platform.open.base.enums.error.LoginError;
@@ -13,7 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
+ * 密码认证
+ *
  * @author yang.lu
  */
 @Component
@@ -21,21 +26,19 @@ import org.springframework.stereotype.Component;
 public class PasswordAuthenticatorHandler implements AuthenticatorHandler {
 
 	@DubboReference
-	private RemoteUserService remoteUserService;
+	private UserServiceRpc userServiceRpc;
 
 	@Override
-	public String authenticate(LoginRequest loginRequest) {
+	public Map<String, Object> authenticate(LoginRequest loginRequest) {
 
-		VerifyAccountParam verifyAccountParam = VerifyAccountParam.builder()
-			.account(loginRequest.getAccount())
-			.secret(loginRequest.getSecret())
-			.build();
+		AccountAuthParam accountAuthParam = new AccountAuthParam(loginRequest.account(), loginRequest.secret());
+		Result<AccountAuthDTO> accountAuthDTOResult = userServiceRpc.accountAuth(accountAuthParam);
 
-		Result<VerifyAccountResult> verifyAccountResult = remoteUserService.verifyAccount(verifyAccountParam);
-		return ResultOps.of(verifyAccountResult)
-			.assertSuccess(() -> new BusinessException(verifyAccountResult.getCode(), verifyAccountResult.getMessage()))
+		AccountAuthDTO accountAuthDTO = ResultOps.of(accountAuthDTOResult)
+			.assertSuccess(() -> new BusinessException(accountAuthDTOResult.getCode(), accountAuthDTOResult.getMessage()))
 			.getData()
-			.map(VerifyAccountResult::getUserId)
 			.orElseThrow(() -> new BusinessException(LoginError.INVALID_ACCOUNT_OR_PASSWORD));
+
+		return BeanUtil.beanToMap(accountAuthDTO);
 	}
 }
