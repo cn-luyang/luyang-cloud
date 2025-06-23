@@ -31,4 +31,10 @@ public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 				.gt(TokenDO::getRefreshTokenExpiresTime, LocalDateTime.now()))
 			.one();
 	}
+
+	public TokenDO findByAccessToken(String accessToken) {
+		return this.lambdaQuery()
+			.eq(TokenDO::getAccessToken, accessToken)
+			.one();
+	}
 }

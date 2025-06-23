@@ -71,4 +71,9 @@ public class AuthService {
 
 		httpServletResponse.sendRedirect(loginUri);
 	}
+
+	public Map<String, Object> introspectToken(String accessToken) {
+		TokenDomain tokenDomain = tokenService.getByAccessToken(accessToken);
+		return  tokenDomain.attachedInfoMap();
+	}
 }

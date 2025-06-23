@@ -26,5 +26,6 @@ public interface TokenConvert {
 	})
 	TokenDO toDO(TokenCommand command);
 
+	@Mapping(target = "attachedInfoMap", source = "attachedInfo")
 	TokenDomain toDomain(TokenDO tokenDO);
 }

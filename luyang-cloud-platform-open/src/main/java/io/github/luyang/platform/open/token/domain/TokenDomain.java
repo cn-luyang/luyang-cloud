@@ -1,6 +1,7 @@
 package io.github.luyang.platform.open.token.domain;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * Token业务领域对象
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
  * @param id                      主键ID
  * @param clientId                客户端ID
  * @param userId                  用户ID
- * @param attachedInfo            附带信息
+ * @param attachedInfoMap         附带信息
  * @param accessToken             访问令牌
  * @param refreshToken            刷新令牌
  * @param accessTokenExpiresTime  访问令牌过期时间
@@ -25,7 +26,7 @@ public record TokenDomain(
 	String id,
 	String clientId,
 	String userId,
-	Object attachedInfo,
+	Map<String, Object> attachedInfoMap,
 	String accessToken,
 	String refreshToken,
 	LocalDateTime accessTokenExpiresTime,

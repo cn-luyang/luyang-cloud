@@ -1,6 +1,7 @@
 package io.github.luyang.platform.open.token.service.impl;
 
 import io.github.luyang.platform.open.base.converter.TokenConvert;
+import io.github.luyang.platform.open.base.enums.error.TokenError;
 import io.github.luyang.platform.open.token.domain.TokenCommand;
 import io.github.luyang.platform.open.token.domain.TokenDomain;
 import io.github.luyang.platform.open.token.repository.TokenRepository;
@@ -41,5 +42,17 @@ public class TokenServiceImpl implements TokenService {
 
 		// TokenDO 换为 TokenDomain
 		return this.convert.toDomain(tokenDO);
+	}
+
+	@Override
+	public TokenDomain getByAccessToken(String accessToken) {
+		TokenDO tokenDO = this.repository.findByAccessToken(accessToken);
+		TokenError.INVALID_ACCESS_TOKEN.notNull(tokenDO);
+
+		TokenDomain tokenDomain = this.convert.toDomain(tokenDO);
+		boolean accessTokenExpired = tokenDomain.accessTokenIsExpired();
+		TokenError.EXPIRED_ACCESS_TOKEN.isFalse(accessTokenExpired);
+
+		return tokenDomain;
 	}
 }
