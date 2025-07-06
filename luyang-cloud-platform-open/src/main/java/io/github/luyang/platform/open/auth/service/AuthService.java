@@ -1,5 +1,9 @@
 package io.github.luyang.platform.open.auth.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.map.MapUtil;
+import io.github.luyang.api.uac.dto.AccountAuthDTO;
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorContext;
 import io.github.luyang.platform.open.auth.mfa.AuthenticatorHandler;
@@ -18,6 +22,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -50,12 +55,14 @@ public class AuthService {
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginType);
 
 		// 执行认证逻辑
-		Map<String, Object> accountAuthMap = authenticatorHandler.authenticate(loginRequest);
+		AccountAuthDTO accountAuthDTO = authenticatorHandler.authenticate(loginRequest);
 
 		// 创建Token
+		@SuppressWarnings("unchecked")
 		TokenCommand tokenCommand = TokenCommand.buildCreateUserTokenParam(
 			clientDomain.clientId(),
-			accountAuthMap,
+			accountAuthDTO.userId(),
+			BeanUtil.beanToMap(accountAuthDTO, MapUtil.newHashMap(), CopyOptions.create().setIgnoreProperties(AccountAuthDTO::userId)),
 			clientDomain.accessTokenValidity(),
 			clientDomain.refreshTokenValidity()
 		);

@@ -3,6 +3,7 @@ package io.github.luyang.platform.open.auth.controller;
 import io.github.luyang.platform.open.auth.controller.request.LoginRequest;
 import io.github.luyang.platform.open.auth.service.AuthService;
 import io.github.luyang.starter.base.api.Result;
+import io.github.luyang.starter.security.annotation.AnonymousAccess;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class AuthController {
 		authService.login(loginRequest, httpServletResponse);
 	}
 
+	@AnonymousAccess
 	@PostMapping("/introspect")
 	public Result<Map<String, Object>> introspectToken(@RequestParam("accessToken") String accessToken) {
 		return Result.success(authService.introspectToken(accessToken));

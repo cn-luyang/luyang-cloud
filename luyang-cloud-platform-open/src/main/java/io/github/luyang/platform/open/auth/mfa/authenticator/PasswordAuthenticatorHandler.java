@@ -1,6 +1,5 @@
 package io.github.luyang.platform.open.auth.mfa.authenticator;
 
-import cn.hutool.core.bean.BeanUtil;
 import io.github.luyang.api.uac.UserServiceRpc;
 import io.github.luyang.api.uac.dto.AccountAuthDTO;
 import io.github.luyang.api.uac.param.AccountAuthParam;
@@ -13,8 +12,6 @@ import io.github.luyang.starter.base.error.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 /**
  * 密码认证
@@ -29,16 +26,14 @@ public class PasswordAuthenticatorHandler implements AuthenticatorHandler {
 	private UserServiceRpc userServiceRpc;
 
 	@Override
-	public Map<String, Object> authenticate(LoginRequest loginRequest) {
+	public AccountAuthDTO authenticate(LoginRequest loginRequest) {
 
 		AccountAuthParam accountAuthParam = new AccountAuthParam(loginRequest.account(), loginRequest.secret());
 		Result<AccountAuthDTO> accountAuthDTOResult = userServiceRpc.accountAuth(accountAuthParam);
 
-		AccountAuthDTO accountAuthDTO = ResultOps.of(accountAuthDTOResult)
+		return ResultOps.of(accountAuthDTOResult)
 			.assertSuccess(() -> new BusinessException(accountAuthDTOResult.getCode(), accountAuthDTOResult.getMessage()))
 			.getData()
 			.orElseThrow(() -> new BusinessException(LoginError.INVALID_ACCOUNT_OR_PASSWORD));
-
-		return BeanUtil.beanToMap(accountAuthDTO);
 	}
 }

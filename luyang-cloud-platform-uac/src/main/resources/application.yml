@@ -2,7 +2,7 @@ server:
   port: 0
 spring:
   application:
-    name: luyang-cloud-platform-uac
+    name: platform-uac
   cloud:
     nacos:
       discovery:
@@ -42,3 +42,6 @@ dubbo:
     port: -1
   application:
     name: ${spring.application.name}
+    qos-enable: false
+  provider:
+    group: ${spring.application.name}
