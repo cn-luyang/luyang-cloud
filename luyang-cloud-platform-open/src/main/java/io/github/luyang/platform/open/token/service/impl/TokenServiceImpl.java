@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
 
-	private final TokenConvert convert;
-	private final TokenRepository repository;
+	private final TokenConvert tokenConvert;
+	private final TokenRepository tokenRepository;
 
 	/**
 	 * 创建用户Token
@@ -33,23 +33,23 @@ public class TokenServiceImpl implements TokenService {
 	public TokenDomain createUserToken(TokenCommand command) {
 
 		// 删除有效的 Token 记录，确保不会为同一个客户端和用户创建多个 Token
-		this.repository.removeByClientIdAndUserId(command.clientId(), command.userId());
+		this.tokenRepository.removeByClientIdAndUserId(command.clientId(), command.userId());
 
 		// TokenCommand 转换为 TokenDO
-		TokenDO tokenDO = this.convert.toDO(command);
+		TokenDO tokenDO = this.tokenConvert.toDO(command);
 		// 持久化到数据库
-		this.repository.save(tokenDO);
+		this.tokenRepository.save(tokenDO);
 
 		// TokenDO 换为 TokenDomain
-		return this.convert.toDomain(tokenDO);
+		return this.tokenConvert.toDomain(tokenDO);
 	}
 
 	@Override
 	public TokenDomain getByAccessToken(String accessToken) {
-		TokenDO tokenDO = this.repository.findByAccessToken(accessToken);
+		TokenDO tokenDO = this.tokenRepository.findByAccessToken(accessToken);
 		TokenError.INVALID_ACCESS_TOKEN.notNull(tokenDO);
 
-		TokenDomain tokenDomain = this.convert.toDomain(tokenDO);
+		TokenDomain tokenDomain = this.tokenConvert.toDomain(tokenDO);
 		boolean accessTokenExpired = tokenDomain.accessTokenIsExpired();
 		TokenError.EXPIRED_ACCESS_TOKEN.isFalse(accessTokenExpired);
 

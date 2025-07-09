@@ -22,9 +22,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * 认证服务类
  *
@@ -77,10 +74,5 @@ public class AuthService {
 			.toUriString();
 
 		httpServletResponse.sendRedirect(loginUri);
-	}
-
-	public Map<String, Object> introspectToken(String accessToken) {
-		TokenDomain tokenDomain = tokenService.getByAccessToken(accessToken);
-		return  tokenDomain.attachedInfoMap();
 	}
 }

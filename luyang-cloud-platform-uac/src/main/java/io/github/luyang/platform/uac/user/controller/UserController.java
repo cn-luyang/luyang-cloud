@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserService userService;
-	private final UserConvert convert;
+	private final UserConvert userConvert;
 
 	@PostMapping
 	public Result<UserResponse> create(@Valid @RequestBody UserCreateRequest createUserRequest) {
-		UserCommand userCommand = this.convert.toCommand(createUserRequest);
+		UserCommand userCommand = this.userConvert.toCommand(createUserRequest);
 		UserDomain userDomain = userService.create(userCommand);
-		return Result.success(this.convert.toResponse(userDomain));
+		return Result.success(this.userConvert.toResponse(userDomain));
 	}
 }

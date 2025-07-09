@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Token RESTful API 控制器
+ *
  * @author yang.lu
  */
 @RestController

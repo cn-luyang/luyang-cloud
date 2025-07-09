@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "t_client", autoResultMap = true)
+@TableName(value = "client", autoResultMap = true)
 public class ClientDO extends BaseEntity<ClientDO, Long> {
 
 	/**

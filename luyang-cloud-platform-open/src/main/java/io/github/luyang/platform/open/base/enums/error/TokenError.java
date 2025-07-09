@@ -9,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum TokenError implements ExceptionAssert<String> {
 
-	INVALID_ACCESS_TOKEN("invalid_access_token", "无效 Access Token"),
-	EXPIRED_ACCESS_TOKEN("expired_access_token", "Access Token 已过期");
+	INVALID_ACCESS_TOKEN("invalid_access_token", "无效访问令牌"),
+	EXPIRED_ACCESS_TOKEN("expired_access_token", "访问令牌已过期");
 
 	private final String code;
 	private final String message;

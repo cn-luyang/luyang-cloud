@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 
-	private final ClientMapper mapper;
+	private final ClientMapper clientMapper;
 
 	/**
 	 * 查询客户端ID是否存在
@@ -30,7 +30,7 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 	 * @author yang.lu
 	 */
 	public boolean existsClientId(String clientId) {
-		return this.mapper.exists(ClientDO::getClientId, clientId);
+		return this.clientMapper.exists(ClientDO::getClientId, clientId);
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 	 * @author yang.lu
 	 */
 	public boolean existsClientName(String clientName) {
-		return this.mapper.exists(ClientDO::getClientName, clientName);
+		return this.clientMapper.exists(ClientDO::getClientName, clientName);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientDO> {
 	 * @author yang.lu
 	 */
 	public boolean removeByClientId(String clientId) {
-		return this.mapper.delete(ClientDO::getClientId, clientId);
+		return this.clientMapper.delete(ClientDO::getClientId, clientId);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.user.domain;
 
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.starter.web.util.SpringUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;

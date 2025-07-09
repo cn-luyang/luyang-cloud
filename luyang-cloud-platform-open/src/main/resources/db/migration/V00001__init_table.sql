@@ -1,4 +1,4 @@
-CREATE TABLE `t_client`
+CREATE TABLE `client`
 (
     `id`                     BIGINT       NOT NULL COMMENT '主键ID',
     `client_id`              VARCHAR(64)  NOT NULL COMMENT '客户端ID',
@@ -20,7 +20,7 @@ CREATE TABLE `t_client`
     UNIQUE index `uniq_client_id` (`client_id` asc) USING BTREE COMMENT '客户端ID唯一索引'
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC COMMENT = '客户端表';
 
-CREATE TABLE `t_token`
+CREATE TABLE `token`
 (
     `id`                         BIGINT      NOT NULL COMMENT '主键ID',
     `client_id`                  VARCHAR(64) NOT NULL COMMENT '客户端ID',

@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-	private final UserConvert convert;
-	private final UserRepository repository;
+	private final UserConvert userConvert;
+	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -33,18 +33,18 @@ public class UserServiceImpl implements UserService {
 		boolean isEmail = Validator.isEmail(email);
 		UserError.INVALID_EMAIL_FORMAT.isTrue(isEmail);
 
-		boolean hasEmail = this.repository.existsEmail(email);
+		boolean hasEmail = this.userRepository.existsEmail(email);
 		UserError.EXISTS_EMAIL.isFalse(hasEmail);
 
-		UserDO userDO = this.convert.toDO(command, passwordEncoder);
-		this.repository.save(userDO);
+		UserDO userDO = this.userConvert.toDO(command, passwordEncoder);
+		this.userRepository.save(userDO);
 
-		return this.convert.toDomain(userDO);
+		return this.userConvert.toDomain(userDO);
 	}
 
 	@Override
 	public UserDomain getUserByEmail(String email) {
-		UserDO userDO = this.repository.findByEmail(email);
-		return this.convert.toDomain(userDO);
+		UserDO userDO = this.userRepository.findByEmail(email);
+		return this.userConvert.toDomain(userDO);
 	}
 }

@@ -25,6 +25,7 @@
 
     <modules>
         <module>luyang-cloud-api-uac</module>
+        <module>luyang-cloud-business-jalendar</module>
         <module>luyang-cloud-platform-open</module>
         <module>luyang-cloud-platform-uac</module>
     </modules>
@@ -34,7 +35,7 @@
             <dependency>
                 <groupId>io.github.cn-luyang</groupId>
                 <artifactId>dependencies</artifactId>
-                <version>0.0.20-SNAPSH0T</version>
+                <version>0.0.22-SNAPSH0T</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

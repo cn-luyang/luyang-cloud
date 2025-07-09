@@ -35,8 +35,8 @@ public class ClientServiceImpl implements ClientService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
 
-	private final ClientConverter converter;
-	private final ClientRepository repository;
+	private final ClientConverter clientConverter;
+	private final ClientRepository clientRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	/**
@@ -50,13 +50,13 @@ public class ClientServiceImpl implements ClientService {
 	@Transactional
 	public ClientDomain create(ClientCommand command) {
 
-		boolean hasClientName = this.repository.existsClientName(command.clientName());
+		boolean hasClientName = this.clientRepository.existsClientName(command.clientName());
 		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
-		ClientDO clientDO = this.converter.toDO(command, passwordEncoder);
-		this.repository.save(clientDO);
+		ClientDO clientDO = this.clientConverter.toDO(command, passwordEncoder);
+		this.clientRepository.save(clientDO);
 
-		return this.converter.toDomain(clientDO);
+		return this.clientConverter.toDomain(clientDO);
 	}
 
 	/**
@@ -68,13 +68,13 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public void delete(String clientId) {
 		// 校验客户端是否存在
-		ClientDO ClientDO = this.repository.findByClientId(clientId);
+		ClientDO ClientDO = this.clientRepository.findByClientId(clientId);
 		if (BeanUtil.isEmpty(ClientDO)) {
 			logger.info("客户端未找到或已删除，ClientId:[{}]", clientId);
 			return;
 		}
 
-		boolean removeSuccess = this.repository.removeByClientId(clientId);
+		boolean removeSuccess = this.clientRepository.removeByClientId(clientId);
 		if (removeSuccess) {
 			logger.info("客户端删除成功，ClientId:[{}]", clientId);
 		} else {
@@ -94,7 +94,7 @@ public class ClientServiceImpl implements ClientService {
 		String clientId = command.clientId();
 
 		// 校验客户端是否存在
-		ClientDO clientDO = this.repository.findByClientId(clientId);
+		ClientDO clientDO = this.clientRepository.findByClientId(clientId);
 		ClientError.NOT_FOUND_CLIENT.notNull(clientDO);
 
 		// 客户端名称变更时校验唯一性
@@ -103,13 +103,13 @@ public class ClientServiceImpl implements ClientService {
 
 		// 如客户端名称有变更，校验新名称的唯一性
 		if (StrUtil.isNotEmpty(newClientName) && !StrUtil.equals(oldClientName, newClientName)) {
-			boolean hasClientName = this.repository.existsClientName(command.clientName());
+			boolean hasClientName = this.clientRepository.existsClientName(command.clientName());
 			ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 		}
 
 		// 命令对象转换为数据对象并更新客户端数据
-		ClientDO newClientDO = this.converter.toDO(command, clientDO);
-		boolean updateSuccess = this.repository.updateById(newClientDO);
+		ClientDO newClientDO = this.clientConverter.toDO(command, clientDO);
+		boolean updateSuccess = this.clientRepository.updateById(newClientDO);
 
 		if (updateSuccess) {
 			logger.info("更新客户端成功，ClientId:[{}]", clientId);
@@ -127,8 +127,8 @@ public class ClientServiceImpl implements ClientService {
 	 */
 	@Override
 	public ClientDomain get(String clientId) {
-		ClientDO clientDO = this.repository.findByClientId(clientId);
-		return this.converter.toDomain(clientDO);
+		ClientDO clientDO = this.clientRepository.findByClientId(clientId);
+		return this.clientConverter.toDomain(clientDO);
 	}
 
 	/**
@@ -140,13 +140,13 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public List<ClientDomain> list() {
 
-		List<ClientDO> clientDOs = this.repository.findAll();
+		List<ClientDO> clientDOs = this.clientRepository.findAll();
 		if (CollUtil.isEmpty(clientDOs)) {
 			return Collections.emptyList();
 		}
 
 		return clientDOs.stream()
-			.map(converter::toDomain)
+			.map(clientConverter::toDomain)
 			.collect(Collectors.toList());
 	}
 
@@ -159,8 +159,8 @@ public class ClientServiceImpl implements ClientService {
 	 */
 	@Override
 	public IPage<ClientDomain> page(ClientQuery query) {
-		IPage<ClientDO> clientDOPage = this.repository.findPage(query);
-		return clientDOPage.convert(this.converter::toDomain);
+		IPage<ClientDO> clientDOPage = this.clientRepository.findPage(query);
+		return clientDOPage.convert(this.clientConverter::toDomain);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class ClientServiceImpl implements ClientService {
 	public ClientDomain validate(ClientCommand command) {
 
 		// 校验客户端是否存在
-		ClientDO clientDO = this.repository.findByClientId(command.clientId());
+		ClientDO clientDO = this.clientRepository.findByClientId(command.clientId());
 		ClientError.NOT_FOUND_CLIENT.notNull(clientDO);
 
 		// 校验 redirect_uri
@@ -186,6 +186,6 @@ public class ClientServiceImpl implements ClientService {
 			ClientError.INVALID_REDIRECT_URI.isTrue(isValid);
 		});
 
-		return this.converter.toDomain(clientDO);
+		return this.clientConverter.toDomain(clientDO);
 	}
 }

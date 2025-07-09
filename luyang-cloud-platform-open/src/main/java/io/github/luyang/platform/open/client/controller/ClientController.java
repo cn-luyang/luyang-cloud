@@ -14,7 +14,6 @@ import io.github.luyang.platform.open.client.service.ClientService;
 import io.github.luyang.starter.base.api.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,14 +36,14 @@ import java.util.List;
 @RequestMapping("/client")
 public class ClientController {
 
-	private final ClientConverter converter;
+	private final ClientConverter clientConverter;
 	private final ClientService clientService;
 
 	@PostMapping
 	public Result<ClientResponse> create(@Valid @RequestBody ClientCreateRequest request) {
-		ClientCommand command = this.converter.toCommand(request);
+		ClientCommand command = this.clientConverter.toCommand(request);
 		ClientDomain clientDomain = this.clientService.create(command);
-		return Result.success(this.converter.toResponse(clientDomain));
+		return Result.success(this.clientConverter.toResponse(clientDomain));
 	}
 
 	@DeleteMapping("/{clientId}")
@@ -55,7 +54,7 @@ public class ClientController {
 
 	@PutMapping
 	public Result<Void> update(@Valid @RequestBody ClientUpdateRequest request) {
-		ClientCommand command = this.converter.toCommand(request);
+		ClientCommand command = this.clientConverter.toCommand(request);
 		clientService.update(command);
 		return Result.success();
 	}
@@ -63,7 +62,7 @@ public class ClientController {
 	@GetMapping("/{clientId}")
 	public Result<ClientResponse> get(@PathVariable String clientId) {
 		ClientDomain clientDomain = this.clientService.get(clientId);
-		return Result.success(this.converter.toResponse(clientDomain));
+		return Result.success(this.clientConverter.toResponse(clientDomain));
 	}
 
 	@GetMapping
@@ -74,7 +73,7 @@ public class ClientController {
 		}
 
 		List<ClientResponse> clientResponses = clientDomains.stream()
-			.map(converter::toResponse)
+			.map(clientConverter::toResponse)
 			.toList();
 
 		return Result.success(clientResponses);
@@ -82,10 +81,10 @@ public class ClientController {
 
 	@GetMapping("/page")
 	public Result<IPage<ClientResponse>> page(@Valid ClientQueryRequest request) {
-		ClientQuery clientQuery = this.converter.toQuery(request);
+		ClientQuery clientQuery = this.clientConverter.toQuery(request);
 		IPage<ClientDomain> clientDomainPage = clientService.page(clientQuery);
 
-		IPage<ClientResponse> responsePage = clientDomainPage.convert(this.converter::toResponse);
+		IPage<ClientResponse> responsePage = clientDomainPage.convert(this.clientConverter::toResponse);
 		return Result.success(responsePage);
 	}
 }

@@ -1,9 +1,9 @@
 package io.github.luyang.platform.open.auth.mfa;
 
+import cn.hutool.extra.spring.SpringUtil;
 import io.github.luyang.platform.open.auth.mfa.authenticator.PasswordAuthenticatorHandler;
 import io.github.luyang.platform.open.base.enums.LoginType;
 import io.github.luyang.platform.open.base.enums.error.LoginError;
-import io.github.luyang.starter.web.util.SpringUtil;
 import lombok.experimental.UtilityClass;
 
 import java.util.Map;
