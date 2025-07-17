@@ -1,6 +1,7 @@
 package io.github.luyang.business.jalendar.calendar.service;
 
-import io.github.luyang.business.jalendar.calendar.domain.CalendarCommand;
+import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
+import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
 
 /**
  * 日历业务服务接口
@@ -16,5 +17,14 @@ public interface CalendarService {
 	 * @return 日历业务对象
 	 * @author yang.lu
 	 */
-	void create(CalendarCommand command);
+	CalendarDomain create(CalendarCommand command);
+
+	/**
+	 * 获取日历详情
+	 *
+	 * @param calendarId 日历
+	 * @return 日历业务对象
+	 * @author yang.lu
+	 */
+	CalendarDomain get(String calendarId);
 }

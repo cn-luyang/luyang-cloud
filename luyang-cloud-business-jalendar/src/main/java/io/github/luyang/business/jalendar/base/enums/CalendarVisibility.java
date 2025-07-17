@@ -8,10 +8,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum CalendarType implements IBaseEnum<Integer> {
+public enum CalendarVisibility implements IBaseEnum<Integer> {
 
-	PRIMARY(1, "主日历"),
-	SHARE(2, "共享日历"),
+	PRIVATE(1, "私密（不可订阅）"),
+	GUEST(2, "简览（可订阅，仅忙闲）"),
+	SHARED(3, "公开（可订阅，查看日程）"),
 	;
 
 	@EnumValue

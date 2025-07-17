@@ -2,8 +2,6 @@ package io.github.luyang.business.jalendar.calendar.repository.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.luyang.business.jalendar.base.enums.CalendarColor;
-import io.github.luyang.business.jalendar.base.enums.CalendarType;
-import io.github.luyang.business.jalendar.base.enums.CalendarVisibility;
 import io.github.luyang.starter.mybatis.beans.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,14 +13,12 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "calendar", autoResultMap = true)
-public class CalendarDO extends BaseEntity<CalendarDO, Long> {
+@TableName(value = "calendar_subscribe", autoResultMap = true)
+public class SubscribeDO extends BaseEntity<SubscribeDO, Long> {
 
-	private String calendarId;
 	private String userId;
-	private String name;
-	private CalendarColor color;
-	private CalendarType type;
-	private CalendarVisibility visibility;
-	private String description;
+	private String calendarId;
+	private String displayName;
+	private CalendarColor displayColor;
+	private Boolean displayed;
 }

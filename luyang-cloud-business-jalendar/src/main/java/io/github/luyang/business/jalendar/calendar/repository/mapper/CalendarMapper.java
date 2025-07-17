@@ -1,4 +1,4 @@
-package io.github.luyang.business.jalendar.calendar.repository;
+package io.github.luyang.business.jalendar.calendar.repository.mapper;
 
 import io.github.luyang.business.jalendar.calendar.repository.model.CalendarDO;
 import io.github.luyang.starter.mybatis.support.DataBaseMapper;

@@ -1,10 +1,15 @@
 package io.github.luyang.business.jalendar.calendar.service.impl;
 
 import io.github.luyang.business.jalendar.base.converter.CalendarConverter;
-import io.github.luyang.business.jalendar.calendar.domain.CalendarCommand;
+import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
+import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
 import io.github.luyang.business.jalendar.calendar.repository.CalendarRepository;
+import io.github.luyang.business.jalendar.calendar.repository.model.CalendarDO;
 import io.github.luyang.business.jalendar.calendar.service.CalendarService;
+import io.github.luyang.business.jalendar.calendar.service.SubscribeService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +22,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CalendarServiceImpl implements CalendarService {
 
+	private static final Logger logger = LoggerFactory.getLogger(CalendarServiceImpl.class);
+
+	private final SubscribeService subscribeService;
 	private final CalendarRepository calendarRepository;
 	private final CalendarConverter calendarConverter;
 
 	@Override
 	@Transactional
-	public void create(CalendarCommand command) {
+	public CalendarDomain create(CalendarCommand command) {
 
+		CalendarDO calendarDO = calendarConverter.toDO(command);
+		calendarRepository.save(calendarDO);
+
+		return calendarConverter.toDomain(calendarDO);
+	}
+
+	@Override
+	public CalendarDomain get(String calendarId) {
+		CalendarDO calendarDO = calendarRepository.findByCalendarId(calendarId);
+		return calendarConverter.toDomain(calendarDO);
 	}
 }
