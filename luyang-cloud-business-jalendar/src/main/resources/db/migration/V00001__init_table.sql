@@ -28,6 +28,7 @@ CREATE TABLE `calendar_subscribe`
     `display_name`  VARCHAR(16) DEFAULT NULL COMMENT '日历名称(对于当前身份)',
     `display_color` VARCHAR(16) DEFAULT NULL COMMENT '日历颜色(对于当前身份)',
     `displayed`     BOOLEAN     DEFAULT TRUE COMMENT '是否显示日历(对于当前身份): {[1:显示:true] [0:隐藏:false]}',
+    `unsubscribe`   BOOLEAN     DEFAULT FALSE COMMENT '是否取消订阅(对于当前身份): {[1:是:true] [0:否:false]}',
 
     `created_by`    VARCHAR(64) DEFAULT NULL COMMENT '创建人',
     `created_time`  DATETIME ( 3 ) DEFAULT NULL COMMENT '创建时间',
