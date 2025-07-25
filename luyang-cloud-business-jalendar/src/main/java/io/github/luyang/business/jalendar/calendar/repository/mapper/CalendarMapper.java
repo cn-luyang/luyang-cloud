@@ -1,9 +1,13 @@
 package io.github.luyang.business.jalendar.calendar.repository.mapper;
 
-import io.github.luyang.business.jalendar.calendar.repository.model.CalendarDO;
+import io.github.luyang.business.jalendar.calendar.repository.entity.CalendarEntity;
+import io.github.luyang.business.jalendar.calendar.repository.entity.join.CalendarJO;
 import io.github.luyang.starter.mybatis.support.DataBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface CalendarMapper extends DataBaseMapper<CalendarDO> {
+public interface CalendarMapper extends DataBaseMapper<CalendarEntity> {
+
+	CalendarJO findByCalendarId(@Param("calendarId") String calendarId);
 }

@@ -8,7 +8,7 @@ import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
 import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
 import io.github.luyang.business.jalendar.calendar.domain.command.SubscribeCommand;
 import io.github.luyang.business.jalendar.calendar.repository.SubscribeRepository;
-import io.github.luyang.business.jalendar.calendar.repository.model.SubscribeDO;
+import io.github.luyang.business.jalendar.calendar.repository.entity.SubscribeEntity;
 import io.github.luyang.business.jalendar.calendar.service.CalendarService;
 import io.github.luyang.business.jalendar.calendar.service.SubscribeService;
 import lombok.RequiredArgsConstructor;
@@ -43,32 +43,32 @@ public class SubscribeServiceImpl implements SubscribeService {
 	@Override
 	public void initSubscribe(CalendarCommand command) {
 
-		List<SubscribeDO> subscribeDOs = new ArrayList<>();
+		List<SubscribeEntity> subscribeEntities = new ArrayList<>();
 
 		// 拥有者订阅
-		SubscribeDO ownerSubscribeDO = subscribeConverter.toOwnerSubscribeDO(command);
-		subscribeDOs.add(ownerSubscribeDO);
+		SubscribeEntity ownerSubscribeEntity = subscribeConverter.toOwnerSubscribeEntity(command);
+		subscribeEntities.add(ownerSubscribeEntity);
 
 		// 共享用户订阅
 		List<CalendarSharedUser> calendarSharedUsers = CalendarSharedUser.deduplicateByUserId(command.sharedUsers());
 		calendarSharedUsers.forEach(sharedUser -> {
-			SubscribeDO shareSubscribeDO = subscribeConverter.toSharedSubscribeDO(command, sharedUser);
-			subscribeDOs.add(shareSubscribeDO);
+			SubscribeEntity subscribeEntity = subscribeConverter.toSharedSubscribeEntity(command, sharedUser);
+			subscribeEntities.add(subscribeEntity);
 		});
 
-		this.subscribeRepository.saveBatch(subscribeDOs);
+		this.subscribeRepository.saveBatch(subscribeEntities);
 	}
 
 	@Override
 	public void subscribe(SubscribeCommand command) {
 
-		CalendarDomain calendarDomain = getCalendarService().get(command.calendarId());
+		CalendarDomain calendarDomain = getCalendarService().getDetail(command.calendarId());
 		CalendarError.NOT_FOUND_CALENDAR.isNull(calendarDomain);
 
 		// 私密日历不允许订阅
 		CalendarError.NOT_ALLOWED_SUBSCRIBE.isFalse(calendarDomain.isPrivateCalendar());
 
-		SubscribeDO subscribeDO = subscribeConverter.toDO(command);
-		subscribeDO.insertOrUpdate();
+		SubscribeEntity subscribeEntity = subscribeConverter.toEntity(command);
+		subscribeEntity.insertOrUpdate();
 	}
 }

@@ -4,7 +4,8 @@ import io.github.luyang.business.jalendar.base.converter.CalendarConverter;
 import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
 import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
 import io.github.luyang.business.jalendar.calendar.repository.CalendarRepository;
-import io.github.luyang.business.jalendar.calendar.repository.model.CalendarDO;
+import io.github.luyang.business.jalendar.calendar.repository.entity.CalendarEntity;
+import io.github.luyang.business.jalendar.calendar.repository.entity.join.CalendarJO;
 import io.github.luyang.business.jalendar.calendar.service.CalendarService;
 import io.github.luyang.business.jalendar.calendar.service.SubscribeService;
 import lombok.RequiredArgsConstructor;
@@ -32,18 +33,18 @@ public class CalendarServiceImpl implements CalendarService {
 	@Transactional
 	public CalendarDomain createSharedCalendar(CalendarCommand command) {
 
-		CalendarDO calendarDO = calendarConverter.toSharedCalendarDO(command);
-		calendarDO.insert();
+		CalendarEntity calendarEntity = calendarConverter.toEntity(command);
+		calendarEntity.insert();
 
 		// 订阅日历
 		subscribeService.initSubscribe(command);
 
-		return calendarConverter.toDomain(calendarDO);
+		return calendarConverter.toDomain(calendarEntity);
 	}
 
 	@Override
-	public CalendarDomain get(String calendarId) {
-		CalendarDO calendarDO = calendarRepository.findByCalendarId(calendarId);
-		return calendarConverter.toDomain(calendarDO);
+	public CalendarDomain getDetail(String calendarId) {
+		CalendarJO calendarJO = calendarRepository.findByCalendarId(calendarId);
+		return calendarConverter.toDomain(calendarJO);
 	}
 }

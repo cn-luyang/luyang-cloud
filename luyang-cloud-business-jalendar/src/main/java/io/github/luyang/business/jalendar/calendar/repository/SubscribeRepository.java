@@ -1,8 +1,8 @@
 package io.github.luyang.business.jalendar.calendar.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.github.luyang.business.jalendar.calendar.repository.entity.SubscribeEntity;
 import io.github.luyang.business.jalendar.calendar.repository.mapper.SubscribeMapper;
-import io.github.luyang.business.jalendar.calendar.repository.model.SubscribeDO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,14 +13,14 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class SubscribeRepository extends ServiceImpl<SubscribeMapper, SubscribeDO> {
+public class SubscribeRepository extends ServiceImpl<SubscribeMapper, SubscribeEntity> {
 
 	private final SubscribeMapper subscribeMapper;
 
-	public SubscribeDO findByUserIdAndCalendarId(String userId, String calendarId) {
+	public SubscribeEntity findByUserIdAndCalendarId(String userId, String calendarId) {
 		return this.lambdaQuery()
-			.eq(SubscribeDO::getUserId, userId)
-			.eq(SubscribeDO::getCalendarId, calendarId)
+			.eq(SubscribeEntity::getUserId, userId)
+			.eq(SubscribeEntity::getCalendarId, calendarId)
 			.one();
 	}
 }

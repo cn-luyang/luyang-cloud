@@ -1,20 +1,20 @@
 -- 日历表
 CREATE TABLE `calendar`
 (
-    `id`           BIGINT      NOT NULL COMMENT '主键ID',
-    `calendar_id`  VARCHAR(64) NOT NULL COMMENT '日历ID',
-    `user_id`      VARCHAR(64) NOT NULL COMMENT '用户ID',
-    `name`         VARCHAR(64) NOT NULL COMMENT '日历名称',
-    `color`        VARCHAR(16)  DEFAULT '#007bff' COMMENT '日历颜色 (HEX格式)',
-    `type`         INT          DEFAULT 2 COMMENT '日历类型 {[1:主日历] [2:共享日历] [3:全员日历]}',
-    `visibility`   INT          DEFAULT 3 COMMENT '日历公开范围 {[1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]}',
-    `description`  VARCHAR(256) DEFAULT NULL COMMENT '日历描述',
+    `id`            BIGINT      NOT NULL COMMENT '主键ID',
+    `calendar_id`   VARCHAR(64) NOT NULL COMMENT '日历ID',
+    `user_id`       VARCHAR(64) NOT NULL COMMENT '日历拥有者用户ID',
+    `default_name`  VARCHAR(64) NOT NULL COMMENT '日历默认名称，创建时的名称',
+    `default_color` VARCHAR(16)  DEFAULT '#007bff' COMMENT '日历默认颜色，创建时的颜色',
+    `type`          INT          DEFAULT 2 COMMENT '日历类型 {[1:主日历] [2:共享日历] [3:全员日历]}',
+    `visibility`    INT          DEFAULT 3 COMMENT '日历公开范围 {[1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]}',
+    `description`   VARCHAR(256) DEFAULT NULL COMMENT '日历描述',
 
-    `created_by`   VARCHAR(64)  DEFAULT NULL COMMENT '创建人',
-    `created_time` DATETIME (3) DEFAULT NULL COMMENT '创建时间',
-    `updated_by`   VARCHAR(64)  DEFAULT NULL COMMENT '更新人',
-    `updated_time` DATETIME (3) DEFAULT NULL COMMENT '更新时间',
-    `deleted`      BOOLEAN      DEFAULT FALSE COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
+    `created_by`    VARCHAR(64)  DEFAULT NULL COMMENT '创建人',
+    `created_time`  DATETIME (3) DEFAULT NULL COMMENT '创建时间',
+    `updated_by`    VARCHAR(64)  DEFAULT NULL COMMENT '更新人',
+    `updated_time`  DATETIME (3) DEFAULT NULL COMMENT '更新时间',
+    `deleted`       BOOLEAN      DEFAULT FALSE COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
     PRIMARY KEY (`id`) USING BTREE,
     UNIQUE INDEX `uniq_calendar_id` ( `calendar_id` ASC ) USING BTREE COMMENT '日历ID唯一索引'
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = dynamic COMMENT = '日历表';
@@ -22,12 +22,12 @@ CREATE TABLE `calendar`
 -- 日历订阅表
 CREATE TABLE `calendar_subscribe`
 (
-    `user_id`       VARCHAR(64) NOT NULL COMMENT '用户ID',
+    `user_id`       VARCHAR(64) NOT NULL COMMENT '日历订阅者用户ID',
     `calendar_id`   VARCHAR(64) NOT NULL COMMENT '日历ID',
-    `permission`    VARCHAR(64) NOT NULL COMMENT '日历权限: {[1:忙闲] [2:查看详情] [3:编辑] [4:管理]}',
-    `display_name`  VARCHAR(16) DEFAULT NULL COMMENT '日历显示名称(仅对自己生效)',
-    `display_color` VARCHAR(16) DEFAULT NULL COMMENT '日历显示颜色(仅对自己生效)',
-    `displayed`     BOOLEAN     DEFAULT TRUE COMMENT '是否显示日历(仅对自己生效): {[1:显示:true] [0:隐藏:false]}',
+    `permissions`   VARCHAR(64) NOT NULL COMMENT '订阅者对于日历的权限: {[1:忙闲] [2:查看详情] [3:编辑] [4:管理]}',
+    `display_name`  VARCHAR(16) DEFAULT NULL COMMENT '日历名称(对于当前身份)',
+    `display_color` VARCHAR(16) DEFAULT NULL COMMENT '日历颜色(对于当前身份)',
+    `displayed`     BOOLEAN     DEFAULT TRUE COMMENT '是否显示日历(对于当前身份): {[1:显示:true] [0:隐藏:false]}',
 
     `created_by`    VARCHAR(64) DEFAULT NULL COMMENT '创建人',
     `created_time`  DATETIME ( 3 ) DEFAULT NULL COMMENT '创建时间',

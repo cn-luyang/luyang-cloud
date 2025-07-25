@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.luyang.business.jalendar.calendar.repository.mapper.CalendarMapper">
+    <select id="findByCalendarId" resultType="io.github.luyang.business.jalendar.calendar.repository.entity.join.CalendarJO">
+
+        SELECT
+            t.`calendar_id`,
+            t.`default_name`,
+            t.`default_color`,
+            t.`type`,
+            t.`visibility`,
+            t.`description`,
+            t1.`permissions`,
+            t1.`display_name`,
+            t1.`display_color`,
+            t1.`displayed`
+        FROM
+            `calendar` t
+                INNER JOIN `calendar_subscribe` t1 ON t.`calendar_id` = t1.`calendar_id`
+                AND t1.deleted = 0
+        WHERE
+            t.calendar_id = #{calendarId}
+          AND t.deleted = 0
+
+    </select>
+</mapper>

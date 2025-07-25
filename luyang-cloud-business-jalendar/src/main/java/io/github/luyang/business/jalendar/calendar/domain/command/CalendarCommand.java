@@ -14,26 +14,25 @@ import java.util.List;
  * 用于在 Service 层内部传递创建或更新操作的数据
  * 与外部请求DTO解耦，允许Service层内部数据结构的变化不影响Controller层
  *
- * @param calendarId    日历ID
- * @param userId        用户ID
- * @param calendarName  日历名称
- * @param calendarColor 日历颜色
- * @param visibility    日历公开范围
- * @param calendarType  日历类型
- * @param description   日历描述
- * @param sharedUsers   共享用户列表
+ * @param calendarId   日历ID
+ * @param defaultName  日历默认名称，创建时的名称
+ * @param defaultColor 日历默认颜色，创建时的颜色
+ * @param type         日历类型，[1:主日历] [2:共享日历] [3:全员日历]
+ * @param visibility   日历公开范围，[1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]
+ * @param description  日历描述
+ * @param sharedUsers  共享用户列表
  * @author yang.lu
  */
 public record CalendarCommand(
 	String calendarId,
 	String userId,
-	String calendarName,
-	CalendarColor calendarColor,
-	CalendarType calendarType,
+	String defaultName,
+	CalendarColor defaultColor,
+	CalendarType type,
 	CalendarVisibility visibility,
 	String description,
 	List<CalendarSharedUser> sharedUsers
-	) {
+) {
 
 	public CalendarCommand {
 		if (CollUtil.isEmpty(sharedUsers)) {

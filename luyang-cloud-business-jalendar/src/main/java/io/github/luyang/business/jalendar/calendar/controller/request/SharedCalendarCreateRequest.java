@@ -1,7 +1,6 @@
 package io.github.luyang.business.jalendar.calendar.controller.request;
 
 import io.github.luyang.business.jalendar.base.bean.CalendarSharedUser;
-import io.github.luyang.business.jalendar.base.enums.CalendarColor;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ import java.util.List;
 public record SharedCalendarCreateRequest(
 
 	String calendarName,
-	CalendarColor calendarColor,
+	String calendarColor,
 	Integer visibility,
 	String description,
 	List<CalendarSharedUser> sharedUsers

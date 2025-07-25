@@ -26,5 +26,5 @@ public interface CalendarService {
 	 * @return 日历业务对象
 	 * @author yang.lu
 	 */
-	CalendarDomain get(String calendarId);
+	CalendarDomain getDetail(String calendarId);
 }

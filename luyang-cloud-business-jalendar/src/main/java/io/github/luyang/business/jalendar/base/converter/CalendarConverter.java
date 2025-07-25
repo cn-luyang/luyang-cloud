@@ -8,7 +8,8 @@ import io.github.luyang.business.jalendar.calendar.controller.request.SharedCale
 import io.github.luyang.business.jalendar.calendar.controller.response.CalendarResponse;
 import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
 import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
-import io.github.luyang.business.jalendar.calendar.repository.model.CalendarDO;
+import io.github.luyang.business.jalendar.calendar.repository.entity.CalendarEntity;
+import io.github.luyang.business.jalendar.calendar.repository.entity.join.CalendarJO;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import io.github.luyang.starter.security.util.SecurityUtil;
 import org.mapstruct.Mapper;
@@ -31,16 +32,20 @@ import org.mapstruct.Mapping;
 	})
 public interface CalendarConverter {
 
-	CalendarCommand toCommand(SharedCalendarCreateRequest request);
-
+	@Mapping(target = "type", constant = "SHARED")
+	@Mapping(target = "defaultName", source = "request.calendarName")
 	@Mapping(target = "calendarId", expression = "java(IdUtil.simpleUUID())")
 	@Mapping(target = "userId", expression = "java(SecurityUtil.getUserId())")
-	@Mapping(target = "calendarType", constant = "SHARED")
-	@Mapping(target = "defaultName", source = "calendarName")
-	@Mapping(target = "defaultColor", source = "calendarColor")
-	CalendarDO toSharedCalendarDO(CalendarCommand command);
+	@Mapping(target = "defaultColor", expression = "java(IBaseEnum.getByCode(CalendarColor.class, request.calendarColor()))")
+	@Mapping(target = "visibility", expression = "java(IBaseEnum.getByCode(CalendarVisibility.class, request.visibility()))")
+	CalendarCommand toCommand(SharedCalendarCreateRequest request);
 
-	CalendarDomain toDomain(CalendarDO calendarDO);
+
+	CalendarEntity toEntity(CalendarCommand command);
+
+	CalendarDomain toDomain(CalendarEntity calendarEntity);
+
+	CalendarDomain toDomain(CalendarJO calendarJO);
 
 	CalendarResponse toResponse(CalendarDomain calendarDomain);
 }

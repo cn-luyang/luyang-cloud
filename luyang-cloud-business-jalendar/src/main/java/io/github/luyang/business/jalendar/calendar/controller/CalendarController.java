@@ -2,6 +2,7 @@ package io.github.luyang.business.jalendar.calendar.controller;
 
 import io.github.luyang.business.jalendar.base.converter.CalendarConverter;
 import io.github.luyang.business.jalendar.base.converter.SubscribeConverter;
+import io.github.luyang.business.jalendar.base.enums.CalendarColor;
 import io.github.luyang.business.jalendar.calendar.controller.request.CalendarSubscribeRequest;
 import io.github.luyang.business.jalendar.calendar.controller.request.SharedCalendarCreateRequest;
 import io.github.luyang.business.jalendar.calendar.controller.response.CalendarResponse;
@@ -11,8 +12,11 @@ import io.github.luyang.business.jalendar.calendar.domain.command.SubscribeComma
 import io.github.luyang.business.jalendar.calendar.service.CalendarService;
 import io.github.luyang.business.jalendar.calendar.service.SubscribeService;
 import io.github.luyang.starter.base.api.Result;
+import io.github.luyang.starter.base.enums.IBaseEnum;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,10 +45,20 @@ public class CalendarController {
 		return Result.success(calendarConverter.toResponse(calendarDomain));
 	}
 
+	@GetMapping("/{calendarId}")
+	public Result<CalendarResponse> getDetail(@PathVariable String calendarId) {
+		CalendarDomain calendarDomain = calendarService.getDetail(calendarId);
+		return Result.success(calendarConverter.toResponse(calendarDomain));
+	}
+
 	@PostMapping("/subscribe")
 	public Result<Void> subscribe(@Valid @RequestBody CalendarSubscribeRequest request) {
 		SubscribeCommand command = subscribeConverter.toCommand(request);
 		subscribeService.subscribe(command);
 		return Result.success();
+	}
+
+	public static void main(String[] args) {
+		CalendarColor byCode = IBaseEnum.getByCode(CalendarColor.class, "#FF0000");
 	}
 }

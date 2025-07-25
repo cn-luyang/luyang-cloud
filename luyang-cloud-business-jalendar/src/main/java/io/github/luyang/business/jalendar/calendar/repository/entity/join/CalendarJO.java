@@ -1,15 +1,12 @@
-package io.github.luyang.business.jalendar.calendar.domain;
+package io.github.luyang.business.jalendar.calendar.repository.entity.join;
 
 import io.github.luyang.business.jalendar.base.enums.CalendarColor;
 import io.github.luyang.business.jalendar.base.enums.CalendarPermissions;
 import io.github.luyang.business.jalendar.base.enums.CalendarType;
 import io.github.luyang.business.jalendar.base.enums.CalendarVisibility;
-import io.github.luyang.business.jalendar.base.enums.error.CalendarError;
-import io.github.luyang.starter.base.error.BusinessException;
 
 /**
- * 日历业务领域对象
- * 封装日历的核心业务属性和可能的业务方法
+ * 日历多表 JOIN 对象
  *
  * @param calendarId   日历ID
  * @param defaultName  日历默认名称，创建时的名称
@@ -23,8 +20,8 @@ import io.github.luyang.starter.base.error.BusinessException;
  * @param displayed    是否显示日历，对于当前身份
  * @author yang.lu
  */
+public record CalendarJO(
 
-public record CalendarDomain(
 	String calendarId,
 	String defaultName,
 	CalendarColor defaultColor,
@@ -33,20 +30,8 @@ public record CalendarDomain(
 	String description,
 	CalendarPermissions permissions,
 	String displayName,
-	String displayColor,
+	CalendarColor displayColor,
 	Boolean displayed
+
 ) {
-
-
-	/**
-	 * 检查当前日历是否为私密日历
-	 *
-	 * @return true表示是私密日历，false表示是公开日历
-	 * @throws BusinessException 当visibility为null时抛出
-	 * @author yang.lu
-	 */
-	public boolean isPrivateCalendar() {
-		CalendarError.INCOMPLETE_CALENDAR.notNull(visibility);
-		return CalendarVisibility.PRIVATE == visibility;
-	}
 }

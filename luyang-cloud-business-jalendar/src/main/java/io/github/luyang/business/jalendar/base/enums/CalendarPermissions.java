@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum CalendarPermission implements IBaseEnum<Integer> {
+public enum CalendarPermissions implements IBaseEnum<Integer> {
 
 	BUSY_FREE(1, "忙闲"),
 	VIEW_DETAILS(2, "查看详情"),
