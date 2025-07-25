@@ -8,11 +8,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum CalendarType implements IBaseEnum<Integer> {
+public enum CalendarPermission implements IBaseEnum<Integer> {
 
-	MAIN(1, "主日历"),
-	SHARED(2, "共享日历"),
-	GLOBAL(3, "全员日历"),
+	BUSY_FREE(1, "忙闲"),
+	VIEW_DETAILS(2, "查看详情"),
+	EDIT(3, "编辑"),
+	ADMIN(4, "管理"),
 	;
 
 	@EnumValue

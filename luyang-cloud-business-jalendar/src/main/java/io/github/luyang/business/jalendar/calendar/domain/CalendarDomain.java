@@ -8,10 +8,13 @@ import io.github.luyang.starter.base.error.BusinessException;
  * 日历业务领域对象
  * 封装日历的核心业务属性和可能的业务方法
  *
+ * @param calendarId 日历ID
+ * @param visibility 日历公开范围 [1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]
  * @author yang.lu
  */
 
 public record CalendarDomain(
+	String calendarId,
 	CalendarVisibility visibility
 ) {
 

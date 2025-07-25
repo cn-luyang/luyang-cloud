@@ -30,10 +30,13 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	@Transactional
-	public CalendarDomain create(CalendarCommand command) {
+	public CalendarDomain createSharedCalendar(CalendarCommand command) {
 
-		CalendarDO calendarDO = calendarConverter.toDO(command);
-		calendarRepository.save(calendarDO);
+		CalendarDO calendarDO = calendarConverter.toSharedCalendarDO(command);
+		calendarDO.insert();
+
+		// 订阅日历
+		subscribeService.initSubscribe(command);
 
 		return calendarConverter.toDomain(calendarDO);
 	}

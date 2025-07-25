@@ -20,9 +20,9 @@ public class CalendarDO extends BaseEntity<CalendarDO, Long> {
 
 	private String calendarId;
 	private String userId;
-	private String name;
-	private CalendarColor color;
-	private CalendarType type;
+	private String defaultName;
+	private CalendarColor defaultColor;
+	private CalendarType calendarType;
 	private CalendarVisibility visibility;
 	private String description;
 }

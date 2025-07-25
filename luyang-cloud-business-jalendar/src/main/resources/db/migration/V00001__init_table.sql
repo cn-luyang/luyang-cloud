@@ -22,9 +22,9 @@ CREATE TABLE `calendar`
 -- 日历订阅表
 CREATE TABLE `calendar_subscribe`
 (
-    `user_id`       INT         NOT NULL COMMENT '用户ID',
-    `calendar_id`   INT         NOT NULL COMMENT '日历ID',
-    `role`          VARCHAR(64) NOT NULL COMMENT '日历权限角色: {[1:忙闲] [2:查看详情] [3:编辑] [4:管理]}',
+    `user_id`       VARCHAR(64) NOT NULL COMMENT '用户ID',
+    `calendar_id`   VARCHAR(64) NOT NULL COMMENT '日历ID',
+    `permission`    VARCHAR(64) NOT NULL COMMENT '日历权限: {[1:忙闲] [2:查看详情] [3:编辑] [4:管理]}',
     `display_name`  VARCHAR(16) DEFAULT NULL COMMENT '日历显示名称(仅对自己生效)',
     `display_color` VARCHAR(16) DEFAULT NULL COMMENT '日历显示颜色(仅对自己生效)',
     `displayed`     BOOLEAN     DEFAULT TRUE COMMENT '是否显示日历(仅对自己生效): {[1:显示:true] [0:隐藏:false]}',

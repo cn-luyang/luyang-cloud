@@ -2,8 +2,8 @@ package io.github.luyang.business.jalendar.calendar.controller;
 
 import io.github.luyang.business.jalendar.base.converter.CalendarConverter;
 import io.github.luyang.business.jalendar.base.converter.SubscribeConverter;
-import io.github.luyang.business.jalendar.calendar.controller.request.CalendarCreateRequest;
 import io.github.luyang.business.jalendar.calendar.controller.request.CalendarSubscribeRequest;
+import io.github.luyang.business.jalendar.calendar.controller.request.SharedCalendarCreateRequest;
 import io.github.luyang.business.jalendar.calendar.controller.response.CalendarResponse;
 import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
 import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
@@ -34,10 +34,10 @@ public class CalendarController {
 	private final CalendarConverter calendarConverter;
 	private final SubscribeConverter subscribeConverter;
 
-	@PostMapping
-	public Result<CalendarResponse> create(@Valid @RequestBody CalendarCreateRequest request) {
+	@PostMapping("/shared")
+	public Result<CalendarResponse> createSharedCalendar(@Valid @RequestBody SharedCalendarCreateRequest request) {
 		CalendarCommand command = calendarConverter.toCommand(request);
-		CalendarDomain calendarDomain = calendarService.create(command);
+		CalendarDomain calendarDomain = calendarService.createSharedCalendar(command);
 		return Result.success(calendarConverter.toResponse(calendarDomain));
 	}
 

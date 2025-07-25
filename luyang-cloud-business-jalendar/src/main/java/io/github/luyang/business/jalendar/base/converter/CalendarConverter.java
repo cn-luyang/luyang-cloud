@@ -4,12 +4,13 @@ import cn.hutool.core.util.IdUtil;
 import io.github.luyang.business.jalendar.base.enums.CalendarColor;
 import io.github.luyang.business.jalendar.base.enums.CalendarType;
 import io.github.luyang.business.jalendar.base.enums.CalendarVisibility;
-import io.github.luyang.business.jalendar.calendar.controller.request.CalendarCreateRequest;
+import io.github.luyang.business.jalendar.calendar.controller.request.SharedCalendarCreateRequest;
 import io.github.luyang.business.jalendar.calendar.controller.response.CalendarResponse;
 import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
 import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
 import io.github.luyang.business.jalendar.calendar.repository.model.CalendarDO;
 import io.github.luyang.starter.base.enums.IBaseEnum;
+import io.github.luyang.starter.security.util.SecurityUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -21,16 +22,23 @@ import org.mapstruct.Mapping;
 @Mapper(
 	componentModel = "spring",
 	imports = {
-		IBaseEnum.class, CalendarColor.class, CalendarType.class, CalendarVisibility.class, IdUtil.class
+		SecurityUtil.class,
+		IBaseEnum.class,
+		CalendarColor.class,
+		CalendarType.class,
+		CalendarVisibility.class,
+		IdUtil.class
 	})
 public interface CalendarConverter {
 
-	@Mapping(target = "calendarId", expression = "java(IdUtil.simpleUUID())")
-	@Mapping(target = "color", expression = "java(IBaseEnum.getByCode(CalendarColor.class, request.color()))")
-	@Mapping(target = "visibility", expression = "java(IBaseEnum.getByCode(CalendarVisibility.class, request.visibility()))")
-	CalendarCommand toCommand(CalendarCreateRequest request);
+	CalendarCommand toCommand(SharedCalendarCreateRequest request);
 
-	CalendarDO toDO(CalendarCommand command);
+	@Mapping(target = "calendarId", expression = "java(IdUtil.simpleUUID())")
+	@Mapping(target = "userId", expression = "java(SecurityUtil.getUserId())")
+	@Mapping(target = "calendarType", constant = "SHARED")
+	@Mapping(target = "defaultName", source = "calendarName")
+	@Mapping(target = "defaultColor", source = "calendarColor")
+	CalendarDO toSharedCalendarDO(CalendarCommand command);
 
 	CalendarDomain toDomain(CalendarDO calendarDO);
 
