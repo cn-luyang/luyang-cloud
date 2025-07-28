@@ -4,7 +4,7 @@ CREATE TABLE `calendar`
     `id`            BIGINT      NOT NULL COMMENT '主键ID',
     `calendar_id`   VARCHAR(64) NOT NULL COMMENT '日历ID',
     `user_id`       VARCHAR(64) NOT NULL COMMENT '日历拥有者用户ID',
-    `default_name`  VARCHAR(64) NOT NULL COMMENT '日历默认名称，创建时的名称',
+    `default_name`  VARCHAR(16) NOT NULL COMMENT '日历默认名称，创建时的名称',
     `default_color` VARCHAR(16)  DEFAULT '#007bff' COMMENT '日历默认颜色，创建时的颜色',
     `type`          INT          DEFAULT 2 COMMENT '日历类型 {[1:主日历] [2:共享日历] [3:全员日历]}',
     `visibility`    INT          DEFAULT 3 COMMENT '日历公开范围 {[1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]}',
@@ -24,7 +24,7 @@ CREATE TABLE `calendar_subscribe`
 (
     `user_id`       VARCHAR(64) NOT NULL COMMENT '日历订阅者用户ID',
     `calendar_id`   VARCHAR(64) NOT NULL COMMENT '日历ID',
-    `permissions`   VARCHAR(64) NOT NULL COMMENT '订阅者对于日历的权限: {[1:忙闲] [2:查看详情] [3:编辑] [4:管理]}',
+    `permissions`   INT         NOT NULL COMMENT '订阅者对于日历的权限: {[1:忙闲] [2:查看详情] [3:编辑] [4:管理]}',
     `display_name`  VARCHAR(16) DEFAULT NULL COMMENT '日历名称(对于当前身份)',
     `display_color` VARCHAR(16) DEFAULT NULL COMMENT '日历颜色(对于当前身份)',
     `displayed`     BOOLEAN     DEFAULT TRUE COMMENT '是否显示日历(对于当前身份): {[1:显示:true] [0:隐藏:false]}',

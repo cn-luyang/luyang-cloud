@@ -31,7 +31,7 @@ public class CalendarEntity extends BaseEntity<CalendarEntity, Long> {
 	private CalendarColor defaultColor;
 
 	/** 日历类型 {[1:主日历] [2:共享日历] [3:全员日历]} */
-	private CalendarType calendarType;
+	private CalendarType type;
 
 	/** 日历公开范围 {[1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]} */
 	private CalendarVisibility visibility;

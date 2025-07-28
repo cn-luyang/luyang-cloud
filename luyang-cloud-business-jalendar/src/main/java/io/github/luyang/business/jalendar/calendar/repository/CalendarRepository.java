@@ -2,7 +2,6 @@ package io.github.luyang.business.jalendar.calendar.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.github.luyang.business.jalendar.calendar.repository.entity.CalendarEntity;
-import io.github.luyang.business.jalendar.calendar.repository.entity.join.CalendarJO;
 import io.github.luyang.business.jalendar.calendar.repository.mapper.CalendarMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,7 +22,11 @@ public class CalendarRepository extends ServiceImpl<CalendarMapper, CalendarEnti
 		return super.save(calendarEntity);
 	}
 
-	public CalendarJO findByCalendarId(String calendarId) {
-		return calendarMapper.findByCalendarId(calendarId);
+	public CalendarEntity findByCalendarId(String calendarId) {
+		return calendarMapper.selectOne(CalendarEntity::getCalendarId, calendarId);
 	}
+
+//	public CalendarJO findByCalendarId(String calendarId) {
+//		return calendarMapper.findByCalendarId(calendarId);
+//	}
 }

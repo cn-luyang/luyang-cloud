@@ -1,11 +1,11 @@
 package io.github.luyang.business.jalendar.calendar.service.impl;
 
 import io.github.luyang.business.jalendar.base.converter.CalendarConverter;
-import io.github.luyang.business.jalendar.calendar.domain.CalendarDomain;
-import io.github.luyang.business.jalendar.calendar.domain.command.CalendarCommand;
+import io.github.luyang.business.jalendar.calendar.domain.command.CreateCalendarCommand;
+import io.github.luyang.business.jalendar.calendar.domain.dto.CreateCalendarDTO;
+import io.github.luyang.business.jalendar.calendar.domain.dto.GetCalendarSummaryDTO;
 import io.github.luyang.business.jalendar.calendar.repository.CalendarRepository;
 import io.github.luyang.business.jalendar.calendar.repository.entity.CalendarEntity;
-import io.github.luyang.business.jalendar.calendar.repository.entity.join.CalendarJO;
 import io.github.luyang.business.jalendar.calendar.service.CalendarService;
 import io.github.luyang.business.jalendar.calendar.service.SubscribeService;
 import lombok.RequiredArgsConstructor;
@@ -31,20 +31,23 @@ public class CalendarServiceImpl implements CalendarService {
 
 	@Override
 	@Transactional
-	public CalendarDomain createSharedCalendar(CalendarCommand command) {
+	public CreateCalendarDTO create(CreateCalendarCommand command) {
 
-		CalendarEntity calendarEntity = calendarConverter.toEntity(command);
-		calendarEntity.insert();
+		CalendarEntity calendarEntity = calendarConverter.buildEntity(command);
+		calendarRepository.save(calendarEntity);
 
-		// 订阅日历
-		subscribeService.initSubscribe(command);
+		String calendarId = calendarEntity.getCalendarId();
 
-		return calendarConverter.toDomain(calendarEntity);
+		subscribeService.initSubscribe(calendarId, command);
+
+		return CreateCalendarDTO.build(calendarId);
 	}
 
 	@Override
-	public CalendarDomain getDetail(String calendarId) {
-		CalendarJO calendarJO = calendarRepository.findByCalendarId(calendarId);
-		return calendarConverter.toDomain(calendarJO);
+	public GetCalendarSummaryDTO getSummary(String calendarId) {
+
+		CalendarEntity calendarEntity = calendarRepository.findByCalendarId(calendarId);
+
+		return calendarConverter.buildGetCalendarSummaryDTO(calendarEntity);
 	}
 }

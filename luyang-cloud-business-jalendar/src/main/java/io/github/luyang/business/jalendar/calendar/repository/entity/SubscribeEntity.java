@@ -34,4 +34,7 @@ public class SubscribeEntity extends BaseEntity<SubscribeEntity, Long> {
 
 	/** 是否显示日历(对于当前身份): {[1:显示:true] [0:隐藏:false]} */
 	private Boolean displayed;
+
+	/** 是否取消订阅(对于当前身份): {[1:是:true] [0:否:false]} */
+	private Boolean unsubscribe;
 }
