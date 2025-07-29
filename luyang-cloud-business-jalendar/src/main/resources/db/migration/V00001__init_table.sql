@@ -38,6 +38,21 @@ CREATE TABLE `calendar_subscribe`
     PRIMARY KEY (`user_id`, `calendar_id`, `deleted`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC COMMENT = '日历订阅表';
 
+-- 日历管理员表
+CREATE TABLE `calendar_admin`
+(
+    `id`           BIGINT      NOT NULL COMMENT '主键ID',
+    `user_id`      VARCHAR(64) NOT NULL COMMENT '管理员用户ID',
+
+    `created_by`   VARCHAR(64) DEFAULT NULL COMMENT '创建人',
+    `created_time` DATETIME (3) DEFAULT NULL COMMENT '创建时间',
+    `updated_by`   VARCHAR(64) DEFAULT NULL COMMENT '更新人',
+    `updated_time` DATETIME (3) DEFAULT NULL COMMENT '更新时间',
+    `deleted`      BOOLEAN     DEFAULT FALSE COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = dynamic COMMENT = '日历管理员表';
+
+
 CREATE TABLE `schedule`
 (
     `id`           BIGINT       NOT NULL COMMENT '主键ID',

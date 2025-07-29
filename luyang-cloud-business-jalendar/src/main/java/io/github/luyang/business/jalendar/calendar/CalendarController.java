@@ -27,6 +27,4 @@ public class CalendarController {
 	public Result<CreateCalendarDTO> createSharedCalendar(@Valid @RequestBody CreateCalendarCommand command) {
 		return Result.success(calendarService.create(command));
 	}
-
-	
 }
