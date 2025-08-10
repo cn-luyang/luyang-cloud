@@ -1,12 +1,12 @@
-package io.github.luyang.business.jalendar.base.converter;
+package io.github.luyang.business.jalendar.calendar.converter;
 
 import cn.hutool.core.util.IdUtil;
 import io.github.luyang.business.jalendar.base.enums.CalendarColor;
 import io.github.luyang.business.jalendar.base.enums.CalendarType;
 import io.github.luyang.business.jalendar.base.enums.CalendarVisibility;
-import io.github.luyang.business.jalendar.calendar.domain.command.CreateCalendarCommand;
-import io.github.luyang.business.jalendar.calendar.domain.dto.GetCalendarSummaryDTO;
+import io.github.luyang.business.jalendar.calendar.controller.request.CreateCalendarRequest;
 import io.github.luyang.business.jalendar.calendar.repository.entity.CalendarEntity;
+import io.github.luyang.business.jalendar.calendar.service.command.CalendarCommand;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import io.github.luyang.starter.security.util.SecurityUtil;
 import org.mapstruct.Mapper;
@@ -28,15 +28,17 @@ import org.mapstruct.Mapping;
 		IdUtil.class
 	})
 public interface CalendarConverter {
+
 	@Mapping(target = "type", constant = "SHARED")
 	@Mapping(target = "defaultName", source = "name")
 	@Mapping(target = "calendarId", expression = "java(IdUtil.nanoId())")
 	@Mapping(target = "userId", expression = "java(SecurityUtil.getUserId())")
-	@Mapping(target = "visibility", expression = "java(IBaseEnum.getByCode(CalendarVisibility.class, command.visibility()))")
-	@Mapping(target = "defaultColor", expression = "java(IBaseEnum.getByCode(CalendarColor.class, command.color()))")
+	@Mapping(target = "visibility", expression = "java(IBaseEnum.getByCode(CalendarVisibility.class, request.visibility()))")
+	@Mapping(target = "defaultColor", expression = "java(IBaseEnum.getByCode(CalendarColor.class, request.color()))")
+	CalendarCommand buildCommand(CreateCalendarRequest request);
 
-	CalendarEntity buildEntity(CreateCalendarCommand command);
+	@Mapping(target = "permissions", expression = "java(IBaseEnum.getByCode(CalendarPermissions.class, sharedUser.permissions()))")
+	CalendarCommand.SharedUser buildCommandSharedUser(CreateCalendarRequest.SharedUser sharedUser);
 
-
-	GetCalendarSummaryDTO buildGetCalendarSummaryDTO(CalendarEntity calendarEntity);
+	CalendarEntity buildEntity(CalendarCommand command);
 }

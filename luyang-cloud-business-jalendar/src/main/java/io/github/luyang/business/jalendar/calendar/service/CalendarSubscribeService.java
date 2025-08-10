@@ -3,11 +3,9 @@ package io.github.luyang.business.jalendar.calendar.service;
 import io.github.luyang.business.jalendar.calendar.service.command.CalendarCommand;
 
 /**
- * 日历业务服务接口
- *
  * @author yang.lu
  */
-public interface CalendarService {
+public interface CalendarSubscribeService {
 
-	String createCalendar(CalendarCommand command);
+	void initSubscribe(CalendarCommand command);
 }

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "calendar_subscribe", autoResultMap = true)
-public class SubscribeEntity extends BaseEntity<SubscribeEntity, Long> {
+public class CalendarSubscribeEntity extends BaseEntity<CalendarSubscribeEntity, Long> {
 
 	/** 日历订阅者用户ID */
 	private String userId;
