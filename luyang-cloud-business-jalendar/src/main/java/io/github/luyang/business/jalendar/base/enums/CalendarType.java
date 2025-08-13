@@ -8,14 +8,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum CalendarType implements IBaseEnum<Integer> {
+public enum CalendarType implements IBaseEnum<String> {
 
-	MAIN(1, "主日历"),
-	SHARED(2, "共享日历"),
-	GLOBAL(3, "全员日历"),
+	MAIN("MAIN", "主日历"),
+	SHARED("SHARED", "共享日历"),
+	GLOBAL("GLOBAL", "全员日历"),
 	;
 
 	@EnumValue
-	private final Integer code;
+	private final String code;
 	private final String message;
 }
