@@ -31,6 +31,16 @@
         <module>luyang-cloud-platform-uac</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -71,6 +81,41 @@
                     <source>21</source>
                     <target>21</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.7.0</version>
+                <configuration>
+                    <!-- 设置扁平化模式为 'oss'（开源发布模式），仅保留必要字段如 groupId、artifactId、version 等 -->
+                    <flattenMode>oss</flattenMode>
+                    <!-- 是否更新项目中的 pom.xml 文件（将扁平化结果写回到 pom 文件） -->
+                    <updatePomFile>true</updatePomFile>
+                </configuration>
+                <executions>
+                    <!-- 在 process-resources 阶段执行 flatten 操作，生成扁平化后的 POM 文件，便于发布到 Maven 仓库 -->
+                    <execution>
+                        <!-- 扁平化执行标识 -->
+                        <id>flatten</id>
+                        <!-- 在处理资源阶段执行 -->
+                        <phase>process-resources</phase>
+                        <goals>
+                            <!-- 执行扁平化操作 -->
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <!-- 在 clean 阶段执行 clean 操作，清除 flatten 生成的临时文件（如原始 pom 的备份） -->
+                    <execution>
+                        <!-- 清理扁平化执行标识 -->
+                        <id>flatten.clean</id>
+                        <!-- 在清理阶段执行 -->
+                        <phase>clean</phase>
+                        <goals>
+                            <!-- 执行清理操作 -->
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
