@@ -18,8 +18,7 @@ RUN apk add --no-cache tzdata && \
 WORKDIR /app
 
 # 从宿主机复制编译好的jar包到容器（构建时）
-# 使用固定名称而不是通配符，更明确
-COPY target/jenkins-test-0.0.1-SNAPSH0T.jar app.jar
+COPY target/*.jar app.jar
 
 # ========== 运行时环境配置 ==========
 # 设置环境变量（可在运行时覆盖）
@@ -29,7 +28,7 @@ ENV JAVA_OPTS="-Xms512m -Xmx512m" \
     TZ=Asia/Shanghai
 
 # 声明容器运行时暴露的端口（元数据）
-EXPOSE 48084
+EXPOSE 8081
 
 # ========== 容器启动配置 ==========
 # 使用 ENTRYPOINT 允许通过 CMD 传递参数
