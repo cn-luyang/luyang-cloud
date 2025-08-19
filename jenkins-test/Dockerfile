@@ -1,5 +1,5 @@
 # 使用基于 Alpine 的官方 Eclipse Temurin JRE 21 镜像作为基础镜像（容器内）
-FROM eclipse-temurin:21-jre
+FROM registry.cn-hangzhou.aliyuncs.com/xx_blog/openjdk:21-jdk
 
 # 设置镜像元数据 - 维护者信息（构建时）
 # LABEL maintainer="cn_luyang@163.com"
@@ -9,7 +9,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # 从宿主机复制编译好的jar包到容器（构建时）
-COPY target/*.jar app.jar
+COPY target/*.jar /app.jar
 
 # ========== 容器内操作 ==========
 # 安装时区数据并配置上海时区（容器内）
