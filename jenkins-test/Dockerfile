@@ -6,7 +6,6 @@ FROM registry.cn-hangzhou.aliyuncs.com/xx_blog/openjdk:21-jdk
 
 # ========== 宿主机与容器交互操作 ==========
 # 创建工作目录（容器内）
-WORKDIR /app
 
 # 从宿主机复制编译好的jar包到容器（构建时）
 COPY target/*.jar /app.jar
