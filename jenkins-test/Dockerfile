@@ -4,21 +4,20 @@ FROM eclipse-temurin:21-jre
 # 设置镜像元数据 - 维护者信息（构建时）
 # LABEL maintainer="cn_luyang@163.com"
 
-# ========== 容器内操作 ==========
-# 安装时区数据并配置上海时区（容器内）
-# --no-cache 避免缓存，减小镜像体积
-RUN apk add --no-cache tzdata && \
-    # 创建时区软链接
-    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    # 设置时区配置文件
-    echo 'Asia/Shanghai' > /etc/timezone
-
 # ========== 宿主机与容器交互操作 ==========
 # 创建工作目录（容器内）
 WORKDIR /app
 
 # 从宿主机复制编译好的jar包到容器（构建时）
 COPY target/*.jar app.jar
+
+# ========== 容器内操作 ==========
+# 安装时区数据并配置上海时区（容器内）
+# --no-cache 避免缓存，减小镜像体积
+RUN apk add -U tzdata; \
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
+    echo 'Asia/Shanghai' >/etc/timezone; \
+    touch /app.jar;
 
 # ========== 运行时环境配置 ==========
 # 设置环境变量（可在运行时覆盖）
