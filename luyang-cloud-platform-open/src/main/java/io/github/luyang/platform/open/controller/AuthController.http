@@ -1,0 +1,10 @@
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "clientId": "cli_CMXsPy7AO0pnryqg",
+    "redirectUri": "https://www.baidu.com/",
+    "account": "测试",
+    "credential": "测试",
+    "loginType": "password"
+}

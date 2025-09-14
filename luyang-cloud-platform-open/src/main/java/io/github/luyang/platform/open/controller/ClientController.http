@@ -1,0 +1,8 @@
+POST {{baseUrl}}/client
+Content-Type: application/json
+
+{
+    "clientName": "Test15",
+    "redirectUris": ["www.baidu.com"],
+    "description": "测试"
+}
