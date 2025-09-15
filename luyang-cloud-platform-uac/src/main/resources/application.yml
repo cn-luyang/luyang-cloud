@@ -21,3 +21,19 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+dubbo:
+  registry:
+    address: nacos://${NACOS_HOST}
+    username: ${NACOS_USERNAME}
+    password: ${NACOS_PASSWORD}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: -1
+  application:
+    name: ${spring.application.name}
+    qos-enable: false
+  provider:
+    group: ${spring.application.name}
+  consumer:
+    check: false

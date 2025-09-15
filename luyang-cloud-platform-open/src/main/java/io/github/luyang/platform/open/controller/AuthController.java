@@ -1,13 +1,13 @@
 package io.github.luyang.platform.open.controller;
 
-import io.github.luyang.platform.open.beans.request.LoginReq;
 import io.github.luyang.platform.open.service.AuthService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 /**
  * 认证相关控制器
@@ -22,7 +22,7 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/login")
-	public void login(@Valid @RequestBody LoginReq loginReq) {
-		authService.login(loginReq);
+	public void login(@RequestBody Map<String, Object> maps) {
+		authService.login(maps);
 	}
 }

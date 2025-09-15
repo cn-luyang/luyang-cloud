@@ -8,13 +8,17 @@ import io.github.luyang.platform.uac.beans.domain.UserDomain;
 import io.github.luyang.platform.uac.beans.enums.error.UserError;
 import io.github.luyang.platform.uac.service.UserService;
 import io.github.luyang.starter.base.api.Result;
+import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 
 /**
  * @author yang.lu
  */
 @DubboService
-public record RemoteUserServiceImpl(UserService userService) implements RemoteUserService {
+@RequiredArgsConstructor
+public class RemoteUserServiceImpl implements RemoteUserService {
+
+	private final UserService userService;
 
 	@Override
 	public Result<AccountAuthResponse> accountAuth(AccountAuthRequest accountAuthRequest) {

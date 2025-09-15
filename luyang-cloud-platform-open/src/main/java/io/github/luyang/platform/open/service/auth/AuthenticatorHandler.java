@@ -1,7 +1,8 @@
 package io.github.luyang.platform.open.service.auth;
 
 import io.github.luyang.api.uac.response.AccountAuthResponse;
-import io.github.luyang.platform.open.beans.request.LoginReq;
+
+import java.util.Map;
 
 /**
  * 认证处理器接口
@@ -10,5 +11,5 @@ import io.github.luyang.platform.open.beans.request.LoginReq;
  */
 public interface AuthenticatorHandler {
 
-	AccountAuthResponse authenticate(LoginReq loginReq);
+	AccountAuthResponse authenticate(Map<String, Object> maps);
 }
