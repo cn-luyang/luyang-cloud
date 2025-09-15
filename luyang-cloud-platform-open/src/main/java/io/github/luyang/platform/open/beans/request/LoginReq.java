@@ -10,7 +10,7 @@ package io.github.luyang.platform.open.beans.request;
  * @param loginType   认证类型(密码/短信等)，非空
  * @author yang.lu
  */
-public record LoginRequest(
+public record LoginReq(
 	String clientId,
 	String redirectUri,
 	String account,

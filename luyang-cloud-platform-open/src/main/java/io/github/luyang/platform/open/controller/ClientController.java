@@ -1,6 +1,6 @@
 package io.github.luyang.platform.open.controller;
 
-import io.github.luyang.platform.open.beans.request.ClientCreateRequest;
+import io.github.luyang.platform.open.beans.request.ClientCreateReq;
 import io.github.luyang.platform.open.service.ClientService;
 import io.github.luyang.starter.base.api.Result;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class ClientController {
 	private final ClientService clientService;
 
 	@PostMapping
-	public Result<String> create(@RequestBody ClientCreateRequest request) {
-		String clientId = clientService.create(request);
+	public Result<String> create(@RequestBody ClientCreateReq clientCreateReq) {
+		String clientId = clientService.create(clientCreateReq);
 		return Result.success(clientId);
 	}
 }

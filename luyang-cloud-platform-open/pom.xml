@@ -15,6 +15,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.cn-luyang</groupId>
+            <artifactId>luyang-cloud-api-uac</artifactId>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
@@ -25,6 +29,10 @@
         <dependency>
             <groupId>io.github.cn-luyang</groupId>
             <artifactId>luyang-framework-starter-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.cn-luyang</groupId>
+            <artifactId>luyang-framework-starter-dubbo</artifactId>
         </dependency>
     </dependencies>
 </project>

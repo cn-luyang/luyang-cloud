@@ -2,7 +2,7 @@ package io.github.luyang.platform.open.util;
 
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
-import io.github.luyang.platform.open.enums.TokenStyle;
+import io.github.luyang.platform.open.beans.enums.TokenStyle;
 import lombok.experimental.UtilityClass;
 
 /**

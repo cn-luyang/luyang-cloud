@@ -3,11 +3,13 @@ package io.github.luyang.platform.open.service.impl;
 import io.github.luyang.platform.open.beans.convert.ClientConverter;
 import io.github.luyang.platform.open.beans.domain.ClientDomain;
 import io.github.luyang.platform.open.beans.entity.ClientEntity;
-import io.github.luyang.platform.open.beans.request.ClientCreateRequest;
-import io.github.luyang.platform.open.enums.error.ClientError;
+import io.github.luyang.platform.open.beans.enums.error.ClientError;
+import io.github.luyang.platform.open.beans.request.ClientCreateReq;
 import io.github.luyang.platform.open.repository.ClientRepository;
 import io.github.luyang.platform.open.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,16 +21,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
 
+	private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
+
 	private final ClientRepository clientRepository;
 	private final ClientConverter clientConverter;
 
 	@Override
-	public String create(ClientCreateRequest request) {
+	public String create(ClientCreateReq clientCreateReq) {
 
-		boolean hasClientName = clientRepository.existsClientName(request.clientName());
+		boolean hasClientName = clientRepository.existsClientName(clientCreateReq.clientName());
 		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
-		ClientEntity entity = clientConverter.buildEntity(request);
+		ClientEntity entity = clientConverter.buildEntity(clientCreateReq);
 
 		clientRepository.save(entity);
 

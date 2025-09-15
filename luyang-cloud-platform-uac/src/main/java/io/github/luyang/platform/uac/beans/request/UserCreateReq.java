@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.beans.request;
 
 /**
- * 创建用户请求 (Request)
+ * 创建用户请求
  *
  * @param zhName   中文名，非空，最大长度 64
  * @param enName   英文名，可选，最大长度 64
@@ -9,7 +9,7 @@ package io.github.luyang.platform.uac.beans.request;
  * @param gender   性别，可选
  * @author yang.lu
  */
-public record UserCreateRequest(
+public record UserCreateReq(
 	String zhName,
 	String enName,
 	String email,

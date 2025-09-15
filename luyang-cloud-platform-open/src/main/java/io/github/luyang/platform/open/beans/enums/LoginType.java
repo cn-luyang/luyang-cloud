@@ -1,4 +1,4 @@
-package io.github.luyang.platform.open.enums;
+package io.github.luyang.platform.open.beans.enums;
 
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import lombok.AccessLevel;

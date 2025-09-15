@@ -17,7 +17,7 @@ import java.util.List;
  * @param description          应用描述，最多 256 字符
  * @author yang.lu
  */
-public record ClientCreateRequest(
+public record ClientCreateReq(
 
 	@NotBlank(message = "应用名不能为空")
 	@Size(max = 64, message = "应用名不能超过 64 个字符")

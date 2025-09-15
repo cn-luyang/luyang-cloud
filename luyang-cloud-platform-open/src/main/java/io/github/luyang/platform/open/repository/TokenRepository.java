@@ -15,6 +15,13 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class TokenRepository extends ServiceImpl<TokenMapper, TokenEntity> {
 
+	/**
+	 * 移除指定客户端和用户的所有 Token
+	 *
+	 * @param clientId 客户端 ID
+	 * @param userId   用户 ID
+	 * @author yang.lu
+	 */
 	public void removeByClientIdAndUserId(String clientId, String userId) {
 		this.lambdaUpdate()
 			.eq(TokenEntity::getClientId, clientId)

@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uac.enums;
+package io.github.luyang.platform.uac.beans.enums;
 
 /**
  * @author yang.lu

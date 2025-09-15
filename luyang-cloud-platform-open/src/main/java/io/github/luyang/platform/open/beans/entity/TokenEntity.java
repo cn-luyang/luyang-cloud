@@ -19,7 +19,7 @@ import java.util.Map;
 @Getter
 @Setter
 @TableName(value = "token", autoResultMap = true)
-public class TokenEntity extends BaseEntity<TokenEntity> {
+public class TokenEntity extends BaseEntity {
 
 	@TableId
 	private String id;

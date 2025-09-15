@@ -1,13 +1,16 @@
 package io.github.luyang.platform.open.service.impl;
 
-import cn.hutool.core.util.IdUtil;
-import io.github.luyang.platform.open.beans.command.UserTokenCreateCommand;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.map.MapUtil;
+import io.github.luyang.api.uac.response.AccountAuthResponse;
+import io.github.luyang.platform.open.beans.constant.AuthConstant;
 import io.github.luyang.platform.open.beans.domain.ClientDomain;
 import io.github.luyang.platform.open.beans.domain.TokenDomain;
-import io.github.luyang.platform.open.beans.request.LoginRequest;
-import io.github.luyang.platform.open.constant.AuthConstant;
-import io.github.luyang.platform.open.enums.LoginType;
-import io.github.luyang.platform.open.enums.error.ClientError;
+import io.github.luyang.platform.open.beans.enums.LoginType;
+import io.github.luyang.platform.open.beans.enums.error.ClientError;
+import io.github.luyang.platform.open.beans.param.UserTokenCreateParam;
+import io.github.luyang.platform.open.beans.request.LoginReq;
 import io.github.luyang.platform.open.service.AuthService;
 import io.github.luyang.platform.open.service.ClientService;
 import io.github.luyang.platform.open.service.TokenService;
@@ -19,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.HashMap;
 
 /**
  * 认证业务服务实现类
@@ -37,38 +38,38 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	@SneakyThrows
-	public void login(LoginRequest loginRequest) {
+	public void login(LoginReq loginReq) {
 
 		// 获取客户端信息
-		ClientDomain clientDomain = clientService.get(loginRequest.clientId());
+		ClientDomain clientDomain = clientService.get(loginReq.clientId());
 		ClientError.NOT_FOUND_CLIENT.notNull(clientDomain);
 
 		// 校验回调地址
-		boolean validRedirectUri = clientDomain.isValidRedirectUri(loginRequest.redirectUri());
+		boolean validRedirectUri = clientDomain.isValidRedirectUri(loginReq.redirectUri());
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
 
 		// 获取认证处理器
-		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginRequest.loginType());
+		LoginType loginType = IBaseEnum.getByCode(LoginType.class, loginReq.loginType());
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginType);
 
 		// 执行认证逻辑
-		authenticatorHandler.authenticate(loginRequest);
+		AccountAuthResponse accountAuthResponse = authenticatorHandler.authenticate(loginReq);
 
 		// 构建用户token创建命名对象
-		UserTokenCreateCommand userTokenCreateCommand = new UserTokenCreateCommand(
+		UserTokenCreateParam userTokenCreateParam = new UserTokenCreateParam(
 			clientDomain.clientId(),
-			IdUtil.randomUUID(),
-			new HashMap<>(),
+			accountAuthResponse.userId(),
+			BeanUtil.beanToMap(accountAuthResponse, MapUtil.newHashMap(), CopyOptions.create().setIgnoreProperties(AccountAuthResponse::userId)),
 			clientDomain.accessTokenValidity(),
 			clientDomain.refreshTokenValidity()
 		);
 
 		// 创建用户 Token
-		TokenDomain tokenDomain = tokenService.createUserToken(userTokenCreateCommand);
+		TokenDomain tokenDomain = tokenService.createUserToken(userTokenCreateParam);
 
 		// 构建重定向 URI
 		String loginUri = UriComponentsBuilder
-			.fromUriString(loginRequest.redirectUri())
+			.fromUriString(loginReq.redirectUri())
 			.queryParam(AuthConstant.ACCESS_TOKEN, tokenDomain.accessToken())
 			.queryParam(AuthConstant.REFRESH_TOKEN, tokenDomain.refreshToken())
 			.build()

@@ -1,8 +1,8 @@
 package io.github.luyang.platform.open.service.auth;
 
 import cn.hutool.extra.spring.SpringUtil;
-import io.github.luyang.platform.open.enums.LoginType;
-import io.github.luyang.platform.open.enums.error.LoginError;
+import io.github.luyang.platform.open.beans.enums.LoginType;
+import io.github.luyang.platform.open.beans.enums.error.LoginError;
 import io.github.luyang.platform.open.service.auth.authenticator.PasswordAuthenticatorHandler;
 import lombok.experimental.UtilityClass;
 
@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 登录认证上下文
+ *
  * @author yang.lu
  */
 @UtilityClass

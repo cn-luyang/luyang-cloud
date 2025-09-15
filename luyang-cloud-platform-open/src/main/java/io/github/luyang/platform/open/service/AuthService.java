@@ -1,7 +1,6 @@
 package io.github.luyang.platform.open.service;
 
-import io.github.luyang.platform.open.beans.request.LoginRequest;
-import jakarta.validation.Valid;
+import io.github.luyang.platform.open.beans.request.LoginReq;
 
 /**
  * 认证业务服务接口
@@ -11,10 +10,9 @@ import jakarta.validation.Valid;
 public interface AuthService {
 
 	/**
-	 * 登录
+	 * 用户登录并跳转至回调地址
 	 *
-	 * @param loginRequest 登录请求
-	 * @author yang.lu
+	 * @param loginReq 登录请求对象
 	 */
-	void login(@Valid LoginRequest loginRequest);
+	void login(LoginReq loginReq);
 }

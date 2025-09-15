@@ -12,7 +12,6 @@ spring:
       idle-timeout: 600000
       maximum-pool-size: 10
       auto-commit: true
-      pool-name: AuthHikariCP
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1

@@ -18,4 +18,8 @@ public class UserRepository extends ServiceImpl<UserMapper, UserEntity> {
 	public boolean existsEmail(String email) {
 		return lambdaQuery().eq(UserEntity::getEmail, email).exists();
 	}
+
+	public UserEntity findByEmail(String email) {
+		return lambdaQuery().eq(UserEntity::getEmail, email).one();
+	}
 }

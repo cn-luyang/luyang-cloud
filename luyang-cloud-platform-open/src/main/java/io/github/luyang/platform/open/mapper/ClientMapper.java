@@ -1,7 +1,7 @@
 package io.github.luyang.platform.open.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.github.luyang.platform.open.beans.entity.ClientEntity;
+import io.github.luyang.starter.mybatis.mapper.UltraMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @author yang.lu
  */
 @Mapper
-public interface ClientMapper extends BaseMapper<ClientEntity> {
+public interface ClientMapper extends UltraMapper<ClientEntity> {
 }

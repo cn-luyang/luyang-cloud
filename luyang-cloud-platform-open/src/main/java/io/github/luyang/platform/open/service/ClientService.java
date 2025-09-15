@@ -1,7 +1,7 @@
 package io.github.luyang.platform.open.service;
 
 import io.github.luyang.platform.open.beans.domain.ClientDomain;
-import io.github.luyang.platform.open.beans.request.ClientCreateRequest;
+import io.github.luyang.platform.open.beans.request.ClientCreateReq;
 
 /**
  * 客户端业务服务接口
@@ -11,19 +11,19 @@ import io.github.luyang.platform.open.beans.request.ClientCreateRequest;
 public interface ClientService {
 
 	/**
-	 * 创建客户端
+	 * 创建新客户端
 	 *
-	 * @param request 客户端创建请求对象
-	 * @return 客户端ID
+	 * @param clientCreateReq 客户端创建请求对象
+	 * @return 客户端 ID
 	 * @author yang.lu
 	 */
-	String create(ClientCreateRequest request);
+	String create(ClientCreateReq clientCreateReq);
 
 	/**
-	 * 获取客户端详情
+	 * 根据客户端 ID 查询客户端信息
 	 *
 	 * @param clientId 客户端ID
-	 * @return 客户端业务对象
+	 * @return 客户端 DTO 对象
 	 * @author yang.lu
 	 */
 	ClientDomain get(String clientId);

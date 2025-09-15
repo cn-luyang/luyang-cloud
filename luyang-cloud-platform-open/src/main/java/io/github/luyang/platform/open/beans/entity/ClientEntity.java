@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.luyang.starter.mybatis.beans.BaseEntity;
-import io.github.luyang.starter.mybatis.support.type.StringListTypeHandler;
+import io.github.luyang.starter.mybatis.type.StringListTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "client", autoResultMap = true)
-public class ClientEntity extends BaseEntity<ClientEntity> {
+public class ClientEntity extends BaseEntity {
 
 	/**
 	 * 客户端ID

@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName(value = "user", autoResultMap = true)
-public class UserEntity extends BaseEntity<UserEntity> {
+public class UserEntity extends BaseEntity {
 
 	/** 用户 ID */
 	private String userId;

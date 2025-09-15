@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import java.util.List;
 
 /**
- * 客户端业务领域对象
+ * 客户端数据传输对象 (DTO)
  *
  * @param clientId             客户端ID
  * @param clientName           应用名
@@ -25,7 +25,7 @@ public record ClientDomain(
 ) {
 
 	/**
-	 * 判断重定向URI是否有效或包含给定的URI
+	 * 校验给定的 URI 是否在允许的回调地址中
 	 *
 	 * @param uri 要检查的URI
 	 * @return 如果重定向URI为空，或者包含给定的URI，则返回 true，否则返回 false

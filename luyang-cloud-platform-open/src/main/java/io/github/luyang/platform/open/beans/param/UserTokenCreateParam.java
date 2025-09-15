@@ -1,9 +1,9 @@
-package io.github.luyang.platform.open.beans.command;
+package io.github.luyang.platform.open.beans.param;
 
 import java.util.Map;
 
 /**
- * 用户Token创建命令对象
+ * 用户 Token 创建参数
  *
  * @param clientId             客户端ID
  * @param userId               用户ID
@@ -12,7 +12,7 @@ import java.util.Map;
  * @param refreshTokenValidity 刷新令牌有效期 (秒)
  * @author yang.lu
  */
-public record UserTokenCreateCommand(
+public record UserTokenCreateParam(
 	String clientId,
 	String userId,
 	Map<String, Object> attachedInfoMap,
