@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.beans.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.luyang.starter.mybatis.beans.BaseEntity;
+import io.github.luyang.starter.mybatis.common.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 

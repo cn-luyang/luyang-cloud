@@ -2,7 +2,7 @@ server:
   port: 8051
 spring:
   application:
-    name: platform-open
+    name: auth-service
   cloud:
     nacos:
       discovery:
@@ -33,7 +33,5 @@ dubbo:
   application:
     name: ${spring.application.name}
     qos-enable: false
-  provider:
-    group: ${spring.application.name}
   consumer:
     check: false

@@ -16,7 +16,7 @@ import io.github.luyang.platform.open.service.ClientService;
 import io.github.luyang.platform.open.service.TokenService;
 import io.github.luyang.platform.open.service.auth.AuthenticatorContext;
 import io.github.luyang.platform.open.service.auth.AuthenticatorHandler;
-import io.github.luyang.starter.base.enums.IBaseEnum;
+import io.github.luyang.starter.base.common.enums.IBaseEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

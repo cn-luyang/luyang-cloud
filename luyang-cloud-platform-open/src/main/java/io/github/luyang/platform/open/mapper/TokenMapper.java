@@ -1,7 +1,7 @@
 package io.github.luyang.platform.open.mapper;
 
 import io.github.luyang.platform.open.beans.entity.TokenEntity;
-import io.github.luyang.starter.mybatis.mapper.UltraMapper;
+import io.github.luyang.starter.mybatis.support.mapper.UltraMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

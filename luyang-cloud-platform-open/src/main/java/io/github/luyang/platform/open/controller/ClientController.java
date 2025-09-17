@@ -2,7 +2,7 @@ package io.github.luyang.platform.open.controller;
 
 import io.github.luyang.platform.open.beans.request.ClientCreateReq;
 import io.github.luyang.platform.open.service.ClientService;
-import io.github.luyang.starter.base.api.Result;
+import io.github.luyang.starter.base.common.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

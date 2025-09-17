@@ -3,8 +3,8 @@ package io.github.luyang.platform.open.beans.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.luyang.starter.mybatis.beans.BaseEntity;
-import io.github.luyang.starter.mybatis.type.StringListTypeHandler;
+import io.github.luyang.starter.mybatis.common.model.BaseEntity;
+import io.github.luyang.starter.mybatis.support.type.StringListTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

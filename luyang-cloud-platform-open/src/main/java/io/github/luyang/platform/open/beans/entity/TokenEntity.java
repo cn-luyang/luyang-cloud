@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import io.github.luyang.starter.mybatis.beans.BaseEntity;
+import io.github.luyang.starter.mybatis.common.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 

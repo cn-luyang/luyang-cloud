@@ -1,6 +1,7 @@
 package io.github.luyang.platform.uac.beans.enums.error;
 
-import io.github.luyang.starter.base.error.ExceptionAssert;
+
+import io.github.luyang.starter.base.common.exception.ExceptionAssert;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
