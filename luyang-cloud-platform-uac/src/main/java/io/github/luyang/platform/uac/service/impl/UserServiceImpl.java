@@ -1,12 +1,12 @@
 package io.github.luyang.platform.uac.service.impl;
 
-import io.github.luyang.platform.uac.beans.convert.UserConvert;
-import io.github.luyang.platform.uac.beans.domain.UserDomain;
-import io.github.luyang.platform.uac.beans.entity.UserEntity;
-import io.github.luyang.platform.uac.beans.enums.error.UserError;
-import io.github.luyang.platform.uac.beans.request.UserCreateReq;
+import io.github.luyang.platform.uac.common.convert.UserConvert;
+import io.github.luyang.platform.uac.common.enums.error.UserError;
+import io.github.luyang.platform.uac.controller.request.UserCreateReq;
+import io.github.luyang.platform.uac.mapper.entity.UserEntity;
 import io.github.luyang.platform.uac.repository.UserRepository;
 import io.github.luyang.platform.uac.service.UserService;
+import io.github.luyang.platform.uac.service.domain.UserDomain;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

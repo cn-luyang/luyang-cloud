@@ -1,6 +1,6 @@
 package io.github.luyang.platform.uac.controller;
 
-import io.github.luyang.platform.uac.beans.request.UserCreateReq;
+import io.github.luyang.platform.uac.controller.request.UserCreateReq;
 import io.github.luyang.platform.uac.service.UserService;
 import io.github.luyang.starter.base.common.model.Result;
 import lombok.RequiredArgsConstructor;

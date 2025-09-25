@@ -1,8 +1,8 @@
 package io.github.luyang.platform.uac.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uac.beans.entity.UserEntity;
 import io.github.luyang.platform.uac.mapper.UserMapper;
+import io.github.luyang.platform.uac.mapper.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.service;
 
-import io.github.luyang.platform.uac.beans.domain.UserDomain;
-import io.github.luyang.platform.uac.beans.request.UserCreateReq;
+import io.github.luyang.platform.uac.controller.request.UserCreateReq;
+import io.github.luyang.platform.uac.service.domain.UserDomain;
 
 /**
  * @author yang.lu

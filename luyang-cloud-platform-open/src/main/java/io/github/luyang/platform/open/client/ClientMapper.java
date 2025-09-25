@@ -1,0 +1,13 @@
+package io.github.luyang.platform.open.client;
+
+import io.github.luyang.starter.mybatis.support.mapper.UltraMapper;
+import org.apache.ibatis.annotations.Mapper;
+
+/**
+ * 客户端相关 Mapper
+ *
+ * @author yang.lu
+ */
+@Mapper
+public interface ClientMapper extends UltraMapper<ClientEntity> {
+}
