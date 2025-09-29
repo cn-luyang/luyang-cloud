@@ -41,7 +41,7 @@ public class AuthService {
 
 		// 获取客户端信息
 		ClientDomain clientDomain = clientService.getDomain(loginParam.getClientId());
-		ClientError.NOT_FOUND_CLIENT.notNull(clientDomain);
+		ClientError.INVALID_CLIENT.notNull(clientDomain);
 
 		// 校验回调地址
 		boolean validRedirectUri = clientDomain.isValidRedirectUri(loginParam.getRedirectUri());

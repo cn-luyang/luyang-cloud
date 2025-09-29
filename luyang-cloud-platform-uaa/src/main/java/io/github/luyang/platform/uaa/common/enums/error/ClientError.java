@@ -15,8 +15,8 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ClientError implements ExceptionAssert<String> {
 
+	INVALID_CLIENT("client:invalid_client", "无效客户端"),
 	INVALID_REDIRECT_URI("client:invalid_redirect_uri", "无效回调地址"),
-	NOT_FOUND_CLIENT("client:not_found_client", "客户端未找到或已删除"),
 	EXISTS_CLIENT_NAME("client:exists_client_name", "客户端名称已存在");
 
 	private final String code;
