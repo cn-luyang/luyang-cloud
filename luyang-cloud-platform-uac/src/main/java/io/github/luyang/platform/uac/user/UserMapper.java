@@ -1,6 +1,6 @@
-package io.github.luyang.platform.uac.mapper;
+package io.github.luyang.platform.uac.user;
 
-import io.github.luyang.platform.uac.mapper.entity.UserEntity;
+import io.github.luyang.platform.uac.user.beans.entity.UserEntity;
 import io.github.luyang.starter.mybatis.support.mapper.UltraMapper;
 import org.apache.ibatis.annotations.Mapper;
 

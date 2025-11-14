@@ -1,0 +1,9 @@
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+    "zhName": "鲁哈哈",
+    "enName": "luhah",
+    "email": "测试",
+    "gender": "测试"
+}

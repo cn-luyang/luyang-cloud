@@ -1,24 +1,20 @@
-package io.github.luyang.platform.uac.remote.dubbo;
+package io.github.luyang.platform.uac.user.remote;
 
 import cn.hutool.core.lang.Validator;
 import io.github.luyang.api.uac.RemoteUserService;
 import io.github.luyang.api.uac.request.AccountAuthRequest;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uac.common.enums.error.UserError;
-import io.github.luyang.platform.uac.service.UserService;
-import io.github.luyang.platform.uac.service.domain.UserDomain;
+import io.github.luyang.platform.uac.user.UserService;
+import io.github.luyang.platform.uac.user.beans.UserDomain;
 import io.github.luyang.starter.base.common.model.Result;
-import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 
 /**
  * @author yang.lu
  */
 @DubboService
-@RequiredArgsConstructor
-public class RemoteUserServiceImpl implements RemoteUserService {
-
-	private final UserService userService;
+public record UserRpcImpl(UserService userService) implements RemoteUserService {
 
 	@Override
 	public Result<AccountAuthResponse> accountAuth(AccountAuthRequest accountAuthRequest) {

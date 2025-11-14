@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uac.controller.request;
+package io.github.luyang.platform.uac.user.beans.body;
 
 /**
  * 创建用户请求
@@ -9,7 +9,7 @@ package io.github.luyang.platform.uac.controller.request;
  * @param gender   性别，可选
  * @author yang.lu
  */
-public record UserCreateReq(
+public record UserCreateRequest(
 	String zhName,
 	String enName,
 	String email,

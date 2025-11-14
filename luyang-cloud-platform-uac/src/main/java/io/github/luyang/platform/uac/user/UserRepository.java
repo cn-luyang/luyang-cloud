@@ -1,8 +1,7 @@
-package io.github.luyang.platform.uac.repository;
+package io.github.luyang.platform.uac.user;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uac.mapper.UserMapper;
-import io.github.luyang.platform.uac.mapper.entity.UserEntity;
+import io.github.luyang.platform.uac.user.beans.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +14,7 @@ public class UserRepository extends ServiceImpl<UserMapper, UserEntity> {
 
 	private final UserMapper userMapper;
 
-	public boolean existsEmail(String email) {
+	public boolean existsByEmail(String email) {
 		return lambdaQuery().eq(UserEntity::getEmail, email).exists();
 	}
 

@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uac.mapper.entity;
+package io.github.luyang.platform.uac.user.beans.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.luyang.starter.mybatis.common.model.BaseEntity;

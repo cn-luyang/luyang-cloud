@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uac.service.domain;
+package io.github.luyang.platform.uac.user.beans;
 
 /**
  * @author yang.lu

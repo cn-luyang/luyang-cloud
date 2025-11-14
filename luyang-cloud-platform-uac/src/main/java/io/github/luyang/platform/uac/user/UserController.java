@@ -1,7 +1,7 @@
-package io.github.luyang.platform.uac.controller;
+package io.github.luyang.platform.uac.user;
 
-import io.github.luyang.platform.uac.controller.request.UserCreateReq;
-import io.github.luyang.platform.uac.service.UserService;
+import io.github.luyang.platform.uac.user.beans.body.UserCreateRequest;
+import io.github.luyang.platform.uac.user.beans.body.UserCreateResponse;
 import io.github.luyang.starter.base.common.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +20,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping
-	public Result<String> create(@RequestBody UserCreateReq userCreateReq) {
-		String userId = userService.create(userCreateReq);
-		return Result.success(userId);
+	public Result<UserCreateResponse> create(@RequestBody UserCreateRequest userCreateRequest) {
+		return Result.success(userService.create(userCreateRequest));
 	}
 }
