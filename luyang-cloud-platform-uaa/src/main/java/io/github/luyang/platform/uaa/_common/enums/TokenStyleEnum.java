@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uaa.common.enums;
+package io.github.luyang.platform.uaa._common.enums;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

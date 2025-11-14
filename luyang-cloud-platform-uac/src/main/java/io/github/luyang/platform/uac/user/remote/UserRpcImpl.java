@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Validator;
 import io.github.luyang.api.uac.RemoteUserService;
 import io.github.luyang.api.uac.request.AccountAuthRequest;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
-import io.github.luyang.platform.uac.common.enums.error.UserError;
+import io.github.luyang.platform.uac._common.enums.error.UserError;
 import io.github.luyang.platform.uac.user.UserService;
 import io.github.luyang.platform.uac.user.beans.UserDomain;
 import io.github.luyang.starter.base.common.model.Result;

@@ -1,5 +1,7 @@
 package io.github.luyang.business.plan.calendar;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.github.luyang.business.plan.calendar.beans.entity.CalendarEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class CalendarRepository {
+public class CalendarRepository extends ServiceImpl<CalendarMapper, CalendarEntity> {
 
 	private final CalendarService calendarService;
 }

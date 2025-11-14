@@ -1,8 +1,8 @@
-package io.github.luyang.platform.uaa.common.util;
+package io.github.luyang.platform.uaa._common.util;
 
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
-import io.github.luyang.platform.uaa.common.enums.TokenStyleEnum;
+import io.github.luyang.platform.uaa._common.enums.TokenStyleEnum;
 import lombok.experimental.UtilityClass;
 
 /**

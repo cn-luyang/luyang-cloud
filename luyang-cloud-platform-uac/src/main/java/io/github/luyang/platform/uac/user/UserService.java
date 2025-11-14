@@ -1,6 +1,6 @@
 package io.github.luyang.platform.uac.user;
 
-import io.github.luyang.platform.uac.common.enums.error.UserError;
+import io.github.luyang.platform.uac._common.enums.error.UserError;
 import io.github.luyang.platform.uac.user.beans.UserConvert;
 import io.github.luyang.platform.uac.user.beans.UserDomain;
 import io.github.luyang.platform.uac.user.beans.body.UserCreateRequest;

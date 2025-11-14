@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uaa.common.enums;
+package io.github.luyang.platform.uaa._common.enums;
 
 import io.github.luyang.starter.base.common.enums.IBaseEnum;
 import lombok.AccessLevel;
@@ -10,11 +10,12 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum LoginMethodEnum implements IBaseEnum<String> {
+public enum GrantTypeEnum implements IBaseEnum<String> {
 
-	PASSWORD("password ", "密码登录"),
-	SMS("sms ", "短信登录"),
-	EMAIL("email ", "邮箱登录");
+	AUTHORIZATION_CODE("authorization_code ", "授权码模式"),
+	CLIENT_CREDENTIALS("client_credentials ", "客户端模式"),
+	REFRESH_TOKEN("refresh_token ", "刷新模式")
+	;
 	private final String code;
 	private final String message;
 }

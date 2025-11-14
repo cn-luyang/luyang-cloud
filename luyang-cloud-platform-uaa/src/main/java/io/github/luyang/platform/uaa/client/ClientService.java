@@ -1,11 +1,11 @@
 package io.github.luyang.platform.uaa.client;
 
+import io.github.luyang.platform.uaa._common.enums.error.ClientError;
 import io.github.luyang.platform.uaa.client.beans.ClientConverter;
 import io.github.luyang.platform.uaa.client.beans.ClientDomain;
 import io.github.luyang.platform.uaa.client.beans.body.ClientCreateRequest;
 import io.github.luyang.platform.uaa.client.beans.body.ClientCreateResponse;
 import io.github.luyang.platform.uaa.client.beans.entity.ClientEntity;
-import io.github.luyang.platform.uaa.common.enums.error.ClientError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

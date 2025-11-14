@@ -1,9 +1,9 @@
 package io.github.luyang.platform.uaa.open;
 
+import io.github.luyang.platform.uaa._common.enums.ResponseTypeEnum;
+import io.github.luyang.platform.uaa._common.enums.error.ClientError;
 import io.github.luyang.platform.uaa.client.ClientService;
 import io.github.luyang.platform.uaa.client.beans.ClientDomain;
-import io.github.luyang.platform.uaa.common.enums.ResponseTypeEnum;
-import io.github.luyang.platform.uaa.common.enums.error.ClientError;
 import io.github.luyang.platform.uaa.open.beans.body.AuthorizeRequest;
 import io.github.luyang.starter.base.common.enums.IBaseEnum;
 import lombok.RequiredArgsConstructor;

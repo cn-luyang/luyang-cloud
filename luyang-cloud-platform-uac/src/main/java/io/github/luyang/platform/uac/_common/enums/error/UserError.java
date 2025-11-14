@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uac.common.enums.error;
+package io.github.luyang.platform.uac._common.enums.error;
 
 
 import io.github.luyang.starter.base.common.exception.ExceptionAssert;
