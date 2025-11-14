@@ -11,9 +11,9 @@ import org.mapstruct.Mapper;
  * @author yang.lu
  */
 @Mapper(componentModel = "spring")
-public class CalendarSubscribeConvert {
+public interface CalendarSubscribeConvert {
 
-	public CalendarSubscribeEntity buildEntity(InitSubscribeParam initSubscribeParam) {
+	default CalendarSubscribeEntity buildEntity(InitSubscribeParam initSubscribeParam) {
 
 		CalendarSubscribeEntity  entity = new CalendarSubscribeEntity();
 		entity.setUserId("");
