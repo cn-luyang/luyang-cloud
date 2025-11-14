@@ -25,6 +25,7 @@
 
     <modules>
         <module>luyang-cloud-api-uac</module>
+        <module>luyang-cloud-business-plan</module>
         <module>luyang-cloud-platform-uaa</module>
         <module>luyang-cloud-platform-uac</module>
     </modules>
