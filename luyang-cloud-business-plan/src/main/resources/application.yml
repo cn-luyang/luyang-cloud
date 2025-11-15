@@ -2,7 +2,7 @@ server:
   port: 0
 spring:
   application:
-    name: platform-uaa
+    name: business-plan
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver

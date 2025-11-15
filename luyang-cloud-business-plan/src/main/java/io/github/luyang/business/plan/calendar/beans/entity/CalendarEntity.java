@@ -1,6 +1,10 @@
 package io.github.luyang.business.plan.calendar.beans.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.github.luyang.business.plan._common.enums.db.CalendarColor;
+import io.github.luyang.business.plan._common.enums.db.CalendarType;
+import io.github.luyang.business.plan._common.enums.db.CalendarVisibility;
 import io.github.luyang.starter.mybatis.common.model.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +18,7 @@ import lombok.EqualsAndHashCode;
 public class CalendarEntity extends BaseEntity {
 
 	/** 日历ID */
+	@TableId
 	private String calendarId;
 
 	/** 日历拥有者用户ID */
@@ -23,13 +28,13 @@ public class CalendarEntity extends BaseEntity {
 	private String defaultName;
 
 	/** 日历默认颜色，创建时的颜色 */
-//	private CalendarColor defaultColor;
+	private CalendarColor defaultColor;
 
 	/** 日历类型 {[1:主日历] [2:共享日历] [3:全员日历]} */
-//	private CalendarType type;
+	private CalendarType calendarType;
 
 	/** 日历公开范围 {[1:私密-不可自行订阅] [2:简览-可订阅，仅忙闲] [3:公开-可订阅，查看日程]} */
-//	private CalendarVisibility visibility;
+	private CalendarVisibility calendarVisibility;
 
 	/** 日历描述 */
 	private String description;

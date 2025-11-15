@@ -17,7 +17,7 @@ create table `calendar`
 
 create table `calendar_subscribe`
 (
-    `id`            varchar(64) not null comment '主键ID',
+    `subscribe_id`  varchar(64) not null comment '主键ID',
     `user_id`       varchar(64) not null comment '日历订阅者用户ID',
     `calendar_id`   varchar(64) not null comment '日历ID',
     `permissions`   varchar(16) not null comment '订阅者对于日历的权限 [BUSY_FREE:忙闲] [VIEW_DETAILS:查看详情] [EDIT:编辑] [ADMIN:管理]',
@@ -30,7 +30,7 @@ create table `calendar_subscribe`
     `updated_by`    varchar(64) default null comment '更新人',
     `updated_time`  datetime ( 3 ) default null comment '更新时间',
     `deleted`       boolean     default false comment '是否删除 [1:删除:true] [0:未删除:false]',
-    primary key (`id`)
+    primary key (`subscribe_id`)
 ) engine = innodb comment = '日历订阅表';
 
 create table `calendar_admin`

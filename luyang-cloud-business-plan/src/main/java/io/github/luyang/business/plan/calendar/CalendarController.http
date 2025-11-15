@@ -1,0 +1,11 @@
+@baseUrl = http://localhost:3288
+
+POST {{baseUrl}}/calendar
+Content-Type: application/json
+
+{
+    "calendarName": "日历1",
+    "calendarColor": "#FF0010",
+    "calendarVisibility": "PUBLIC",
+    "description": "日历描述"
+}

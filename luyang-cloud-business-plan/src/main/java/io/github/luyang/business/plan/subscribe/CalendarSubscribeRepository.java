@@ -13,4 +13,12 @@ import org.springframework.stereotype.Repository;
 public class CalendarSubscribeRepository extends ServiceImpl<CalendarSubscribeMapper, CalendarSubscribeEntity> {
 
 	private final CalendarSubscribeMapper calendarSubscribeMapper;
+
+	public boolean isRepeatSubscribe(String userId, String calendarId) {
+		return lambdaQuery()
+			.eq(CalendarSubscribeEntity::getUserId, userId)
+			.eq(CalendarSubscribeEntity::getCalendarId, calendarId)
+			.eq(CalendarSubscribeEntity::getUnsubscribe, true)
+			.exists();
+	}
 }

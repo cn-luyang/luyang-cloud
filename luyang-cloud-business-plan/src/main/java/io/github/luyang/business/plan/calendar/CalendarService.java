@@ -2,6 +2,7 @@ package io.github.luyang.business.plan.calendar;
 
 import cn.hutool.core.util.IdUtil;
 import io.github.luyang.business.plan.calendar.beans.CalendarConvert;
+import io.github.luyang.business.plan.calendar.beans.CalendarDomain;
 import io.github.luyang.business.plan.calendar.beans.body.CalendarCreateRequest;
 import io.github.luyang.business.plan.calendar.beans.body.CalendarCreateResponse;
 import io.github.luyang.business.plan.calendar.beans.entity.CalendarEntity;
@@ -29,13 +30,18 @@ public class CalendarService {
 		String calendarId = IdUtil.nanoId();
 
 		// 入库日历数据
-		CalendarEntity entity = calendarConvert.buildEntity(calendarId, calendarCreateRequest);
-		calendarRepository.save(entity);
+		CalendarEntity calendarEntity = calendarConvert.buildEntity(calendarId, calendarCreateRequest);
+		calendarRepository.save(calendarEntity);
 
 		// 初始订阅日历
-		InitSubscribeParam initSubscribeParam = calendarConvert.buildInitSubscribeParam(calendarId, calendarCreateRequest);
+		InitSubscribeParam initSubscribeParam = calendarConvert.buildInitSubscribeParam(calendarId, calendarEntity);
 		calendarSubscribeService.initSubscribe(initSubscribeParam);
 
 		return CalendarCreateResponse.build(calendarId);
+	}
+
+	public CalendarDomain getDomain(String calendarId) {
+		CalendarEntity calendarEntity = calendarRepository.getById(calendarId);
+		return calendarConvert.buildDomain(calendarEntity);
 	}
 }

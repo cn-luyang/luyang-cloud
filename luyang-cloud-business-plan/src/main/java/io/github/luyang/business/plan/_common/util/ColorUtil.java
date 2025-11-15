@@ -1,7 +1,7 @@
 package io.github.luyang.business.plan._common.util;
 
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.business.plan._common.enums.CalendarColorEnum;
+import io.github.luyang.business.plan._common.enums.db.CalendarColor;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -12,14 +12,14 @@ import java.util.Optional;
  */
 public class ColorUtil {
 
-	public static CalendarColorEnum findClosestColor(String codeHex) {
+	public static CalendarColor findClosestColor(String codeHex) {
 		// 校验颜色格式是否为 #RRGGBB 的十六进制格式
 		if (StrUtil.isBlank(codeHex) || !codeHex.matches("^#[0-9a-fA-F]{6}$")) {
-			return CalendarColorEnum.BLUE;
+			return CalendarColor.BLUE;
 		}
 
 		// 1. 优先尝试精确匹配枚举中的颜色
-		Optional<CalendarColorEnum> exactMatch = Arrays.stream(CalendarColorEnum.values())
+		Optional<CalendarColor> exactMatch = Arrays.stream(CalendarColor.values())
 			.filter(c -> StrUtil.equalsIgnoreCase(c.getCode(), codeHex))
 			.findFirst();
 		if (exactMatch.isPresent()) {
@@ -30,7 +30,7 @@ public class ColorUtil {
 		int[] targetRgb = hexToRgb(codeHex);
 
 		// 3. 遍历枚举，找到与目标颜色最接近的颜色（欧几里得距离最小）
-		return Arrays.stream(CalendarColorEnum.values())
+		return Arrays.stream(CalendarColor.values())
 			.min(Comparator.comparingDouble(c -> colorDistance(targetRgb, hexToRgb(c.getCode()))))
 			.orElse(null); // 理论上不会为 null，除非 Color.values() 为空
 	}

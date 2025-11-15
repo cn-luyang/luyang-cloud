@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CalendarRepository extends ServiceImpl<CalendarMapper, CalendarEntity> {
 
-	private final CalendarService calendarService;
+	private final CalendarMapper calendarMapper;
 }
