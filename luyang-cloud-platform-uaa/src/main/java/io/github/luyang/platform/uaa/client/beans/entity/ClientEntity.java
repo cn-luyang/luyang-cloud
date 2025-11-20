@@ -18,46 +18,60 @@ import java.util.List;
 @TableName(value = "client", autoResultMap = true)
 public class ClientEntity extends BaseEntity {
 
-	/**
-	 * 客户端ID
-	 */
+	/** 客户端ID */
 	@TableId
 	private String clientId;
 
-	/**
-	 * 客户端名称
-	 */
+	/** 客户端名称 */
 	private String clientName;
 
-	/**
-	 * 客户端密钥
-	 */
+	/** 客户端密钥 */
 	private String clientSecret;
 
-	/**
-	 * 访问令牌有效期(秒)
-	 */
-	private Integer accessTokenValidity;
-
-	/**
-	 * 刷新令牌有效期(秒)
-	 */
-	private Integer refreshTokenValidity;
-
-	/**
-	 * 授权类型
-	 */
+	/** 授权类型 */
 	@TableField(typeHandler = StringListTypeHandler.class)
 	private List<String> grantTypes;
 
-	/**
-	 * 重定向URI
-	 */
+	/** 授权回调地址 */
 	@TableField(typeHandler = StringListTypeHandler.class)
 	private List<String> redirectUris;
 
-	/**
-	 * 描述
-	 */
+	/** 授权范围 */
+	@TableField(typeHandler = StringListTypeHandler.class)
+	private List<String> scopes;
+
+	/** 客户端配置信息 */
+	@TableField(typeHandler = StringListTypeHandler.class)
+	private ClientSettings clientSettings;
+
+	/** 令牌配置信息 */
+	@TableField(typeHandler = StringListTypeHandler.class)
+	private TokenSettings tokenSettings;
+
+	/** 描述 */
 	private String description;
+
+	/**
+	 * 客户端配置信息
+	 *
+	 * @author yang.lu
+	 */
+	@Data
+	public static class ClientSettings {
+		private boolean requireProofKey = true;
+		private boolean requireAuthorizationConsent = true;
+	}
+
+	/**
+	 * 令牌配置信息
+	 *
+	 * @author yang.lu
+	 */
+	@Data
+	public static class TokenSettings {
+		private int accessTokenTtl = 3600;
+		private int refreshTokenTtl = 30 * 24 * 3600;
+		private boolean reuseRefreshTokens = true;
+		private String idTokenSignatureAlgorithm = "RS256";
+	}
 }

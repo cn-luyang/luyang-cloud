@@ -2,7 +2,6 @@ package io.github.luyang.platform.uaa.open;
 
 import io.github.luyang.platform.uaa.open.beans.body.AuthorizeRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,20 +17,35 @@ public class OpenController {
 
 	private final OpenService openService;
 
+	/**
+	 * 授权端点
+	 *
+	 * @param clientId            客户端ID
+	 * @param redirectUri         授权成功后的回调地址
+	 * @param responseType        响应类型，如"code"表示授权码流程
+	 * @param scopes              请求的权限范围
+	 * @param state               防CSRF的随机字符串，由客户端生成
+	 * @param nonce               防重放攻击的随机值，用于OIDC协议
+	 * @param codeChallenge       PKCE挑战码，code_verifier的哈希值
+	 * @param codeChallengeMethod PKCE哈希算法
+	 * @author yang.lu
+	 */
 	@GetMapping("/authorize")
-	public ResponseEntity<?> authorize(
-		@RequestParam("response_type") String responseType,
+	public void authorize(
 		@RequestParam("client_id") String clientId,
-		@RequestParam(value = "redirect_uri", required = false) String redirectUri,
-		@RequestParam(value = "scope", required = false) String scope,
+		@RequestParam("redirect_uri") String redirectUri,
+		@RequestParam(value = "response_type") String responseType,
+		@RequestParam(value = "scopes", required = false) String scopes,
 		@RequestParam(value = "state", required = false) String state,
+		@RequestParam(value = "nonce", required = false) String nonce,
 		@RequestParam(value = "code_challenge", required = false) String codeChallenge,
-		@RequestParam(value = "code_challenge_method", required = false) String codeChallengeMethod) {
+		@RequestParam(value = "code_challenge_method", required = false) String codeChallengeMethod
+	) {
 
 		AuthorizeRequest authorizeRequest = new AuthorizeRequest(
-			responseType,clientId,redirectUri,scope,state,codeChallenge,codeChallengeMethod
+			clientId, redirectUri, responseType, scopes, state, nonce, codeChallenge, codeChallengeMethod
 		);
 
-		return openService.authorize(authorizeRequest);
+		openService.authorize(authorizeRequest);
 	}
 }

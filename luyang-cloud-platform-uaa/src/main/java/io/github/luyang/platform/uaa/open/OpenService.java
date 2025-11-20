@@ -1,5 +1,7 @@
 package io.github.luyang.platform.uaa.open;
 
+import cn.hutool.core.util.StrUtil;
+import io.github.luyang.platform.uaa._common.enums.CodeChallengeMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.ResponseTypeEnum;
 import io.github.luyang.platform.uaa._common.enums.error.ClientError;
 import io.github.luyang.platform.uaa.client.ClientService;
@@ -7,10 +9,6 @@ import io.github.luyang.platform.uaa.client.beans.ClientDomain;
 import io.github.luyang.platform.uaa.open.beans.body.AuthorizeRequest;
 import io.github.luyang.starter.base.common.enums.IBaseEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,44 +20,40 @@ public class OpenService {
 
 	private final ClientService clientService;
 
-	public ResponseEntity<?> authorize(AuthorizeRequest authorizeRequest) {
+	public void authorize(AuthorizeRequest authorizeRequest) {
 
-		// 验证response_type必须是code
-		IBaseEnum.executeIfCodeNotMatches(ResponseTypeEnum.CODE, authorizeRequest.responseType(), () -> {
-			throw new RuntimeException("response_type，响应类型必须是“code”");
-		});
+		// response_type 必须为 code
+		boolean validResponseType = ResponseTypeEnum.CODE.getCode().equals(authorizeRequest.responseType());
+		ClientError.RESPONSE_TYPE_MUST_BE_CODE.isTrue(validResponseType);
 
-		// 获取客户端信息
+		// 校验客户端是否存在
 		ClientDomain clientDomain = clientService.getDomain(authorizeRequest.clientId());
 		ClientError.INVALID_CLIENT.notNull(clientDomain);
 
-		// 验证重定向URI
+		// 校验 redirect_uri 是否在允许的回调地址中
 		boolean validRedirectUri = clientDomain.isValidRedirectUri(authorizeRequest.redirectUri());
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
 
-		if (authorizeRequest.codeChallenge() != null && !isValidCodeChallengeMethod(authorizeRequest.codeChallengeMethod())) {
-			return buildErrorResponse("invalid_request","Invalid code challenge method", redirectUri, state);
-		}
+		// 验证scopes
+		// boolean validScope = clientDomain.isValidScopes(authorizeRequest.scopes());
+		// ClientError.INVALID_SCOPE.isTrue(validScope);
 
-		// 验证PKCE参数
-		// 检查用户是否已认证
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated()) {
-			// 重定向到登录页面
-			return buildAuthenticationRedirect(request, clientId, redirectUri,
-				scope, state, codeChallenge, codeChallengeMethod);
-		}
+		// 校验 code_challenge_method 是否有效
+		CodeChallengeMethodEnum codeChallengeMethodEnum = IBaseEnum.getByCode(
+			CodeChallengeMethodEnum.class, authorizeRequest.codeChallengeMethod()
+		);
+		ClientError.INVALID_CODE_CHALLENGE_METHOD.notNull(codeChallengeMethodEnum);
 
-		// 生成授权码
-		// 构建重定向URI with authorization code
-		String redirectUrl = buildAuthorizationRedirectUri(redirectUri,authorizationCode.getCode(), state);
+		// 校验 code_challenge 是否存在
+		boolean validCodeChallenge = StrUtil.isNotBlank(authorizeRequest.codeChallenge());
+		ClientError.MISSING_CODE_CHALLENGE.isTrue(validCodeChallenge);
 
-		return ResponseEntity.status(HttpStatus.FOUND)
-			.header("Location", redirectUrl)
-			.build();
-	}
-
-	private boolean isValidCodeChallengeMethod(String method) {
-		return method == null || "S256".equals(method) || "plain".equals(method);
+		/*
+			基于Cookie检查用户是否已认证
+				已经认证
+					保存当前请求参数及code，下发code携带state
+				未认证
+					跳转到登录界面拼接当前请求参数
+		 */
 	}
 }

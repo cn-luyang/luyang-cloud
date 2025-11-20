@@ -14,6 +14,7 @@ import java.util.List;
  * @param accessTokenValidity  访问令牌有效期 (秒)
  * @param refreshTokenValidity 刷新令牌有效期 (秒)
  * @param redirectUris         重定向URI
+ * @param scopes               授权范围
  * @author yang.lu
  */
 public record ClientDomain(
@@ -21,7 +22,8 @@ public record ClientDomain(
 	String clientName,
 	Integer accessTokenValidity,
 	Integer refreshTokenValidity,
-	List<String> redirectUris
+	List<String> redirectUris,
+	List<String> scopes
 ) {
 
 	/**
@@ -40,4 +42,9 @@ public record ClientDomain(
 			.map(UrlBuilder::getHost)
 			.anyMatch(allowedHost -> StrUtil.equals(allowedHost, uriHost));
 	}
+
+	/*public boolean isValidScopes(String scopes) {
+		List<String> split = StrUtil.split(scopes, StrPool.COMMA);
+		return CollUtil.containsAll(this.scopes, split);
+	}*/
 }
