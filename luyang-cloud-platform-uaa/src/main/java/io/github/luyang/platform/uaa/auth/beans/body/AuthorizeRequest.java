@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uaa.open.beans.body;
+package io.github.luyang.platform.uaa.auth.beans.body;
 
 /**
  * 授权请求参数

@@ -10,7 +10,9 @@ import lombok.Setter;
 @Setter
 public class LoginParam {
 
-	private String clientId;
-	private String redirectUri;
+	/** URLEncode编码，登录成功的重定向地址 */
+	private String target;
+
+	/** 登录方式 */
 	private String loginMethod;
 }

@@ -17,7 +17,8 @@ public enum LoginError implements ExceptionAssert<String> {
 
 	INVALID_LOGIN_TYPE("login:invalid_login_type", "无效登录类"),
 	INVALID_AUTHORIZE_REQUEST_ID("login:invalid_authorize_request_id", "无效授权请求标识"),
-	INVALID_ACCOUNT_OR_PASSWORD("login:invalid_account_or_password", "无效账号或密码");
+	INVALID_ACCOUNT_OR_PASSWORD("login:invalid_account_or_password", "无效账号或密码"),
+	INVALID_TARGET_URI("login:invalid_target_uri", "无效的 target 地址，无法完成登录后跳转");
 
 	private final String code;
 	private final String message;
