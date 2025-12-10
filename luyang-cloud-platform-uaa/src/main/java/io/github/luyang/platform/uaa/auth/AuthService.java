@@ -8,6 +8,7 @@ import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.error.ClientError;
+import io.github.luyang.platform.uaa._common.properties.LoginProperties;
 import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
 import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorContext;
@@ -43,6 +44,7 @@ public class AuthService {
 	private final ClientService clientService;
 	private final HttpServletResponse httpServletResponse;
 	private final HttpServletRequest httpServletRequest;
+	private final LoginProperties loginProperties;
 
 	@SneakyThrows
 	public void login(Map<String, Object> maps) {
@@ -93,7 +95,7 @@ public class AuthService {
 				.append(httpServletRequest.getQueryString())
 				.toString();
 
-			String loginUrl = UriComponentsBuilder.fromPath("https://www.luyang.com/login-page")
+			String loginUrl = UriComponentsBuilder.fromPath(loginProperties.getPageUrl())
 				.queryParam("target", URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
 				.build()
 				.toUriString();
