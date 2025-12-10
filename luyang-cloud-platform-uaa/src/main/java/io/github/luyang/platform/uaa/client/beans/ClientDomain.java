@@ -29,13 +29,13 @@ public record ClientDomain(
 	/**
 	 * 校验给定的 URI 是否在允许的回调地址中
 	 *
-	 * @param uri 要检查的URI
+	 * @param url 要检查的URI
 	 * @return 如果重定向URI为空，或者包含给定的URI，则返回 true，否则返回 false
 	 * @author yang.lu
 	 */
-	public boolean isValidRedirectUri(String uri) {
+	public boolean isValidRedirectUrl(String url) {
 
-		String uriHost = UrlBuilder.of(uri).getHost();
+		String uriHost = UrlBuilder.of(url).getHost();
 
 		return CollUtil.emptyIfNull(redirectUris).stream()
 			.map(UrlBuilder::of)

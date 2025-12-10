@@ -2,7 +2,7 @@ package io.github.luyang.platform.uaa.client;
 
 import io.github.luyang.platform.uaa.client.beans.body.ClientCreateRequest;
 import io.github.luyang.platform.uaa.client.beans.body.ClientCreateResponse;
-import io.github.luyang.starter.base.common.model.Result;
+import io.github.luyang.starter.base.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

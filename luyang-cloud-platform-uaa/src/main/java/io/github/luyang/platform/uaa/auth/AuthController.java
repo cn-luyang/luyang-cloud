@@ -1,7 +1,6 @@
 package io.github.luyang.platform.uaa.auth;
 
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
-import io.github.luyang.starter.security.annotation.Anonymous;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,6 @@ public class AuthController {
 
 	private final AuthService authService;
 
-	@Anonymous
 	@PostMapping("/login")
 	public void login(@RequestBody Map<String, Object> maps) {
 		authService.login(maps);

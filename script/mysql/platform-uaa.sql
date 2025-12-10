@@ -1,4 +1,4 @@
-CREATE TABLE `client`
+CREATE TABLE `oauth2_client`
 (
     `client_id`       VARCHAR(64)  NOT NULL COMMENT '客户端ID',
     `client_name`     VARCHAR(64)  NOT NULL COMMENT '客户端名称',
@@ -17,7 +17,7 @@ CREATE TABLE `client`
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE = INNODB COMMENT = '客户端表';
 
-CREATE TABLE `token`
+CREATE TABLE `oauth2_token`
 (
     `id`                         VARCHAR(64) NOT NULL COMMENT '主键ID',
     `client_id`                  VARCHAR(64) NOT NULL COMMENT '客户端ID',
@@ -36,4 +36,21 @@ CREATE TABLE `token`
     UNIQUE INDEX `uk_access_token` (`access_token` ASC) USING BTREE COMMENT 'access_token唯一索引',
     UNIQUE INDEX `uk_refresh_token` (`refresh_token` ASC) USING BTREE COMMENT 'refresh_token唯一索引'
 ) ENGINE = INNODB COMMENT = 'Token表';
+
+CREATE TABLE `oauth2_code`
+(
+    `code`                  VARCHAR(64)  NOT NULL COMMENT '授权码',
+    `client_id`             VARCHAR(64)  NOT NULL COMMENT '客户端ID',
+    `user_id`               VARCHAR(64)  NOT NULL COMMENT '用户ID',
+    `scopes`                VARCHAR(255) NOT NULL COMMENT '授权范围，多个用空格分隔',
+    `redirect_uri`          VARCHAR(255) NOT NULL,
+    `nonce`                 VARCHAR(64)  NOT NULL,
+    `code_challenge`        VARCHAR(64)  NOT NULL,
+    `code_challenge_method` VARCHAR(16)  NOT NULL DEFAULT 'S256',
+    `authenticated_at`      DATETIME(3)   NOT NULL COMMENT '认证时间',
+    `expires_at`            DATETIME(3)   NOT NULL COMMENT '过期时间（通常 10 分钟）',
+    `consumed`              TINYINT(1)    NOT NULL DEFAULT 0 COMMENT '是否已兑换（一次性）',
+    `consumed_at`           DATETIME(3)            DEFAULT NULL,
+    PRIMARY KEY (`code`) USING BTREE,
+) ENGINE = INNODB COMMENT = '授权码表';
 

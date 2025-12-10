@@ -1,5 +1,11 @@
 package io.github.luyang.platform.uaa.auth.beans.body;
 
+import io.github.luyang.platform.uaa._common.enums.CodeChallengeMethodEnum;
+import io.github.luyang.starter.base.validation.InValues;
+import io.github.luyang.starter.base.validation.IsEnum;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
+
 /**
  * 授权请求参数
  *
@@ -45,13 +51,28 @@ package io.github.luyang.platform.uaa.auth.beans.body;
  * @author yang.lu
  */
 public record AuthorizeRequest(
+
+	@NotBlank(message = "客户端ID不能为空")
 	String clientId,
+
+	@URL(protocol = "http,https", message = "回调地址必须是合法的http或https链接")
 	String redirectUri,
+
+	@InValues(values = "code", message = "响应类型必须为code")
 	String responseType,
+
 	String scopes,
+
+	@NotBlank(message = "防CSRF令牌不能为空")
 	String state,
+
+	@NotBlank(message = "防重放随机值不能为空")
 	String nonce,
+
+	@NotBlank(message = "PKCE码不能为空")
 	String codeChallenge,
+
+	@IsEnum(value = CodeChallengeMethodEnum.class, message = "PKCE算法类型不正确")
 	String codeChallengeMethod
 ) {
 }

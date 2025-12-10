@@ -45,7 +45,7 @@
             <dependency>
                 <groupId>io.github.cn-luyang</groupId>
                 <artifactId>dependencies</artifactId>
-                <version>2025.11.19.01</version>
+                <version>2025.12.10.01</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
