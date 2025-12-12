@@ -23,6 +23,12 @@ public class AuthController {
 
 	private final AuthService authService;
 
+	/**
+	 * 登录
+	 *
+	 * @param maps 请求参数映射
+	 * @author yang.lu
+	 */
 	@PostMapping("/login")
 	public void login(@RequestBody Map<String, Object> maps) {
 		authService.login(maps);
@@ -37,7 +43,7 @@ public class AuthController {
 	 * @param scopes              请求的权限范围
 	 * @param state               防CSRF的随机字符串，由客户端生成
 	 * @param nonce               防重放攻击的随机值，用于OIDC协议
-	 * @param codeChallenge       PKCE挑战码，code_verifier的哈希值
+	 * @param codeChallenge       PKCE码，code_verifier的哈希值
 	 * @param codeChallengeMethod PKCE哈希算法
 	 * @author yang.lu
 	 */

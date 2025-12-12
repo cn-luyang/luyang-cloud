@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
+import io.github.luyang.platform.uaa._common.constant.OAuthConstant;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.error.ClientError;
 import io.github.luyang.platform.uaa._common.properties.LoginProperties;
@@ -17,6 +18,7 @@ import io.github.luyang.platform.uaa.client.ClientService;
 import io.github.luyang.platform.uaa.client.beans.ClientDomain;
 import io.github.luyang.platform.uaa.token.TokenService;
 import io.github.luyang.starter.base.enums.IBaseEnum;
+import io.github.luyang.starter.redisson.helper.RedissonHelper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,10 +47,18 @@ public class AuthService {
 	private final HttpServletResponse httpServletResponse;
 	private final HttpServletRequest httpServletRequest;
 	private final LoginProperties loginProperties;
+	private final RedissonHelper redissonHelper;
 
+	/**
+	 * 登录
+	 *
+	 * @param maps 登录请求参数映射
+	 * @author yang.lu
+	 */
 	@SneakyThrows
 	public void login(Map<String, Object> maps) {
 
+		// 参数转换
 		LoginParam loginParam = BeanUtil.toBean(maps, LoginParam.class);
 
 		// 校验参数
@@ -61,13 +71,27 @@ public class AuthService {
 		// 执行认证逻辑
 		AccountAuthResponse accountAuthResponse = authenticatorHandler.authenticate(maps);
 
-		JakartaServletUtil.addCookie(httpServletResponse, "sid", IdUtil.fastSimpleUUID());
+		// 生成登录凭证
+		String ticket = IdUtil.fastSimpleUUID();
 
-		// 构建重定向地址
-		String loginUri = UriComponentsBuilder.fromUriString(loginParam.getTarget()).build().toUriString();
+		// 将登录凭证添加到Cookie中，设置3分钟失效
+		JakartaServletUtil.addCookie(
+			httpServletResponse,
+			OAuthConstant.COOKIE_LOGIN_TICKET,
+			ticket,
+			Math.toIntExact(OAuthConstant.LOGIN_TICKET_DURATION.getSeconds()));
+
+		// Redis绑定登录凭证与用户ID，设置3分钟失效
+		redissonHelper.setString(
+			OAuthConstant.REDIS_LOGIN_TICKET_KEY_PREFIX.concat(ticket),
+			accountAuthResponse.userId(),
+			OAuthConstant.LOGIN_TICKET_DURATION);
 
 		// 认证成功，执行 302 跳转
-		httpServletResponse.sendRedirect(loginUri);
+		httpServletResponse.sendRedirect(
+			UriComponentsBuilder.fromUriString(loginParam.getTarget())
+				.build()
+				.toUriString());
 	}
 
 	@SneakyThrows
@@ -84,17 +108,19 @@ public class AuthService {
 		boolean validRedirectUri = clientDomain.isValidRedirectUrl(authorizeRequest.redirectUri());
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
 
-		// 获取登录会话
-		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, "sid");
+		// 获取登录凭证Cookie
+		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuthConstant.COOKIE_LOGIN_TICKET);
 
-		// 会话为空则跳转至登录界面
+		// 凭证Cookie为空则跳转至前端登录界面
 		if (null == cookie || StrUtil.isBlank(cookie.getValue())) {
 
+			// 当前请求完整的URL路径
 			String currentRequestUrl = httpServletRequest.getRequestURL()
 				.append("?")
 				.append(httpServletRequest.getQueryString())
 				.toString();
 
+			// 前端登陆界面地址拼接target，用于登陆完成后重定向到/authorize接口与当前请求参数保持一致
 			String loginUrl = UriComponentsBuilder.fromPath(loginProperties.getPageUrl())
 				.queryParam("target", URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
 				.build()
