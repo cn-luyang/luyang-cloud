@@ -1,8 +1,8 @@
 package io.github.luyang.platform.uaa.auth.beans.body;
 
 import io.github.luyang.platform.uaa._common.enums.CodeChallengeMethodEnum;
+import io.github.luyang.starter.base.validation.InEnum;
 import io.github.luyang.starter.base.validation.InValues;
-import io.github.luyang.starter.base.validation.IsEnum;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
@@ -72,7 +72,7 @@ public record AuthorizeRequest(
 	@NotBlank(message = "PKCE码不能为空")
 	String codeChallenge,
 
-	@IsEnum(value = CodeChallengeMethodEnum.class, message = "PKCE算法类型不正确")
+	@InEnum(value = CodeChallengeMethodEnum.class, message = "PKCE算法类型不正确")
 	String codeChallengeMethod
 ) {
 }

@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-@TableName(value = "token", autoResultMap = true)
+@TableName(value = "oauth2_token", autoResultMap = true)
 public class TokenEntity extends BaseEntity {
 
 	@TableId

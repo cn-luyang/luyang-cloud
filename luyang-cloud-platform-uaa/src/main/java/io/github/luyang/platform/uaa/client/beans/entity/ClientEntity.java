@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "client", autoResultMap = true)
+@TableName(value = "oauth2_client", autoResultMap = true)
 public class ClientEntity extends BaseEntity {
 
 	/** 客户端ID */

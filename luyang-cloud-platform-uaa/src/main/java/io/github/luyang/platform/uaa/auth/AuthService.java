@@ -16,6 +16,7 @@ import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorContext;
 import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorHandler;
 import io.github.luyang.platform.uaa.client.ClientService;
 import io.github.luyang.platform.uaa.client.beans.ClientDomain;
+import io.github.luyang.platform.uaa.code.OAuth2CodeService;
 import io.github.luyang.platform.uaa.token.TokenService;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import io.github.luyang.starter.redisson.helper.RedissonHelper;
@@ -44,6 +45,7 @@ public class AuthService {
 
 	private final TokenService tokenService;
 	private final ClientService clientService;
+	private final OAuth2CodeService oAuth2CodeService;
 	private final HttpServletResponse httpServletResponse;
 	private final HttpServletRequest httpServletRequest;
 	private final LoginProperties loginProperties;
