@@ -43,7 +43,7 @@ import org.hibernate.validator.constraints.URL;
  * @param clientId            客户端ID
  * @param redirectUri         授权成功后的回调地址
  * @param responseType        响应类型，如"code"表示授权码流程
- * @param scopes              请求的权限范围
+ * @param scope               请求的权限范围
  * @param state               防CSRF的随机字符串，由客户端生成
  * @param nonce               防重放攻击的随机值，用于OIDC协议
  * @param codeChallenge       PKCE挑战码，code_verifier的哈希值
@@ -61,7 +61,7 @@ public record AuthorizeRequest(
 	@InValues(values = "code", message = "响应类型必须为code")
 	String responseType,
 
-	String scopes,
+	String scope,
 
 	@NotBlank(message = "防CSRF令牌不能为空")
 	String state,

@@ -9,7 +9,7 @@ import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa._common.constant.OAuthConstant;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.error.ClientError;
-import io.github.luyang.platform.uaa._common.properties.LoginProperties;
+import io.github.luyang.platform.uaa._common.properties.OAuth2Properties;
 import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
 import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorContext;
@@ -17,7 +17,8 @@ import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorHandler;
 import io.github.luyang.platform.uaa.client.ClientService;
 import io.github.luyang.platform.uaa.client.beans.ClientDomain;
 import io.github.luyang.platform.uaa.code.OAuth2CodeService;
-import io.github.luyang.platform.uaa.token.TokenService;
+import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateParam;
+import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateResult;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import io.github.luyang.starter.redisson.helper.RedissonHelper;
 import jakarta.servlet.http.Cookie;
@@ -33,6 +34,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author yang.lu
@@ -43,13 +45,15 @@ public class AuthService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-	private final TokenService tokenService;
 	private final ClientService clientService;
 	private final OAuth2CodeService oAuth2CodeService;
+
+	private final OAuth2Properties oAuth2Properties;
+
+	private final RedissonHelper redissonHelper;
+
 	private final HttpServletResponse httpServletResponse;
 	private final HttpServletRequest httpServletRequest;
-	private final LoginProperties loginProperties;
-	private final RedissonHelper redissonHelper;
 
 	/**
 	 * 登录
@@ -113,9 +117,16 @@ public class AuthService {
 		// 获取登录凭证Cookie
 		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuthConstant.COOKIE_LOGIN_TICKET);
 
-		// 凭证Cookie为空则跳转至前端登录界面
-		if (null == cookie || StrUtil.isBlank(cookie.getValue())) {
+		// 过滤出Cookie值，从缓存中获取对应的UserId
+		String userId = Optional.ofNullable(cookie)
+			.map(Cookie::getValue)
+			.filter(StrUtil::isNotBlank)
+			.map(OAuthConstant.REDIS_LOGIN_TICKET_KEY_PREFIX::concat)
+			.map(redissonHelper::<String>getString)
+			.orElse(null);
 
+		// UserId 为空则跳转至前端登录界面
+		if (StrUtil.isBlank(userId)) {
 			// 当前请求完整的URL路径
 			String currentRequestUrl = httpServletRequest.getRequestURL()
 				.append("?")
@@ -123,7 +134,7 @@ public class AuthService {
 				.toString();
 
 			// 前端登陆界面地址拼接target，用于登陆完成后重定向到/authorize接口与当前请求参数保持一致
-			String loginUrl = UriComponentsBuilder.fromPath(loginProperties.getPageUrl())
+			String loginUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getLoginPageUrl())
 				.queryParam("target", URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
 				.build()
 				.toUriString();
@@ -132,7 +143,25 @@ public class AuthService {
 			return;
 		}
 
-		// TODO：下发Code
+		// 下发Code
+		OAuth2CodeCreateParam oAuth2CodeCreateParam = new OAuth2CodeCreateParam(
+			authorizeRequest.clientId(),
+			userId,
+			authorizeRequest.scope(),
+			authorizeRequest.redirectUri(),
+			authorizeRequest.nonce(),
+			authorizeRequest.codeChallenge(),
+			authorizeRequest.codeChallengeMethod()
+		);
+
+		OAuth2CodeCreateResult oAuth2CodeCreateResult = oAuth2CodeService.create(oAuth2CodeCreateParam);
+		String callbackUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getCallbackUrl())
+			.queryParam(OAuthConstant.FIELDS_CODE, oAuth2CodeCreateResult.code())
+			.queryParam(OAuthConstant.FIELDS_STATE, authorizeRequest.state())
+			.build()
+			.toUriString();
+
+		httpServletResponse.sendRedirect(callbackUrl);
 	}
 
 	/*@SneakyThrows

@@ -19,7 +19,7 @@ import java.util.Map;
 @Getter
 @Setter
 @TableName(value = "oauth2_token", autoResultMap = true)
-public class TokenEntity extends BaseEntity {
+public class OAuth2TokenEntity extends BaseEntity {
 
 	@TableId
 	private String id;

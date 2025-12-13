@@ -11,6 +11,9 @@ import java.time.Duration;
  */
 public class OAuthConstant {
 
+	public static final String FIELDS_CODE = "code";
+	public static final String FIELDS_STATE = "state";
+
 	/**
 	 * Cookie中存储登录凭证的键名
 	 */
