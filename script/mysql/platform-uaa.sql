@@ -1,19 +1,20 @@
 CREATE TABLE `oauth2_client`
 (
-    `client_id`       VARCHAR(64)  NOT NULL COMMENT '客户端ID',
-    `client_name`     VARCHAR(64)  NOT NULL COMMENT '客户端名称',
-    `client_secret`   VARCHAR(128) NOT NULL COMMENT '客户端密钥',
-    `grant_types`     VARCHAR(255)  DEFAULT NULL COMMENT '授权类型，多个用逗号分隔',
-    `redirect_uris`   VARCHAR(2048) DEFAULT NULL COMMENT '授权回调地址，多个URI用逗号分隔',
-    `scope`           VARCHAR(255) NOT NULL COMMENT '授权范围，多个用空格分隔',
-    `client_settings` JSON          DEFAULT NULL COMMENT '客户端配置信息(JSON格式)',
-    `token_settings`  JSON          DEFAULT NULL COMMENT '令牌配置信息(JSON格式)',
-    `description`     VARCHAR(256)  DEFAULT NULL COMMENT '应用描述',
-    `created_by`      VARCHAR(64)   DEFAULT NULL COMMENT '创建人',
-    `created_time`    DATETIME (3) DEFAULT NULL COMMENT '创建时间',
-    `updated_by`      VARCHAR(64)   DEFAULT NULL COMMENT '更新人',
-    `updated_time`    DATETIME (3) DEFAULT NULL COMMENT '更新时间',
-    `deleted`         BOOLEAN       DEFAULT FALSE COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
+    `client_id`              VARCHAR(64)  NOT NULL COMMENT '客户端ID',
+    `client_name`            VARCHAR(64)  NOT NULL COMMENT '客户端名称',
+    `client_secret`          VARCHAR(128) NOT NULL COMMENT '客户端密钥',
+    `grant_types`            JSON         NOT NULL COMMENT '授权类型列表',
+    `redirect_uris`          JSON         DEFAULT NULL COMMENT '授权回调地址列表',
+    `scopes`                 JSON         NOT NULL COMMENT '授权范围列表',
+    `access_token_validity`  INT          DEFAULT 3600 COMMENT '访问令牌有效期(秒)',
+    `refresh_token_validity` INT          DEFAULT 86400 COMMENT '刷新令牌有效期(秒)',
+    `description`            VARCHAR(256) DEFAULT NULL COMMENT '应用描述',
+
+    `created_by`             VARCHAR(64)  DEFAULT NULL COMMENT '创建人',
+    `created_time`           DATETIME (3) DEFAULT NULL COMMENT '创建时间',
+    `updated_by`             VARCHAR(64)  DEFAULT NULL COMMENT '更新人',
+    `updated_time`           DATETIME (3) DEFAULT NULL COMMENT '更新时间',
+    `deleted`                BOOLEAN      DEFAULT FALSE COMMENT '是否删除: {[1:删除:true] [0:未删除:false]}',
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE = INNODB COMMENT = '客户端表';
 

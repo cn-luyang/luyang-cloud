@@ -52,7 +52,7 @@ import org.hibernate.validator.constraints.URL;
  */
 public record AuthorizeRequest(
 
-	@NotBlank(message = "客户端ID不能为空")
+	@NotBlank(message = "客户端 ID 不能为空")
 	String clientId,
 
 	@URL(protocol = "http,https", message = "回调地址必须是合法的http或https链接")

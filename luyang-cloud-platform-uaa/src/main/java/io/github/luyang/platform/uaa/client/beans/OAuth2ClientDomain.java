@@ -1,46 +1,42 @@
 package io.github.luyang.platform.uaa.client.beans;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 客户端 Domain
  *
- * @param clientId             客户端ID
- * @param clientName           应用名
+ * @param clientId             客户端 ID
+ * @param clientName           客户端名称
  * @param accessTokenValidity  访问令牌有效期 (秒)
  * @param refreshTokenValidity 刷新令牌有效期 (秒)
- * @param redirectUris         重定向URI
- * @param scopes               授权范围
+ * @param redirectUris         授权回调地址列表
+ * @param scopes               授权范围列表
  * @author yang.lu
  */
-public record ClientDomain(
+public record OAuth2ClientDomain(
 	String clientId,
 	String clientName,
 	Integer accessTokenValidity,
 	Integer refreshTokenValidity,
-	List<String> redirectUris,
-	List<String> scopes
+	Set<String> redirectUris,
+	Set<String> scopes
 ) {
 
 	/**
-	 * 校验给定的 URI 是否在允许的回调地址中
+	 * 验证重定向 URI 是否合法
 	 *
-	 * @param url 要检查的URI
+	 * @param uri 要检查的 URI
 	 * @return 如果重定向URI为空，或者包含给定的URI，则返回 true，否则返回 false
 	 * @author yang.lu
 	 */
-	public boolean isValidRedirectUrl(String url) {
-
-		String uriHost = UrlBuilder.of(url).getHost();
+	public boolean isValidRedirectUrl(String uri) {
 
 		return CollUtil.emptyIfNull(redirectUris).stream()
-			.map(UrlBuilder::of)
-			.map(UrlBuilder::getHost)
-			.anyMatch(allowedHost -> StrUtil.equals(allowedHost, uriHost));
+			.filter(StrUtil::isNotBlank)
+			.anyMatch(allowedUri -> StrUtil.startWith(allowedUri, uri));
 	}
 
 	/*public boolean isValidScopes(String scopes) {

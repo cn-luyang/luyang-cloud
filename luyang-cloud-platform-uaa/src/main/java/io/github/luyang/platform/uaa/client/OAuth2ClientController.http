@@ -1,0 +1,51 @@
+### 创建 OAuth2 客户端
+POST {{baseUrl}}/client
+Content-Type: application/json
+
+{
+    "clientName": "企业门户系统",
+    "accessTokenValidity": 7200,
+    "refreshTokenValidity": 7776000,
+    "grantTypes": [
+        "authorization_code",
+        "client_credentials",
+        "refresh_token"
+    ],
+    "redirectUris": [
+        "https://portal.company.com/oauth/callback",
+        "https://portal.company.com/login/oauth2/code",
+        "https://staging.company.com/callback"
+    ],
+    "scopes": [
+        "openid",
+        "profile",
+        "email",
+        "read:user",
+        "write:user",
+        "read:admin",
+        "offline_access"
+    ],
+    "description": "企业内部统一门户系统，支持单点登录和API访问"
+}
+
+### 创建服务间通信客户端
+### Client Credentials 授权类型示例
+POST {{baseUrl}}/client
+Content-Type: application/json
+
+{
+    "clientName": "订单微服务",
+    "accessTokenValidity": 1800,
+    "refreshTokenValidity": 86400,
+    "grantTypes": [
+        "client_credentials"
+    ],
+    "redirectUris": [],
+    "scopes": [
+        "internal:orders:read",
+        "internal:orders:write"
+    ],
+    "description": "订单处理微服务，仅用于服务间API调用"
+}
+
+

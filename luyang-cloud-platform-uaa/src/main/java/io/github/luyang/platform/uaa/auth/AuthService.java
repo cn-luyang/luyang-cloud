@@ -14,8 +14,8 @@ import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
 import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorContext;
 import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorHandler;
-import io.github.luyang.platform.uaa.client.ClientService;
-import io.github.luyang.platform.uaa.client.beans.ClientDomain;
+import io.github.luyang.platform.uaa.client.OAuth2ClientService;
+import io.github.luyang.platform.uaa.client.beans.OAuth2ClientDomain;
 import io.github.luyang.platform.uaa.code.OAuth2CodeService;
 import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateParam;
 import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateResult;
@@ -45,8 +45,8 @@ public class AuthService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-	private final ClientService clientService;
-	private final OAuth2CodeService oAuth2CodeService;
+	private final OAuth2ClientService clientService;
+	private final OAuth2CodeService codeService;
 
 	private final OAuth2Properties oAuth2Properties;
 
@@ -107,7 +107,7 @@ public class AuthService {
 		ValidationUtil.validate(authorizeRequest);
 
 		// 获取客户端信息
-		ClientDomain clientDomain = clientService.getDomain(authorizeRequest.clientId());
+		OAuth2ClientDomain clientDomain = clientService.getDomain(authorizeRequest.clientId());
 		ClientError.INVALID_CLIENT.notNull(clientDomain);
 
 		// 校验 redirect_uri 是否在允许的回调地址中
@@ -154,7 +154,7 @@ public class AuthService {
 			authorizeRequest.codeChallengeMethod()
 		);
 
-		OAuth2CodeCreateResult oAuth2CodeCreateResult = oAuth2CodeService.create(oAuth2CodeCreateParam);
+		OAuth2CodeCreateResult oAuth2CodeCreateResult = codeService.create(oAuth2CodeCreateParam);
 		String callbackUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getCallbackUrl())
 			.queryParam(OAuth2Constant.PARAM_CODE, oAuth2CodeCreateResult.code())
 			.queryParam(OAuth2Constant.PARAM_STATE, authorizeRequest.state())

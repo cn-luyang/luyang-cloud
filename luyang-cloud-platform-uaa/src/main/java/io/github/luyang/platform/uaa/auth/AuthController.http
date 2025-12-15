@@ -1,10 +1,10 @@
-POST {{baseUrl}}/auth/login
-Content-Type: application/json
-
-{
-    "clientId": "cli_CMXsPy7AO0pnryqg",
-    "redirectUri": "https://www.baidu.com/",
-    "account": "测试",
-    "credential": "测试",
-    "loginType": "password"
-}
+### 基础授权码流程 (PKCE)
+GET {{baseUrl}}/auth/authorize?
+    response_type=code&
+    client_id=cli_5FnA4XzAEuH4l2Xk&
+    redirect_uri=https://portal.company.com/oauth/callback&
+    scope=openid%20profile%20email%20offline_access&
+    state=web_state_7f89d2e4a5c6b3&
+    nonce=web_nonce_7f89d2e4a5c6b3&
+    code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM&
+    code_challenge_method=S256
