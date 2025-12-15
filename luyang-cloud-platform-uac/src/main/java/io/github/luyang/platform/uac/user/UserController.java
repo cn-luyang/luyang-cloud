@@ -2,7 +2,7 @@ package io.github.luyang.platform.uac.user;
 
 import io.github.luyang.platform.uac.user.beans.body.UserCreateRequest;
 import io.github.luyang.platform.uac.user.beans.body.UserCreateResponse;
-import io.github.luyang.starter.base.common.model.Result;
+import io.github.luyang.starter.base.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -7,7 +7,7 @@ import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uac._common.enums.error.UserError;
 import io.github.luyang.platform.uac.user.UserService;
 import io.github.luyang.platform.uac.user.beans.UserDomain;
-import io.github.luyang.starter.base.common.model.Result;
+import io.github.luyang.starter.base.model.Result;
 import org.apache.dubbo.config.annotation.DubboService;
 
 /**

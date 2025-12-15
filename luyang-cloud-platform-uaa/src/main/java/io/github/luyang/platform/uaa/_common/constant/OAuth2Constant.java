@@ -9,10 +9,22 @@ import java.time.Duration;
  *
  * @author yang.lu
  */
-public class OAuthConstant {
+public class OAuth2Constant {
 
-	public static final String FIELDS_CODE = "code";
-	public static final String FIELDS_STATE = "state";
+	/**
+	 * 登录跳转目标参数名
+	 */
+	public static final String PARAM_TARGET = "target";
+
+	/**
+	 * 授权码参数名
+	 */
+	public static final String PARAM_CODE = "code";
+
+	/**
+	 * 防CSRF状态参数名
+	 */
+	public static final String PARAM_STATE = "state";
 
 	/**
 	 * Cookie中存储登录凭证的键名

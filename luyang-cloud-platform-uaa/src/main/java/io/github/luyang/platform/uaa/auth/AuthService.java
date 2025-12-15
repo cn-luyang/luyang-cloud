@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
-import io.github.luyang.platform.uaa._common.constant.OAuthConstant;
+import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.error.ClientError;
 import io.github.luyang.platform.uaa._common.properties.OAuth2Properties;
@@ -83,15 +83,15 @@ public class AuthService {
 		// 将登录凭证添加到Cookie中，设置3分钟失效
 		JakartaServletUtil.addCookie(
 			httpServletResponse,
-			OAuthConstant.COOKIE_LOGIN_TICKET,
+			OAuth2Constant.COOKIE_LOGIN_TICKET,
 			ticket,
-			Math.toIntExact(OAuthConstant.LOGIN_TICKET_DURATION.getSeconds()));
+			Math.toIntExact(OAuth2Constant.LOGIN_TICKET_DURATION.getSeconds()));
 
 		// Redis绑定登录凭证与用户ID，设置3分钟失效
 		redissonHelper.setString(
-			OAuthConstant.REDIS_LOGIN_TICKET_KEY_PREFIX.concat(ticket),
+			OAuth2Constant.REDIS_LOGIN_TICKET_KEY_PREFIX.concat(ticket),
 			accountAuthResponse.userId(),
-			OAuthConstant.LOGIN_TICKET_DURATION);
+			OAuth2Constant.LOGIN_TICKET_DURATION);
 
 		// 认证成功，执行 302 跳转
 		httpServletResponse.sendRedirect(
@@ -115,13 +115,13 @@ public class AuthService {
 		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
 
 		// 获取登录凭证Cookie
-		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuthConstant.COOKIE_LOGIN_TICKET);
+		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuth2Constant.COOKIE_LOGIN_TICKET);
 
 		// 过滤出Cookie值，从缓存中获取对应的UserId
 		String userId = Optional.ofNullable(cookie)
 			.map(Cookie::getValue)
 			.filter(StrUtil::isNotBlank)
-			.map(OAuthConstant.REDIS_LOGIN_TICKET_KEY_PREFIX::concat)
+			.map(OAuth2Constant.REDIS_LOGIN_TICKET_KEY_PREFIX::concat)
 			.map(redissonHelper::<String>getString)
 			.orElse(null);
 
@@ -135,7 +135,7 @@ public class AuthService {
 
 			// 前端登陆界面地址拼接target，用于登陆完成后重定向到/authorize接口与当前请求参数保持一致
 			String loginUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getLoginPageUrl())
-				.queryParam("target", URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
+				.queryParam(OAuth2Constant.PARAM_TARGET, URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
 				.build()
 				.toUriString();
 
@@ -156,54 +156,11 @@ public class AuthService {
 
 		OAuth2CodeCreateResult oAuth2CodeCreateResult = oAuth2CodeService.create(oAuth2CodeCreateParam);
 		String callbackUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getCallbackUrl())
-			.queryParam(OAuthConstant.FIELDS_CODE, oAuth2CodeCreateResult.code())
-			.queryParam(OAuthConstant.FIELDS_STATE, authorizeRequest.state())
+			.queryParam(OAuth2Constant.PARAM_CODE, oAuth2CodeCreateResult.code())
+			.queryParam(OAuth2Constant.PARAM_STATE, authorizeRequest.state())
 			.build()
 			.toUriString();
 
 		httpServletResponse.sendRedirect(callbackUrl);
 	}
-
-	/*@SneakyThrows
-	public void login(Map<String, Object> maps) {
-
-		LoginParam loginParam = BeanUtil.toBean(maps, LoginParam.class);
-
-		// 获取客户端信息
-		ClientDomain clientDomain = clientService.getDomain(loginParam.getClientId());
-		ClientError.INVALID_CLIENT.notNull(clientDomain);
-
-		// 校验回调地址
-		boolean validRedirectUri = clientDomain.isValidRedirectUri(loginParam.getRedirectUri());
-		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
-
-		// 获取认证处理器
-		LoginMethodEnum loginMethodEnum = IBaseEnum.getByCode(LoginMethodEnum.class, loginParam.getLoginMethod());
-		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginMethodEnum);
-
-		// 执行认证逻辑
-		AccountAuthResponse accountAuthResponse = authenticatorHandler.authenticate(maps);
-
-		// 构建用户token创建命名对象
-		TokenCreateParam tokenCreateParam = new TokenCreateParam(
-			clientDomain.clientId(),
-			accountAuthResponse.userId(),
-			BeanUtil.beanToMap(accountAuthResponse, MapUtil.newHashMap(), CopyOptions.create().setIgnoreProperties(AccountAuthResponse::userId)),
-			clientDomain.accessTokenValidity(),
-			clientDomain.refreshTokenValidity()
-		);
-
-		// 创建 Token
-		TokenCreateResult tokenCreateResult = tokenService.create(tokenCreateParam);
-
-		// 构建重定向 URI
-		String loginUri = UriComponentsBuilder
-			.fromUriString(loginParam.getRedirectUri())
-			.queryParam("ACCESS_TOKEN", tokenCreateResult.accessToken())
-			.queryParam("REFRESH_TOKEN", tokenCreateResult.refreshToken())
-			.build()
-			.toUriString();
-
-		httpServletResponse.sendRedirect(loginUri);
-	}*/
 }
