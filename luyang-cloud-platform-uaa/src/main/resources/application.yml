@@ -1,12 +1,25 @@
 server:
   port: 8080
 spring:
-#  application:
-#    name: platform-uaa
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: ${NACOS_HOST}
+  application:
+    name: platform-uaa
+  cloud:
+    nacos:
+      discovery:
+        group: platform
+        server-addr: ${NACOS_HOST}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: 10s
+      lettuce:
+        pool:
+          min-idle: 0
+          max-idle: 8
+          max-active: 8
+          max-wait: -1ms
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
