@@ -6,6 +6,8 @@ import io.github.luyang.starter.base.validation.InValues;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.Set;
+
 /**
  * 授权请求参数
  *
@@ -43,10 +45,10 @@ import org.hibernate.validator.constraints.URL;
  * @param clientId            客户端ID
  * @param redirectUri         授权成功后的回调地址
  * @param responseType        响应类型，如"code"表示授权码流程
- * @param scope               请求的权限范围
+ * @param scopes              请求的权限范围
  * @param state               防CSRF的随机字符串，由客户端生成
  * @param nonce               防重放攻击的随机值，用于OIDC协议
- * @param codeChallenge       PKCE挑战码，code_verifier的哈希值
+ * @param codeChallenge       PKCE码，code_verifier的哈希值
  * @param codeChallengeMethod PKCE哈希算法
  * @author yang.lu
  */
@@ -61,7 +63,7 @@ public record AuthorizeRequest(
 	@InValues(values = "code", message = "响应类型必须为code")
 	String responseType,
 
-	String scope,
+	Set<String> scopes,
 
 	@NotBlank(message = "防CSRF令牌不能为空")
 	String state,

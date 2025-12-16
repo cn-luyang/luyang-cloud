@@ -14,7 +14,7 @@ public class UserRepository extends ServiceImpl<UserMapper, UserEntity> {
 
 	private final UserMapper userMapper;
 
-	public boolean existsByEmail(String email) {
+	public boolean emailUnique(String email) {
 		return lambdaQuery().eq(UserEntity::getEmail, email).exists();
 	}
 

@@ -1,5 +1,6 @@
 package io.github.luyang.platform.uaa.auth;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 认证相关控制器
@@ -40,7 +43,7 @@ public class AuthController {
 	 * @param clientId            客户端ID
 	 * @param redirectUri         授权成功后的回调地址
 	 * @param responseType        响应类型，如"code"表示授权码流程
-	 * @param scopes              请求的权限范围
+	 * @param scope               请求的权限范围
 	 * @param state               防CSRF的随机字符串，由客户端生成
 	 * @param nonce               防重放攻击的随机值，用于OIDC协议
 	 * @param codeChallenge       PKCE码，code_verifier的哈希值
@@ -52,13 +55,14 @@ public class AuthController {
 		@RequestParam("client_id") String clientId,
 		@RequestParam("redirect_uri") String redirectUri,
 		@RequestParam(value = "response_type") String responseType,
-		@RequestParam(value = "scopes", required = false) String scopes,
+		@RequestParam(value = "scope", required = false) String scope,
 		@RequestParam(value = "state", required = false) String state,
 		@RequestParam(value = "nonce", required = false) String nonce,
 		@RequestParam(value = "code_challenge", required = false) String codeChallenge,
 		@RequestParam(value = "code_challenge_method", required = false) String codeChallengeMethod
 	) {
 
+		Set<String> scopes = new HashSet<>(StrUtil.split(scope, StrUtil.SPACE));
 		AuthorizeRequest authorizeRequest = new AuthorizeRequest(
 			clientId, redirectUri, responseType, scopes, state, nonce, codeChallenge, codeChallengeMethod
 		);

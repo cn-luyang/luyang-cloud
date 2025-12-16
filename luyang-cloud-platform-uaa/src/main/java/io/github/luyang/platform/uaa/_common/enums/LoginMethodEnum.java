@@ -12,7 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum LoginMethodEnum implements IBaseEnum<String> {
 
-	PASSWORD("password ", "密码登录"),
+	PASSWORD("password", "密码登录"),
 	SMS("sms ", "短信登录"),
 	EMAIL("email ", "邮箱登录");
 	private final String code;

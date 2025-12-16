@@ -7,7 +7,7 @@ import io.github.luyang.starter.base.model.Result;
 /**
  * @author yang.lu
  */
-public interface RemoteUserService {
+public interface UserRemoteService {
 
 	Result<AccountAuthResponse> accountAuth(AccountAuthRequest accountAuthRequest);
 }

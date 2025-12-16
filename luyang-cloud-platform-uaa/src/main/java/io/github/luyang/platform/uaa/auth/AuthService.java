@@ -33,6 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -75,23 +76,26 @@ public class AuthService {
 		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginMethodEnum);
 
 		// 执行认证逻辑
-		AccountAuthResponse accountAuthResponse = authenticatorHandler.authenticate(maps);
+		AccountAuthResponse authResult = authenticatorHandler.authenticate(maps);
 
-		// 生成登录凭证
+		// 生成临时登录凭证
 		String ticket = IdUtil.fastSimpleUUID();
 
-		// 将登录凭证添加到Cookie中，设置3分钟失效
+		/*
+			将登录凭证添加到Cookie中，设置1小时失效
+			防止用户在1小时内访问不同应用时进行多次登陆认证
+		 */
 		JakartaServletUtil.addCookie(
 			httpServletResponse,
 			OAuth2Constant.COOKIE_LOGIN_TICKET,
 			ticket,
-			Math.toIntExact(OAuth2Constant.LOGIN_TICKET_DURATION.getSeconds()));
+			Math.toIntExact(OAuth2Constant.LOGIN_TICKET_TTL.getSeconds()));
 
 		// Redis绑定登录凭证与用户ID，设置3分钟失效
 		redissonHelper.setString(
 			OAuth2Constant.REDIS_LOGIN_TICKET_KEY_PREFIX.concat(ticket),
-			accountAuthResponse.userId(),
-			OAuth2Constant.LOGIN_TICKET_DURATION);
+			authResult.userId(),
+			OAuth2Constant.LOGIN_TICKET_TTL);
 
 		// 认证成功，执行 302 跳转
 		httpServletResponse.sendRedirect(
@@ -127,14 +131,14 @@ public class AuthService {
 
 		// UserId 为空则跳转至前端登录界面
 		if (StrUtil.isBlank(userId)) {
-			// 当前请求完整的URL路径
+			// 当前请求完整的 URL 路径
 			String currentRequestUrl = httpServletRequest.getRequestURL()
 				.append("?")
 				.append(httpServletRequest.getQueryString())
 				.toString();
 
 			// 前端登陆界面地址拼接target，用于登陆完成后重定向到/authorize接口与当前请求参数保持一致
-			String loginUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getLoginPageUrl())
+			String loginUrl = UriComponentsBuilder.fromUriString(oAuth2Properties.getLoginPageUrl())
 				.queryParam(OAuth2Constant.PARAM_TARGET, URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
 				.build()
 				.toUriString();
@@ -143,20 +147,21 @@ public class AuthService {
 			return;
 		}
 
-		// 下发Code
-		OAuth2CodeCreateParam oAuth2CodeCreateParam = new OAuth2CodeCreateParam(
+		// 已登录 → 下发授权码
+		OAuth2CodeCreateParam codeParam = new OAuth2CodeCreateParam(
 			authorizeRequest.clientId(),
 			userId,
-			authorizeRequest.scope(),
+			authorizeRequest.scopes(),
 			authorizeRequest.redirectUri(),
 			authorizeRequest.nonce(),
 			authorizeRequest.codeChallenge(),
-			authorizeRequest.codeChallengeMethod()
+			authorizeRequest.codeChallengeMethod(),
+			LocalDateTime.now().plusMinutes(3)
 		);
 
-		OAuth2CodeCreateResult oAuth2CodeCreateResult = codeService.create(oAuth2CodeCreateParam);
-		String callbackUrl = UriComponentsBuilder.fromPath(oAuth2Properties.getCallbackUrl())
-			.queryParam(OAuth2Constant.PARAM_CODE, oAuth2CodeCreateResult.code())
+		OAuth2CodeCreateResult createResult = codeService.create(codeParam);
+		String callbackUrl = UriComponentsBuilder.fromUriString(authorizeRequest.redirectUri())
+			.queryParam(OAuth2Constant.PARAM_CODE, createResult.code())
 			.queryParam(OAuth2Constant.PARAM_STATE, authorizeRequest.state())
 			.build()
 			.toUriString();

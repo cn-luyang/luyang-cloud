@@ -5,7 +5,7 @@ CREATE TABLE `user`
     `en_name`      VARCHAR(64)  DEFAULT NULL COMMENT '英文名',
     `email`        VARCHAR(32)  DEFAULT NULL COMMENT '邮箱号',
     `password`     VARCHAR(128) DEFAULT NULL COMMENT '密码',
-    `gender`       INT          DEFAULT NULL COMMENT '性别 {[0:保密] [1:男] [2:女]}',
+    `gender`       INT          DEFAULT NULL COMMENT '性别 {[[1:男] [2:女]}',
     `created_by`   VARCHAR(64)  DEFAULT NULL COMMENT '创建人',
     `created_time` DATETIME (3) DEFAULT NULL COMMENT '创建时间',
     `updated_by`   VARCHAR(64)  DEFAULT NULL COMMENT '更新人',

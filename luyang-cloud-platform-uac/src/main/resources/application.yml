@@ -6,6 +6,7 @@ spring:
   cloud:
     nacos:
       discovery:
+        group: platform
         server-addr: ${NACOS_HOST}
   data:
     redis:

@@ -1,12 +1,15 @@
 package io.github.luyang.platform.uaa.code.beans.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import io.github.luyang.starter.mybatis.common.model.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * 授权码表 实体
@@ -22,13 +25,13 @@ public class OAuth2CodeEntity extends BaseEntity {
 	private String code;
 	private String clientId;
 	private String userId;
-	private String scope;
+	@TableField(typeHandler = JacksonTypeHandler.class)
+	private Set<String> scopes;
 	private String redirectUri;
 	private String nonce;
 	private String codeChallenge;
 	private String codeChallengeMethod;
-	private LocalDateTime authenticatedAt;
-	private LocalDateTime expiresAt;
-	private Boolean consumed;
-	private LocalDateTime consumedAt;
+	private LocalDateTime expiresTime;
+	private Boolean used;
+	private LocalDateTime usedTime;
 }

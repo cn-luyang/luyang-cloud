@@ -21,7 +21,7 @@ public class UserService {
 
 	public UserCreateResponse create(UserCreateRequest userCreateRequest) {
 
-		boolean hasEmail = userRepository.existsByEmail(userCreateRequest.email());
+		boolean hasEmail = userRepository.emailUnique(userCreateRequest.email());
 		UserError.EXISTS_EMAIL.isFalse(hasEmail);
 
 		UserEntity entity = userConvert.buildEntity(userCreateRequest);
@@ -31,6 +31,7 @@ public class UserService {
 	}
 
 	public UserDomain getByEmail(String email) {
-		return null;
+		UserEntity entity = userRepository.findByEmail(email);
+		return userConvert.buildDomain(entity);
 	}
 }

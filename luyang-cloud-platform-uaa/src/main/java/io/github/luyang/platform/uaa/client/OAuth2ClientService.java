@@ -30,7 +30,7 @@ public class OAuth2ClientService {
 	 */
 	public OAuth2ClientCreateResponse create(OAuth2ClientCreateRequest request) {
 
-		boolean hasClientName = clientRepository.checkClientNameUnique(request.clientName());
+		boolean hasClientName = clientRepository.clientNameUnique(request.clientName());
 		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
 		OAuth2ClientEntity entity = clientConverter.buildEntity(request);

@@ -17,7 +17,7 @@ public class OAuth2ClientRepository extends ServiceImpl<OAuth2ClientMapper, OAut
 
 	private final OAuth2ClientMapper clientMapper;
 
-	public boolean checkClientNameUnique(String clientName) {
+	public boolean clientNameUnique(String clientName) {
 		return this.lambdaQuery().eq(OAuth2ClientEntity::getClientName, clientName).exists();
 	}
 }

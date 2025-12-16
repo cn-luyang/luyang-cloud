@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8051
 spring:
   application:
     name: platform-uaa
@@ -34,17 +34,22 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
-#dubbo:
-#  registry:
-#    address: nacos://${NACOS_HOST}
-#    username: ${NACOS_USERNAME}
-#    password: ${NACOS_PASSWORD}
-#    register-mode: instance
-#  protocol:
-#    name: tri
-#    port: -1
-#  application:
-#    name: ${spring.application.name}
-#    qos-enable: false
-#  consumer:
-#    check: false
+dubbo:
+  registry:
+    address: nacos://${NACOS_HOST}
+    username: ${NACOS_USERNAME}
+    password: ${NACOS_PASSWORD}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: -1
+  application:
+    name: ${spring.application.name}
+    qos-enable: false
+  consumer:
+    check: false
+
+luyang:
+  uaa:
+    oauth2:
+      login-page-url: http://localhost:8080/login-page

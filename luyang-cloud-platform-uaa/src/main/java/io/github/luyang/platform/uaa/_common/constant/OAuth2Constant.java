@@ -37,7 +37,7 @@ public class OAuth2Constant {
 	public static final String REDIS_LOGIN_TICKET_KEY_PREFIX = COOKIE_LOGIN_TICKET.concat(StrPool.COLON);
 
 	/**
-	 * 登录凭证的过期时间，设置为3分钟，保证临时凭证的短期有效性
+	 * 登录凭证的过期时间
 	 */
-	public static final Duration LOGIN_TICKET_DURATION = Duration.ofSeconds(3 * 60);
+	public static final Duration LOGIN_TICKET_TTL = Duration.ofHours(1);
 }

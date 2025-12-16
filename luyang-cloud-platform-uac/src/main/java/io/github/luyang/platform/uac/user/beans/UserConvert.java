@@ -19,4 +19,6 @@ public interface UserConvert {
 
 	@Mapping(target = "userId", expression = "java(\"u_\" + IdUtil.nanoId(32))")
 	UserEntity buildEntity(UserCreateRequest userCreateRequest);
+
+	UserDomain buildDomain(UserEntity entity);
 }
