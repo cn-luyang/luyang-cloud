@@ -48,7 +48,7 @@ CREATE TABLE `oauth2_code`
     `code_challenge`        VARCHAR(64)  NOT NULL COMMENT 'PKCE码',
     `code_challenge_method` VARCHAR(16)  NOT NULL COMMENT 'PKCE算法',
     `expires_time`          DATETIME(3)  NOT NULL COMMENT '过期时间（通常 10 分钟）',
-    `used`                  BOOLEAN     DEFAULT FALSE COMMENT '是否已使用',
+    `used`                  BOOLEAN     DEFAULT FALSE COMMENT '是否已使用: {[1:已使用:true] [0:未使用:false]}',
     `used_time`             DATETIME(3) DEFAULT NULL COMMENT '使用时间',
     `created_by`            VARCHAR(64) DEFAULT NULL COMMENT '创建人',
     `created_time`          DATETIME(3) DEFAULT NULL COMMENT '创建时间',

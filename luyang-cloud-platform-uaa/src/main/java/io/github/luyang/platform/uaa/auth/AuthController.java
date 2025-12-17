@@ -3,6 +3,7 @@ package io.github.luyang.platform.uaa.auth;
 import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,5 +69,17 @@ public class AuthController {
 		);
 
 		authService.authorize(authorizeRequest);
+	}
+
+	@PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public void token(
+		@RequestParam("grant_type") String grantType,
+		@RequestParam(value = "code", required = false) String code,
+		@RequestParam(value = "redirect_uri", required = false) String redirectUri,
+		@RequestParam(value = "client_id", required = false) String clientId,
+		@RequestParam(value = "code_verifier", required = false) String codeVerifier,
+		@RequestParam(value = "refresh_token", required = false) String refreshToken
+	) {
+
 	}
 }

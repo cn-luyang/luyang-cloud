@@ -32,15 +32,10 @@ public record OAuth2ClientDomain(
 	 * @return 如果重定向URI为空，或者包含给定的URI，则返回 true，否则返回 false
 	 * @author yang.lu
 	 */
-	public boolean isValidRedirectUrl(String uri) {
+	public boolean isValidRedirectUri(String uri) {
 
 		return CollUtil.emptyIfNull(redirectUris).stream()
 			.filter(StrUtil::isNotBlank)
 			.anyMatch(allowedUri -> StrUtil.startWith(allowedUri, uri));
 	}
-
-	/*public boolean isValidScopes(String scopes) {
-		List<String> split = StrUtil.split(scopes, StrPool.COMMA);
-		return CollUtil.containsAll(this.scopes, split);
-	}*/
 }

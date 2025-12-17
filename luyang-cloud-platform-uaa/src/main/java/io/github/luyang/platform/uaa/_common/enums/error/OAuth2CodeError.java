@@ -7,15 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 登录相关错误枚举
+ * OAuth2 业务错误码枚举
  *
  * @author yang.lu
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum LoginError implements ExceptionAssert<String> {
+public enum OAuth2CodeError implements ExceptionAssert<String> {
 
-	UNSUPPORTED_LOGIN_METHOD("login:unsupported_login_method", "不支持的登录方式");
+	CODE_SAVE_FAILED("oauth2_code:code_save_failed", "授权码入库保存失败"),
+	;
 
 	private final String code;
 	private final String message;

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Token风格相关枚举
+ * Token 风格相关枚举
  *
  * @author yang.lu
  */

@@ -8,7 +8,7 @@ import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
-import io.github.luyang.platform.uaa._common.enums.error.ClientError;
+import io.github.luyang.platform.uaa._common.enums.error.OAuth2ClientError;
 import io.github.luyang.platform.uaa._common.properties.OAuth2Properties;
 import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
@@ -93,13 +93,13 @@ public class AuthService {
 
 		// Redis绑定登录凭证与用户ID，设置3分钟失效
 		redissonHelper.setString(
-			OAuth2Constant.REDIS_LOGIN_TICKET_KEY_PREFIX.concat(ticket),
+			OAuth2Constant.buildLoginTicketRedisKey(ticket),
 			authResult.userId(),
 			OAuth2Constant.LOGIN_TICKET_TTL);
 
 		// 认证成功，执行 302 跳转
 		httpServletResponse.sendRedirect(
-			UriComponentsBuilder.fromUriString(loginParam.getTarget())
+			UriComponentsBuilder.fromPath(loginParam.getTarget())
 				.build()
 				.toUriString());
 	}
@@ -111,12 +111,12 @@ public class AuthService {
 		ValidationUtil.validate(authorizeRequest);
 
 		// 获取客户端信息
-		OAuth2ClientDomain clientDomain = clientService.getDomain(authorizeRequest.clientId());
-		ClientError.INVALID_CLIENT.notNull(clientDomain);
+		OAuth2ClientDomain clientDomain = clientService.getDomainByClientId(authorizeRequest.clientId());
+		OAuth2ClientError.CLIENT_NOT_FOUND.notNull(clientDomain);
 
 		// 校验 redirect_uri 是否在允许的回调地址中
-		boolean validRedirectUri = clientDomain.isValidRedirectUrl(authorizeRequest.redirectUri());
-		ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
+		boolean validRedirectUri = clientDomain.isValidRedirectUri(authorizeRequest.redirectUri());
+		OAuth2ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
 
 		// 获取登录凭证Cookie
 		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuth2Constant.COOKIE_LOGIN_TICKET);
@@ -125,7 +125,7 @@ public class AuthService {
 		String userId = Optional.ofNullable(cookie)
 			.map(Cookie::getValue)
 			.filter(StrUtil::isNotBlank)
-			.map(OAuth2Constant.REDIS_LOGIN_TICKET_KEY_PREFIX::concat)
+			.map(OAuth2Constant::buildLoginTicketRedisKey)
 			.map(redissonHelper::<String>getString)
 			.orElse(null);
 

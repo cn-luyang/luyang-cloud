@@ -8,4 +8,6 @@ import org.mapstruct.Mapper;
 public interface OAuth2CodeConvert {
 
 	OAuth2CodeEntity buildEntity(OAuth2CodeCreateParam param);
+
+	OAuth2CodeDomain buildDomain(OAuth2CodeEntity entity);
 }

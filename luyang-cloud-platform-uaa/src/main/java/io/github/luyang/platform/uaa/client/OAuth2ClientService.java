@@ -1,6 +1,6 @@
 package io.github.luyang.platform.uaa.client;
 
-import io.github.luyang.platform.uaa._common.enums.error.ClientError;
+import io.github.luyang.platform.uaa._common.enums.error.OAuth2ClientError;
 import io.github.luyang.platform.uaa.client.beans.OAuth2ClientConverter;
 import io.github.luyang.platform.uaa.client.beans.OAuth2ClientDomain;
 import io.github.luyang.platform.uaa.client.beans.body.OAuth2ClientCreateRequest;
@@ -31,11 +31,12 @@ public class OAuth2ClientService {
 	public OAuth2ClientCreateResponse create(OAuth2ClientCreateRequest request) {
 
 		boolean hasClientName = clientRepository.clientNameUnique(request.clientName());
-		ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
+		OAuth2ClientError.EXISTS_CLIENT_NAME.isFalse(hasClientName);
 
 		OAuth2ClientEntity entity = clientConverter.buildEntity(request);
 
-		clientRepository.save(entity);
+		boolean hasSuccess = clientRepository.save(entity);
+		OAuth2ClientError.CLIENT_SAVE_FAILED.isTrue(hasSuccess);
 
 		return OAuth2ClientCreateResponse.build(entity.getClientId());
 	}
@@ -47,7 +48,7 @@ public class OAuth2ClientService {
 	 * @return 客户端领域模型
 	 * @author yang.lu
 	 */
-	public OAuth2ClientDomain getDomain(String clientId) {
+	public OAuth2ClientDomain getDomainByClientId(String clientId) {
 		OAuth2ClientEntity entity = clientRepository.getById(clientId);
 		return this.clientConverter.buildDomain(entity);
 	}

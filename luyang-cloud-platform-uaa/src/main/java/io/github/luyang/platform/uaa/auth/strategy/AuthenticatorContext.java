@@ -33,7 +33,7 @@ public class AuthenticatorContext {
 	public static AuthenticatorHandler getAuthenticator(LoginMethodEnum loginMethodEnum) {
 		AuthenticatorHandler authenticatorHandler = AUTH_POOL.get(loginMethodEnum);
 		// 如果认证处理器不存在，抛出 INVALID_GRANT 异常
-		LoginError.INVALID_LOGIN_TYPE.notNull(authenticatorHandler);
+		LoginError.UNSUPPORTED_LOGIN_METHOD.notNull(authenticatorHandler);
 		return authenticatorHandler;
 	}
 }

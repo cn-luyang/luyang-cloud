@@ -27,17 +27,24 @@ public class OAuth2Constant {
 	public static final String PARAM_STATE = "state";
 
 	/**
-	 * Cookie中存储登录凭证的键名
+	 * Cookie 中存储登录凭证的键名
 	 */
 	public static final String COOKIE_LOGIN_TICKET = "login_ticket";
-
-	/**
-	 * Redis中存储登录凭证的前缀，示例: login_ticket:xxx
-	 */
-	public static final String REDIS_LOGIN_TICKET_KEY_PREFIX = COOKIE_LOGIN_TICKET.concat(StrPool.COLON);
 
 	/**
 	 * 登录凭证的过期时间
 	 */
 	public static final Duration LOGIN_TICKET_TTL = Duration.ofHours(1);
+
+	public static String buildLoginTicketRedisKey(String ticket) {
+		return COOKIE_LOGIN_TICKET + StrPool.COLON + ticket;
+	}
+
+	public static String buildAuthorizationCodeRedisKey(String code) {
+		return "authorization_code:" + code;
+	}
+
+	public static String buildClientRedisKey(String clientId) {
+		return "client:" + clientId;
+	}
 }

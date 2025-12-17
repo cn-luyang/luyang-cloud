@@ -1,5 +1,6 @@
 package io.github.luyang.platform.uaa.code.beans.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,7 +22,7 @@ import java.util.Set;
 @TableName(value = "oauth2_code", autoResultMap = true)
 public class OAuth2CodeEntity extends BaseEntity {
 
-	@TableId
+	@TableId(type = IdType.ASSIGN_UUID)
 	private String code;
 	private String clientId;
 	private String userId;
