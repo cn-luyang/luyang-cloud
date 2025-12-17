@@ -67,6 +67,5 @@ public class OAuth2ClientEntity extends BaseEntity {
 	/**
 	 * 客户端描述
 	 */
-	@TableField(exist = false)
 	private String description;
 }

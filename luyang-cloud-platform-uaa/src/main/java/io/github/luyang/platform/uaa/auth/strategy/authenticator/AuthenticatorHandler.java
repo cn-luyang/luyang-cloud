@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uaa.auth.strategy;
+package io.github.luyang.platform.uaa.auth.strategy.authenticator;
 
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 

@@ -8,12 +8,17 @@ import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
+import io.github.luyang.platform.uaa._common.enums.db.OAuth2GrantType;
 import io.github.luyang.platform.uaa._common.enums.error.OAuth2ClientError;
 import io.github.luyang.platform.uaa._common.properties.OAuth2Properties;
 import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
+import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
+import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenResponse;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
-import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorContext;
-import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorHandler;
+import io.github.luyang.platform.uaa.auth.strategy.authenticator.AuthenticatorContext;
+import io.github.luyang.platform.uaa.auth.strategy.authenticator.AuthenticatorHandler;
+import io.github.luyang.platform.uaa.auth.strategy.grant.OAuth2GrantContext;
+import io.github.luyang.platform.uaa.auth.strategy.grant.OAuth2GrantHandler;
 import io.github.luyang.platform.uaa.client.OAuth2ClientService;
 import io.github.luyang.platform.uaa.client.beans.OAuth2ClientDomain;
 import io.github.luyang.platform.uaa.code.OAuth2CodeService;
@@ -56,12 +61,6 @@ public class AuthService {
 	private final HttpServletResponse httpServletResponse;
 	private final HttpServletRequest httpServletRequest;
 
-	/**
-	 * 登录
-	 *
-	 * @param maps 登录请求参数映射
-	 * @author yang.lu
-	 */
 	@SneakyThrows
 	public void login(Map<String, Object> maps) {
 
@@ -118,7 +117,7 @@ public class AuthService {
 		boolean validRedirectUri = clientDomain.isValidRedirectUri(authorizeRequest.redirectUri());
 		OAuth2ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
 
-		// 获取登录凭证Cookie
+		// 获取登录凭证 Cookie
 		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuth2Constant.COOKIE_LOGIN_TICKET);
 
 		// 过滤出Cookie值，从缓存中获取对应的UserId
@@ -167,5 +166,16 @@ public class AuthService {
 			.toUriString();
 
 		httpServletResponse.sendRedirect(callbackUrl);
+	}
+
+	public ApplyTokenResponse applyToken(ApplyTokenRequest applyTokenRequest) {
+
+		// 校验参数
+		ValidationUtil.validate(applyTokenRequest);
+
+		OAuth2GrantType grantType = IBaseEnum.getByCode(OAuth2GrantType.class, applyTokenRequest.grantType());
+		OAuth2GrantHandler grantHandler = OAuth2GrantContext.getOAuth2GrantHandler(grantType);
+
+		return grantHandler.handle(applyTokenRequest);
 	}
 }

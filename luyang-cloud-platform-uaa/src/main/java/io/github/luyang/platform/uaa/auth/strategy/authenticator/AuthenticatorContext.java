@@ -1,9 +1,9 @@
-package io.github.luyang.platform.uaa.auth.strategy;
+package io.github.luyang.platform.uaa.auth.strategy.authenticator;
 
 import cn.hutool.extra.spring.SpringUtil;
 import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.error.LoginError;
-import io.github.luyang.platform.uaa.auth.strategy.authenticator.PasswordAuthenticatorHandler;
+import io.github.luyang.platform.uaa.auth.strategy.authenticator.handler.PasswordAuthenticatorHandler;
 import lombok.experimental.UtilityClass;
 
 import java.util.Map;

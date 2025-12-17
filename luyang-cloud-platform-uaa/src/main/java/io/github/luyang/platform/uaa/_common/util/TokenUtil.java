@@ -24,7 +24,6 @@ public class TokenUtil {
 	 */
 	private static final int REFRESH_TOKEN_LENGTH = 64;
 
-
 	/**
 	 * 生成令牌
 	 *

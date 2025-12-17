@@ -1,7 +1,10 @@
 package io.github.luyang.platform.uaa.auth;
 
 import cn.hutool.core.util.StrUtil;
+import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
+import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenResponse;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
+import io.github.luyang.starter.base.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,8 +62,8 @@ public class AuthController {
 		@RequestParam(value = "scope", required = false) String scope,
 		@RequestParam(value = "state", required = false) String state,
 		@RequestParam(value = "nonce", required = false) String nonce,
-		@RequestParam(value = "code_challenge", required = false) String codeChallenge,
-		@RequestParam(value = "code_challenge_method", required = false) String codeChallengeMethod
+		@RequestParam(value = "code_challenge") String codeChallenge,
+		@RequestParam(value = "code_challenge_method") String codeChallengeMethod
 	) {
 
 		Set<String> scopes = new HashSet<>(StrUtil.split(scope, StrUtil.SPACE));
@@ -72,7 +75,7 @@ public class AuthController {
 	}
 
 	@PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public void token(
+	public Result<ApplyTokenResponse> token(
 		@RequestParam("grant_type") String grantType,
 		@RequestParam(value = "code", required = false) String code,
 		@RequestParam(value = "redirect_uri", required = false) String redirectUri,
@@ -80,6 +83,10 @@ public class AuthController {
 		@RequestParam(value = "code_verifier", required = false) String codeVerifier,
 		@RequestParam(value = "refresh_token", required = false) String refreshToken
 	) {
+		ApplyTokenRequest applyTokenRequest = new ApplyTokenRequest(
+			grantType, code, redirectUri, clientId, codeVerifier, refreshToken
+		);
 
+		return Result.success(authService.applyToken(applyTokenRequest));
 	}
 }

@@ -1,6 +1,5 @@
 package io.github.luyang.platform.uaa.code;
 
-import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uaa._common.enums.error.OAuth2CodeError;
 import io.github.luyang.platform.uaa.code.beans.OAuth2CodeConvert;
 import io.github.luyang.platform.uaa.code.beans.OAuth2CodeDomain;
@@ -40,5 +39,15 @@ public class OAuth2CodeService {
 	public OAuth2CodeDomain getDomainByCode(String code) {
 		OAuth2CodeEntity entity = codeRepository.getById(code);
 		return codeConvert.buildDomain(entity);
+	}
+
+	/**
+	 * 作废授权码
+	 *
+	 * @param code 授权码
+	 * @author yang.lu
+	 */
+	public void consumedCode(String code) {
+		codeRepository.consumedCode(code);
 	}
 }

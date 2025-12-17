@@ -18,7 +18,7 @@ import java.util.Set;
  * @param state               防止 CSRF（跨站请求伪造），由客户端生成，客户端收到重定向回调后，必须校验返回的 state 是否与自己生成的一致
  * @param nonce               防止 id_token 重放。由客户端生成，服务器将其写入 id_token；客户端收到 id_token 后比对 nonce 值，不一致即拒绝
  * @param codeChallenge       PKCE码。客户端生成code_verifier并计算challenge，服务端计算verifier的哈希值并与存储的challenge比对
- * @param codeChallengeMethod PKCE的算法方式
+ * @param codeChallengeMethod PKCE的编码方式
  * @author yang.lu
  */
 public record AuthorizeRequest(
@@ -34,7 +34,6 @@ public record AuthorizeRequest(
 
 	Set<String> scopes,
 
-	@NotBlank(message = "防CSRF令牌不能为空")
 	String state,
 
 	@NotBlank(message = "防重放随机值不能为空")
@@ -43,7 +42,7 @@ public record AuthorizeRequest(
 	@NotBlank(message = "PKCE码不能为空")
 	String codeChallenge,
 
-	@InEnum(value = CodeChallengeMethodEnum.class, message = "PKCE算法类型不正确")
+	@InEnum(value = CodeChallengeMethodEnum.class, message = "PKCE编码方式类型不正确")
 	String codeChallengeMethod
 ) {
 }

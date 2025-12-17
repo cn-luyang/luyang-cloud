@@ -1,9 +1,6 @@
 package io.github.luyang.platform.uaa.token;
 
 import io.github.luyang.platform.uaa.token.beans.OAuth2TokenConvert;
-import io.github.luyang.platform.uaa.token.beans.bo.OAuth2TokenCreateParam;
-import io.github.luyang.platform.uaa.token.beans.bo.OAuth2TokenCreateResult;
-import io.github.luyang.platform.uaa.token.beans.entity.OAuth2TokenEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OAuth2TokenService {
 
-	private final OAuth2TokenRepository oAuth2TokenRepository;
-	private final OAuth2TokenConvert oAuth2TokenConvert;
+	private final OAuth2TokenRepository tokenRepository;
+	private final OAuth2TokenConvert tokenConvert;
 
-	public OAuth2TokenCreateResult create(OAuth2TokenCreateParam param) {
+	public void issueToken() {
 
-		// 移除同一客户端和用户下的旧 Token
-		this.oAuth2TokenRepository.removeByClientIdAndUserId(param.clientId(), param.userId());
-
-		// 构建并持久化 Token 实体
-		OAuth2TokenEntity entity = oAuth2TokenConvert.buildEntity(param);
-		oAuth2TokenRepository.save(entity);
-
-		return oAuth2TokenConvert.buildOAuth2TokenCreateResult(entity);
 	}
+
 }

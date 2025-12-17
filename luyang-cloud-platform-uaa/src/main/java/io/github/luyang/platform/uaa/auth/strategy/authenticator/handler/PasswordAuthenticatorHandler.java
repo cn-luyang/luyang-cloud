@@ -1,11 +1,11 @@
-package io.github.luyang.platform.uaa.auth.strategy.authenticator;
+package io.github.luyang.platform.uaa.auth.strategy.authenticator.handler;
 
 import cn.hutool.core.bean.BeanUtil;
 import io.github.luyang.api.uac.UserRemoteService;
 import io.github.luyang.api.uac.request.AccountAuthRequest;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa.auth.beans.bo.PasswordLoginParam;
-import io.github.luyang.platform.uaa.auth.strategy.AuthenticatorHandler;
+import io.github.luyang.platform.uaa.auth.strategy.authenticator.AuthenticatorHandler;
 import io.github.luyang.starter.base.model.Result;
 import io.github.luyang.starter.base.model.ResultOps;
 import lombok.RequiredArgsConstructor;

@@ -1,10 +1,13 @@
 package io.github.luyang.platform.uaa.code.beans;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
+import io.github.luyang.platform.uaa._common.enums.CodeChallengeMethodEnum;
+import io.github.luyang.starter.base.enums.IBaseEnum;
+import org.apache.commons.codec.digest.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Set;
 
 /**
@@ -26,7 +29,29 @@ public record OAuth2CodeDomain(
 	LocalDateTime usedTime
 ) {
 
-	public boolean isValidCode() {
-		return BooleanUtil.isFalse(used) && expiresTime.isAfter(LocalDateTime.now());
+	/**
+	 * 验证 PKCE code_verifier
+	 *
+	 * @param codeVerifier 客户端提供的验证码
+	 * @return true 验证通过， false 验证失败
+	 * @author yang.lu
+	 */
+	public boolean validatePkce(String codeVerifier) {
+
+		// 获取 PKCE 编码方式枚举
+		CodeChallengeMethodEnum codeChallengeMethodEnum = IBaseEnum.getByCode(CodeChallengeMethodEnum.class, codeChallengeMethod);
+		return switch (codeChallengeMethodEnum) {
+			case PLAIN -> StrUtil.equals(codeChallenge, codeVerifier);
+			case S256 -> {
+				// code_verifier 作为 ASCII 字符串处理
+				byte[] verifierBytes = codeVerifier.getBytes(StandardCharsets.US_ASCII);
+				// 计算 SHA256 哈希
+				byte[] hash = DigestUtils.getSha256Digest().digest(verifierBytes);
+				// Base64 URL 编码
+				String computedChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
+				// 比较是否一样
+				yield StrUtil.equals(computedChallenge, codeChallenge);
+			}
+		};
 	}
 }
