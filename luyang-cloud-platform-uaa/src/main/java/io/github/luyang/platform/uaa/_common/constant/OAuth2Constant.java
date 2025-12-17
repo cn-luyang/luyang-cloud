@@ -5,7 +5,7 @@ import cn.hutool.core.text.StrPool;
 import java.time.Duration;
 
 /**
- * OAuth 相关常量
+ * OAuth2 相关常量定义
  *
  * @author yang.lu
  */
@@ -22,7 +22,7 @@ public class OAuth2Constant {
 	public static final String PARAM_CODE = "code";
 
 	/**
-	 * 防CSRF状态参数名
+	 * 防 CSRF 状态参数名
 	 */
 	public static final String PARAM_STATE = "state";
 
@@ -36,14 +36,35 @@ public class OAuth2Constant {
 	 */
 	public static final Duration LOGIN_TICKET_TTL = Duration.ofHours(1);
 
+	/**
+	 * 构建登录凭证的 Redis 键
+	 *
+	 * @param ticket 登录凭证
+	 * @return Redis 键
+	 * @author yang.lu
+	 */
 	public static String buildLoginTicketRedisKey(String ticket) {
 		return COOKIE_LOGIN_TICKET + StrPool.COLON + ticket;
 	}
 
+	/**
+	 * 构建授权码的 Redis 键
+	 *
+	 * @param code 授权码
+	 * @return Redis 键
+	 * @author yang.lu
+	 */
 	public static String buildAuthorizationCodeRedisKey(String code) {
 		return "authorization_code:" + code;
 	}
 
+	/**
+	 * 构建客户端的 Redis 键
+	 *
+	 * @param clientId 客户端 ID
+	 * @return Redis 键
+	 * @author yang.lu
+	 */
 	public static String buildClientRedisKey(String clientId) {
 		return "client:" + clientId;
 	}

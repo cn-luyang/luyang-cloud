@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * Token 实体
+ * OAuth2 令牌实体
  *
  * @author yang.lu
  */

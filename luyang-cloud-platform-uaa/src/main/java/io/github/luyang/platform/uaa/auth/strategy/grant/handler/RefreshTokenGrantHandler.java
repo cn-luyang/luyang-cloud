@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author yang.lu
  */
 @Component
-public class RefreshTokenHandler implements OAuth2GrantHandler {
+public class RefreshTokenGrantHandler implements OAuth2GrantHandler {
 
 	@Override
 	public ApplyTokenResponse handle(ApplyTokenRequest request) {

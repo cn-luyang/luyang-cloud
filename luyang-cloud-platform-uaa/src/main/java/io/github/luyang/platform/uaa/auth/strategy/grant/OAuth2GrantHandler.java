@@ -12,8 +12,10 @@ public interface OAuth2GrantHandler {
 
 	/**
 	 * 执行授权流程
+	 *
 	 * @param request 授权请求
 	 * @return 授权响应
+	 * @author yang.lu
 	 */
 	ApplyTokenResponse handle(ApplyTokenRequest request);
 

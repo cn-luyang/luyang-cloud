@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 
 /**
+ * 登录参数基类
+ *
  * @author yang.lu
  */
 @Getter

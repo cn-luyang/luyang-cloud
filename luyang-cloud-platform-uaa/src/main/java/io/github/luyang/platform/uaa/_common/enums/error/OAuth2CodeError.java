@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * OAuth2 业务错误码枚举
+ * OAuth2 授权码错误枚举
  *
  * @author yang.lu
  */
@@ -25,9 +25,6 @@ public enum OAuth2CodeError implements ExceptionAssert<String> {
 	INVALID_CODE_CHALLENGE_METHOD("oauth2_code:invalid_code_challenge_method", "PKCE 编码方式无效"),
 	UNSUPPORTED_CODE_CHALLENGE_METHOD("unsupported_code_challenge_method", "不支持的 PKCE 编码方式"),
 	CODE_VERIFIER_MISMATCH("oauth2_code:code_verifier_mismatch", "PKCE 验证码验证失败"),
-
-
-
 	;
 
 	private final String code;

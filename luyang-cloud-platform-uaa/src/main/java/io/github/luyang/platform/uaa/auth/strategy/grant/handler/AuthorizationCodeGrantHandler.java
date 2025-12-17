@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Component
 @RequiredArgsConstructor
-public class AuthorizationCodeHandler implements OAuth2GrantHandler {
+public class AuthorizationCodeGrantHandler implements OAuth2GrantHandler {
 
 	private final OAuth2CodeService codeService;
 	private final OAuth2TokenService tokenService;

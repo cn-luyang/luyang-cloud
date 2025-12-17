@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 /**
+ * OAuth2 令牌数据访问层
+ *
  * @author yang.lu
  */
 @Repository

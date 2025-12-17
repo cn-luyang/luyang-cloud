@@ -36,6 +36,13 @@ public class OAuth2CodeService {
 		return OAuth2CodeCreateResult.build(entity.getCode());
 	}
 
+	/**
+	 * 根据授权码获取领域模型
+	 *
+	 * @param code 授权码
+	 * @return 领域模型
+	 * @author yang.lu
+	 */
 	public OAuth2CodeDomain getDomainByCode(String code) {
 		OAuth2CodeEntity entity = codeRepository.getById(code);
 		return codeConvert.buildDomain(entity);

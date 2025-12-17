@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ * 密码认证处理器
+ *
  * @author yang.lu
  */
 @Component

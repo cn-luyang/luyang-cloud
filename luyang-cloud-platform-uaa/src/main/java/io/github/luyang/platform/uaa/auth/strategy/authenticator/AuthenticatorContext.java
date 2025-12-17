@@ -24,15 +24,14 @@ public class AuthenticatorContext {
 	}
 
 	/**
-	 * 获取指定的登录实例
+	 * 获取认证处理器
 	 *
 	 * @param loginMethodEnum 登录方式
-	 * @return MultiFactorAuthenticator<T> 登录处理
+	 * @return 认证处理器
 	 * @author yang.lu
 	 */
 	public static AuthenticatorHandler getAuthenticator(LoginMethodEnum loginMethodEnum) {
 		AuthenticatorHandler authenticatorHandler = AUTH_POOL.get(loginMethodEnum);
-		// 如果认证处理器不存在，抛出 INVALID_GRANT 异常
 		LoginError.UNSUPPORTED_LOGIN_METHOD.notNull(authenticatorHandler);
 		return authenticatorHandler;
 	}

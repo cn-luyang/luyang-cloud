@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @author yang.lu
  */
 @Component
-public class ClientCredentialsHandler implements OAuth2GrantHandler {
+public class ClientCredentialsGrantHandler implements OAuth2GrantHandler {
 	@Override
 	public ApplyTokenResponse handle(ApplyTokenRequest request) {
 		return null;

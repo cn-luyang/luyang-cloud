@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 密码登录参数
+ *
  * @author yang.lu
  */
 @Getter
