@@ -7,19 +7,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
+ * 认证授权配置属性
+ *
  * @author yang.lu
  */
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties(prefix = OAuth2Properties.PREFIX)
-public class OAuth2Properties {
+@ConfigurationProperties(prefix = AuthProperties.PREFIX)
+public class AuthProperties {
 
-	public static final String PREFIX = "luyang.uaa.oauth2";
+	public static final String PREFIX = "luyang.uaa.auth";
 
 	/**
 	 * 登录页面地址
 	 */
-	@NotBlank(message = "登录页面地址不能为空字符串")
+	@NotBlank(message = "登录页面地址不能为空")
 	private String loginPageUrl;
 }

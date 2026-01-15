@@ -11,14 +11,14 @@ import lombok.EqualsAndHashCode;
 import java.util.Set;
 
 /**
- * OAuth2 客户端实体
+ * 客户端实体
  *
  * @author yang.lu
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "oauth2_client", autoResultMap = true)
-public class OAuth2ClientEntity extends BaseEntity {
+@TableName(value = "auth_client", autoResultMap = true)
+public class ClientEntity extends BaseEntity {
 
 	/**
 	 * 客户端 ID

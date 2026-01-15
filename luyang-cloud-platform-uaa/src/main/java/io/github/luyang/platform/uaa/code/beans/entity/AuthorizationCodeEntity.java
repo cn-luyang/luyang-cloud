@@ -19,8 +19,8 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@TableName(value = "oauth2_code", autoResultMap = true)
-public class OAuth2CodeEntity extends BaseEntity {
+@TableName(value = "auth_authorization_code", autoResultMap = true)
+public class AuthorizationCodeEntity extends BaseEntity {
 
 	@TableId(type = IdType.ASSIGN_UUID)
 	private String code;

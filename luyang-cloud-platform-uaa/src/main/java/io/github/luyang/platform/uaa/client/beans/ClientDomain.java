@@ -16,7 +16,7 @@ import java.util.Set;
  * @param scopes               授权范围列表
  * @author yang.lu
  */
-public record OAuth2ClientDomain(
+public record ClientDomain(
 	String clientId,
 	String clientName,
 	Integer accessTokenValidity,

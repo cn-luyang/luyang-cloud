@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.URL;
 import java.util.Set;
 
 /**
- * OAuth2 客户端创建请求参数
+ * 客户端创建请求参数
  *
  * @param clientName           客户端名称
  * @param accessTokenValidity  访问令牌有效期（秒）
@@ -20,7 +20,7 @@ import java.util.Set;
  * @param description          客户端描述
  * @author yang.lu
  */
-public record OAuth2ClientCreateRequest(
+public record ClientCreateRequest(
 
 	@NotBlank(message = "客户端名称不能为空")
 	@Size(max = 64, message = "客户端名称不能超过 64 个字符")

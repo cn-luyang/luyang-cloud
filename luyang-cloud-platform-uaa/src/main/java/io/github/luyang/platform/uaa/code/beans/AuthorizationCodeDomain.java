@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author yang.lu
  */
-public record OAuth2CodeDomain(
+public record AuthorizationCodeDomain(
 	String code,
 	String clientId,
 	String userId,

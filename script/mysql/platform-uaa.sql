@@ -1,4 +1,4 @@
-CREATE TABLE `oauth2_client`
+CREATE TABLE `auth_client`
 (
     `client_id`                           VARCHAR(64)  NOT NULL COMMENT '客户端ID',
     `client_name`                         VARCHAR(64)  NOT NULL COMMENT '客户端名称',
@@ -20,7 +20,7 @@ CREATE TABLE `oauth2_client`
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE = INNODB COMMENT = '客户端表';
 
-CREATE TABLE `oauth2_code`
+CREATE TABLE `auth_authorization_code`
 (
     `code`                  VARCHAR(64)  NOT NULL COMMENT '授权码',
     `client_id`             VARCHAR(64)  NOT NULL COMMENT '客户端ID',
@@ -42,7 +42,7 @@ CREATE TABLE `oauth2_code`
     PRIMARY KEY (`code`) USING BTREE
 ) ENGINE = INNODB COMMENT = '授权码表';
 
-CREATE TABLE `oauth2_token`
+CREATE TABLE `auth_token`
 (
     `id`                       VARCHAR(64) NOT NULL COMMENT '主键ID',
     `client_id`                VARCHAR(64) NOT NULL COMMENT '客户端ID',

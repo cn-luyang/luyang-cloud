@@ -7,13 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * OAuth2 授权码错误枚举
+ * 授权码错误枚举
  *
  * @author yang.lu
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum OAuth2CodeError implements ExceptionAssert<String> {
+public enum AuthorizationCodeError implements ExceptionAssert<String> {
 
 	CODE_SAVE_FAILED("oauth2_code:code_save_failed", "授权码入库保存失败"),
 	CODE_NOT_FOUND("oauth2_code:code_not_found", "授权码不存在或已被删除"),

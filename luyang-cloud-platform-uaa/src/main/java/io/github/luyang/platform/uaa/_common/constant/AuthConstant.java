@@ -5,11 +5,11 @@ import cn.hutool.core.text.StrPool;
 import java.time.Duration;
 
 /**
- * OAuth2 相关常量定义
+ * 认证授权相关常量定义
  *
  * @author yang.lu
  */
-public class OAuth2Constant {
+public class AuthConstant {
 
 	/**
 	 * 登录跳转目标参数名

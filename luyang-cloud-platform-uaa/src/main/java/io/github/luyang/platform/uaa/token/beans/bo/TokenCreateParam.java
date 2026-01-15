@@ -12,7 +12,7 @@ import java.util.Map;
  * @param refreshTokenValidity 刷新令牌有效期 (秒)
  * @author yang.lu
  */
-public record OAuth2TokenCreateParam(
+public record TokenCreateParam(
 	String clientId,
 	String userId,
 	Map<String, Object> attachedInfoMap,

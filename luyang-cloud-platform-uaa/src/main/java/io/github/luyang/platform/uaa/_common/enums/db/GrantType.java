@@ -6,13 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * OAuth2 授权类型枚举。
+ * 授权类型枚举。
  *
  * @author yang.lu
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum OAuth2GrantType implements IBaseEnum<String> {
+public enum GrantType implements IBaseEnum<String> {
 
 	AUTHORIZATION_CODE("authorization_code ", "授权码模式"),
 	CLIENT_CREDENTIALS("client_credentials ", "客户端模式"),

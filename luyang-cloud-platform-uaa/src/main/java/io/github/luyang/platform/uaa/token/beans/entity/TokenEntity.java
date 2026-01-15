@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
- * OAuth2 令牌实体
+ * 令牌实体
  *
  * @author yang.lu
  */
 @Getter
 @Setter
-@TableName(value = "oauth2_token", autoResultMap = true)
-public class OAuth2TokenEntity extends BaseEntity {
+@TableName(value = "auth_token", autoResultMap = true)
+public class TokenEntity extends BaseEntity {
 
 	@TableId
 	private String id;

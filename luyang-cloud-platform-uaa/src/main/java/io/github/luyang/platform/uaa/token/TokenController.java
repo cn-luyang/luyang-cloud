@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/token")
-public class OAuth2TokenController {
+public class TokenController {
 
-	private final OAuth2TokenService oAuth2TokenService;
 }
