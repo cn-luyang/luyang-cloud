@@ -77,7 +77,7 @@ public class AuthService {
 		// 执行认证逻辑
 		AccountAuthResponse authResult = authenticatorHandler.authenticate(maps);
 
-		// 生成临时登录凭证
+		// 生成登录凭证
 		String ticket = IdUtil.fastSimpleUUID();
 
 		/*

@@ -1,6 +1,5 @@
 package io.github.luyang.platform.uaa.auth;
 
-import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenResponse;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 认证相关控制器
@@ -66,9 +63,8 @@ public class AuthController {
 		@RequestParam(value = "code_challenge_method") String codeChallengeMethod
 	) {
 
-		Set<String> scopes = new HashSet<>(StrUtil.split(scope, StrUtil.SPACE));
 		AuthorizeRequest authorizeRequest = new AuthorizeRequest(
-			clientId, redirectUri, responseType, scopes, state, nonce, codeChallenge, codeChallengeMethod
+			clientId, redirectUri, responseType, scope, state, nonce, codeChallenge, codeChallengeMethod
 		);
 
 		authService.authorize(authorizeRequest);
