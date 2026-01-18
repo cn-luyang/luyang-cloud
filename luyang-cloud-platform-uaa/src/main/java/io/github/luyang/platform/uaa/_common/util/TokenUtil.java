@@ -2,7 +2,9 @@ package io.github.luyang.platform.uaa._common.util;
 
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.IdUtil;
-import io.github.luyang.platform.uaa._common.enums.TokenStyleEnum;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -70,5 +72,12 @@ public class TokenUtil {
 		System.out.println("AccessToken: " + generateToken(TokenStyleEnum.ACCESS_TOKEN));
 		System.out.println("RefreshToken: " + generateToken(TokenStyleEnum.REFRESH_TOKEN));
 		System.out.println("ClientToken: " + generateToken(TokenStyleEnum.CLIENT_TOKEN));
+	}
+
+	@Getter
+	@AllArgsConstructor(access = AccessLevel.PRIVATE)
+	public enum TokenStyleEnum {
+
+		ACCESS_TOKEN, REFRESH_TOKEN, CLIENT_TOKEN
 	}
 }

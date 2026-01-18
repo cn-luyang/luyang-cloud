@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uaa.auth.strategy.grant;
 
 import cn.hutool.extra.spring.SpringUtil;
-import io.github.luyang.platform.uaa._common.enums.db.OAuth2GrantType;
+import io.github.luyang.platform.uaa._common.enums.dict.OAuth2GrantType;
 import io.github.luyang.platform.uaa._common.enums.error.OAuth2ClientError;
 import io.github.luyang.platform.uaa.auth.strategy.grant.handler.AuthorizationCodeGrantHandler;
 import lombok.experimental.UtilityClass;

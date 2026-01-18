@@ -6,16 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * PKCE 编码方式枚举
+ * 授权类型枚举
  *
  * @author yang.lu
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum PKCEMethodEnum implements IBaseEnum<String> {
+public enum GrantType implements IBaseEnum<String> {
 
-	PLAIN("plain", "直接使用 code_verifier"),
-	S256("S256", "SHA-256 + Base64URL 编码");
+	AUTHORIZATION_CODE("authorization_code ", "授权码模式"),
+	CLIENT_CREDENTIALS("client_credentials ", "客户端模式"),
+	REFRESH_TOKEN("refresh_token ", "刷新模式");
 
 	private final String code;
 	private final String message;

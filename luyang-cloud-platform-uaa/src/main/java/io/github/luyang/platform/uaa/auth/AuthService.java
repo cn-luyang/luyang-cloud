@@ -7,9 +7,10 @@ import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
-import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
-import io.github.luyang.platform.uaa._common.enums.db.OAuth2GrantType;
-import io.github.luyang.platform.uaa._common.enums.error.OAuth2ClientError;
+import io.github.luyang.platform.uaa._common.enums.LoginMethod;
+import io.github.luyang.platform.uaa._common.enums.dict.OAuth2GrantType;
+import io.github.luyang.platform.uaa._common.enums.infra.ErrorCode;
+import io.github.luyang.platform.uaa._common.enums.infra.RedisKey;
 import io.github.luyang.platform.uaa._common.properties.OAuth2Properties;
 import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
@@ -38,6 +39,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
@@ -71,36 +73,15 @@ public class AuthService {
 		ValidationUtil.validate(loginParam);
 
 		// 获取认证处理器
-		LoginMethodEnum loginMethodEnum = IBaseEnum.getByCode(LoginMethodEnum.class, loginParam.getLoginMethod());
-		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginMethodEnum);
+		LoginMethod loginMethod = IBaseEnum.getByCode(LoginMethod.class, loginParam.getLoginMethod());
+		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginMethod);
 
 		// 执行认证逻辑
 		AccountAuthResponse authResult = authenticatorHandler.authenticate(maps);
 
 		// 生成登录凭证
 		String ticket = IdUtil.fastSimpleUUID();
-
-		/*
-			将登录凭证添加到Cookie中，设置1小时失效
-			防止用户在1小时内访问不同应用时进行多次登陆认证
-		 */
-		JakartaServletUtil.addCookie(
-			httpServletResponse,
-			OAuth2Constant.COOKIE_LOGIN_TICKET,
-			ticket,
-			Math.toIntExact(OAuth2Constant.LOGIN_TICKET_TTL.getSeconds()));
-
-		// Redis绑定登录凭证与用户ID，设置3分钟失效
-		redissonHelper.setString(
-			OAuth2Constant.buildLoginTicketRedisKey(ticket),
-			authResult.userId(),
-			OAuth2Constant.LOGIN_TICKET_TTL);
-
-		// 认证成功，执行 302 跳转
-		httpServletResponse.sendRedirect(
-			UriComponentsBuilder.fromPath(loginParam.getTarget())
-				.build()
-				.toUriString());
+		redissonHelper.setString(RedisKey.LOGIN_TICKET.buildKey(ticket), authResult, Duration.ofSeconds(OAuth2Constant.LOGIN_TICKET_TTL.getSeconds()));
 	}
 
 	@SneakyThrows
@@ -111,11 +92,11 @@ public class AuthService {
 
 		// 获取客户端信息
 		OAuth2ClientDomain clientDomain = clientService.getDomainByClientId(authorizeRequest.clientId());
-		OAuth2ClientError.CLIENT_NOT_FOUND.notNull(clientDomain);
+		ErrorCode.CLIENT_NOT_FOUND.notNull(clientDomain);
 
 		// 校验 redirect_uri 是否在允许的回调地址中
 		boolean validRedirectUri = clientDomain.isValidRedirectUri(authorizeRequest.redirectUri());
-		OAuth2ClientError.INVALID_REDIRECT_URI.isTrue(validRedirectUri);
+		ErrorCode.CLIENT_REDIRECT_URI_INVALID.isTrue(validRedirectUri);
 
 		// 获取登录凭证 Cookie
 		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuth2Constant.COOKIE_LOGIN_TICKET);

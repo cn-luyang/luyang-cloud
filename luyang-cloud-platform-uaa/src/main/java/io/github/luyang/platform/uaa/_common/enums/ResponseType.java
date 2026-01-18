@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum ResponseTypeEnum implements IBaseEnum<String> {
+public enum ResponseType implements IBaseEnum<String> {
 
 	/**
 	 * 授权码模式 - 最安全的标准流程

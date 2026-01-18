@@ -1,6 +1,5 @@
 package io.github.luyang.platform.uaa.token.beans;
 
-import io.github.luyang.platform.uaa._common.enums.TokenStyleEnum;
 import io.github.luyang.platform.uaa._common.util.TokenUtil;
 import io.github.luyang.platform.uaa.token.beans.bo.TokenCreateParam;
 import io.github.luyang.platform.uaa.token.beans.bo.TokenCreateResult;
