@@ -17,8 +17,8 @@ import java.util.Set;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "auth_client", autoResultMap = true)
-public class ClientEntity extends BaseEntity {
+@TableName(value = "oauth2_client", autoResultMap = true)
+public class OAuth2ClientEntity extends BaseEntity {
 
 	/**
 	 * 客户端 ID
@@ -57,12 +57,17 @@ public class ClientEntity extends BaseEntity {
 	/**
 	 * 访问令牌有效期(秒)
 	 */
-	private Integer accessTokenValidity;
+	private Integer accessTokenValiditySeconds;
 
 	/**
 	 * 刷新令牌有效期(秒)
 	 */
-	private Integer refreshTokenValidity;
+	private Integer refreshTokenValiditySeconds;
+
+	/**
+	 * 授权码有效期(秒)
+	 */
+	private Integer authorizationCodeValiditySeconds;
 
 	/**
 	 * 客户端描述

@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum CodeChallengeMethodEnum implements IBaseEnum<String> {
+public enum PKCEMethodEnum implements IBaseEnum<String> {
 
 	PLAIN("plain", "直接使用 code_verifier"),
 	S256("S256", "SHA-256 + Base64URL 编码");

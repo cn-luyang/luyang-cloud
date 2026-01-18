@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uaa.client;
 
-import io.github.luyang.platform.uaa.client.beans.body.ClientCreateRequest;
-import io.github.luyang.platform.uaa.client.beans.body.ClientCreateResponse;
+import io.github.luyang.platform.uaa.client.beans.body.OAuth2ClientCreateRequest;
+import io.github.luyang.platform.uaa.client.beans.body.OAuth2ClientCreateResponse;
 import io.github.luyang.starter.base.model.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/client")
-public class ClientController {
+public class OAuth2ClientController {
 
-	private final ClientService clientService;
+	private final OAuth2ClientService clientService;
 
 	/**
 	 * 创建 客户端
@@ -29,7 +29,7 @@ public class ClientController {
 	 * @return 客户端创建响应
 	 */
 	@PostMapping
-	public Result<ClientCreateResponse> create(@Valid @RequestBody ClientCreateRequest request) {
+	public Result<OAuth2ClientCreateResponse> create(@Valid @RequestBody OAuth2ClientCreateRequest request) {
 		return Result.success(clientService.create(request));
 	}
 }

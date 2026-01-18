@@ -1,7 +1,5 @@
 package io.github.luyang.platform.uaa.token;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uaa.token.beans.entity.TokenEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class TokenRepository extends ServiceImpl<TokenMapper, TokenEntity> {
+public class OAuth2TokenRepository {
 
 }

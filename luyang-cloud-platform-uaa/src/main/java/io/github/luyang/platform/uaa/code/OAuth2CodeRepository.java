@@ -1,8 +1,8 @@
 package io.github.luyang.platform.uaa.code;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uaa._common.constant.AuthConstant;
-import io.github.luyang.platform.uaa.code.beans.entity.AuthorizationCodeEntity;
+import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
+import io.github.luyang.platform.uaa.code.beans.entity.OAuth2CodeEntity;
 import io.github.luyang.starter.redisson.helper.RedissonHelper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,19 +21,19 @@ import java.util.Optional;
  */
 @Repository
 @RequiredArgsConstructor
-public class AuthorizationCodeRepository extends ServiceImpl<AuthorizationCodeMapper, AuthorizationCodeEntity> {
+public class OAuth2CodeRepository extends ServiceImpl<OAuth2CodeMapper, OAuth2CodeEntity> {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthorizationCodeRepository.class);
+	private static final Logger logger = LoggerFactory.getLogger(OAuth2CodeRepository.class);
 
 	private final RedissonHelper redissonHelper;
 
 	@Override
-	public boolean save(AuthorizationCodeEntity entity) {
+	public boolean save(OAuth2CodeEntity entity) {
 
 		boolean hasSuccess = super.save(entity);
 		if (hasSuccess) {
 			// 添加 Redis缓存，有效期3分钟
-			String redisKey = AuthConstant.buildAuthorizationCodeRedisKey(entity.getCode());
+			String redisKey = OAuth2Constant.buildAuthorizationCodeRedisKey(entity.getCode());
 			redissonHelper.setString(redisKey, entity, Duration.ofMinutes(3));
 		}
 
@@ -41,20 +41,20 @@ public class AuthorizationCodeRepository extends ServiceImpl<AuthorizationCodeMa
 	}
 
 	@Override
-	public AuthorizationCodeEntity getById(Serializable code) {
-		String redisKey = AuthConstant.buildAuthorizationCodeRedisKey(code.toString());
-		AuthorizationCodeEntity entity = redissonHelper.getString(redisKey);
+	public OAuth2CodeEntity getById(Serializable code) {
+		String redisKey = OAuth2Constant.buildAuthorizationCodeRedisKey(code.toString());
+		OAuth2CodeEntity entity = redissonHelper.getString(redisKey);
 		return Optional.ofNullable(entity).orElseGet(() -> super.getById(code));
 	}
 
 	public void consumedCode(String code) {
 		boolean hasSuccess = this.lambdaUpdate()
-			.set(AuthorizationCodeEntity::getUsed, true)
-			.set(AuthorizationCodeEntity::getUsedTime, LocalDateTime.now())
-			.eq(AuthorizationCodeEntity::getCode, code)
+			.set(OAuth2CodeEntity::getUsed, true)
+			.set(OAuth2CodeEntity::getUsedAt, LocalDateTime.now())
+			.eq(OAuth2CodeEntity::getCode, code)
 			.update();
 		if (hasSuccess) {
-			String redisKey = AuthConstant.buildAuthorizationCodeRedisKey(code);
+			String redisKey = OAuth2Constant.buildAuthorizationCodeRedisKey(code);
 			try {
 				redissonHelper.remove(redisKey);
 			} catch (Exception e) {

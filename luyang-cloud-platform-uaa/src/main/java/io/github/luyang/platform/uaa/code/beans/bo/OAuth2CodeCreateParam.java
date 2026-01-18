@@ -3,7 +3,7 @@ package io.github.luyang.platform.uaa.code.beans.bo;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public record AuthorizationCodeCreateParam(
+public record OAuth2CodeCreateParam(
 	String clientId,
 	String userId,
 	Set<String> scopes,

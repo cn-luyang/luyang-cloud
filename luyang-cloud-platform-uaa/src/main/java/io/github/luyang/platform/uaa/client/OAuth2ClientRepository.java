@@ -2,8 +2,8 @@ package io.github.luyang.platform.uaa.client;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uaa._common.constant.AuthConstant;
-import io.github.luyang.platform.uaa.client.beans.entity.ClientEntity;
+import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
+import io.github.luyang.platform.uaa.client.beans.entity.OAuth2ClientEntity;
 import io.github.luyang.starter.redisson.helper.RedissonHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,16 +18,16 @@ import java.time.Duration;
  */
 @Repository
 @RequiredArgsConstructor
-public class ClientRepository extends ServiceImpl<ClientMapper, ClientEntity> {
+public class OAuth2ClientRepository extends ServiceImpl<OAuth2ClientMapper, OAuth2ClientEntity> {
 
 	private final RedissonHelper redissonHelper;
 
 	public boolean clientNameUnique(String clientName) {
-		return this.lambdaQuery().eq(ClientEntity::getClientName, clientName).exists();
+		return this.lambdaQuery().eq(OAuth2ClientEntity::getClientName, clientName).exists();
 	}
 
 	@Override
-	public boolean save(ClientEntity entity) {
+	public boolean save(OAuth2ClientEntity entity) {
 
 		boolean hasSuccess = super.save(entity);
 		if (hasSuccess) {
@@ -39,15 +39,15 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientEntity> {
 	}
 
 	@Override
-	public ClientEntity getById(Serializable clientId) {
+	public OAuth2ClientEntity getById(Serializable clientId) {
 
-		String redisKey = AuthConstant.buildClientRedisKey(clientId.toString());
-		ClientEntity cachedEntity = redissonHelper.getString(redisKey);
+		String redisKey = OAuth2Constant.buildClientRedisKey(clientId.toString());
+		OAuth2ClientEntity cachedEntity = redissonHelper.getString(redisKey);
 		if (null != cachedEntity) {
 			return cachedEntity;
 		}
 
-		ClientEntity entity = super.getById(clientId);
+		OAuth2ClientEntity entity = super.getById(clientId);
 		if (null != entity) {
 			cacheClient(entity);
 		}
@@ -55,9 +55,9 @@ public class ClientRepository extends ServiceImpl<ClientMapper, ClientEntity> {
 		return entity;
 	}
 
-	private void cacheClient(ClientEntity entity) {
+	private void cacheClient(OAuth2ClientEntity entity) {
 		// 添加 Redis缓存，有效期8小时
-		String redisKey = AuthConstant.buildClientRedisKey(entity.getClientId());
+		String redisKey = OAuth2Constant.buildClientRedisKey(entity.getClientId());
 		redissonHelper.setString(redisKey, entity, Duration.ofHours(8));
 	}
 }

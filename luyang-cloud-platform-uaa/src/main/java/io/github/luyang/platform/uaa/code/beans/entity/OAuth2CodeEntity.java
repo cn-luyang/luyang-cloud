@@ -19,20 +19,68 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@TableName(value = "auth_authorization_code", autoResultMap = true)
-public class AuthorizationCodeEntity extends BaseEntity {
+@TableName(value = "oauth2_code", autoResultMap = true)
+public class OAuth2CodeEntity extends BaseEntity {
 
+	/**
+	 * 授权码
+	 */
 	@TableId(type = IdType.ASSIGN_UUID)
 	private String code;
+
+	/**
+	 * 客户端 ID
+	 */
 	private String clientId;
+
+	/**
+	 * 用户ID
+	 */
 	private String userId;
+
+	/**
+	 * 申请的授权范围
+	 */
 	@TableField(typeHandler = JacksonTypeHandler.class)
 	private Set<String> scopes;
+
+	/**
+	 * 使用的回调地址
+	 */
 	private String redirectUri;
+
+	/**
+	 * OIDC Nonce参数
+	 */
 	private String nonce;
+
+	/**
+	 * PKCE 验证码
+	 */
 	private String codeChallenge;
+
+	/**
+	 * PKCE 计算方式
+	 */
 	private String codeChallengeMethod;
-	private LocalDateTime expiresTime;
+
+	/**
+	 * 颁发时间
+	 */
+	private LocalDateTime issuedAt;
+
+	/**
+	 * 过期时间
+	 */
+	private LocalDateTime expiresAt;
+
+	/**
+	 * 是否已使用: {[1:已使用:true] [0:未使用:false]}
+	 */
 	private Boolean used;
-	private LocalDateTime usedTime;
+
+	/**
+	 * 使用时间
+	 */
+	private LocalDateTime usedAt;
 }

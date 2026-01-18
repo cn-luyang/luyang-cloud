@@ -20,7 +20,7 @@ import java.util.Set;
  * @param description          客户端描述
  * @author yang.lu
  */
-public record ClientCreateRequest(
+public record OAuth2ClientCreateRequest(
 
 	@NotBlank(message = "客户端名称不能为空")
 	@Size(max = 64, message = "客户端名称不能超过 64 个字符")

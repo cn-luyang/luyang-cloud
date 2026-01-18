@@ -1,11 +1,11 @@
 package io.github.luyang.platform.uaa.code;
 
 import io.github.luyang.platform.uaa._common.enums.error.AuthorizationCodeError;
-import io.github.luyang.platform.uaa.code.beans.AuthorizationCodeConvert;
 import io.github.luyang.platform.uaa.code.beans.AuthorizationCodeDomain;
+import io.github.luyang.platform.uaa.code.beans.OAuth2CodeConvert;
 import io.github.luyang.platform.uaa.code.beans.bo.AuthorizationCodeCreateParam;
 import io.github.luyang.platform.uaa.code.beans.bo.AuthorizationCodeCreateResult;
-import io.github.luyang.platform.uaa.code.beans.entity.AuthorizationCodeEntity;
+import io.github.luyang.platform.uaa.code.beans.entity.OAuth2CodeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthorizationCodeService {
+public class OAuth2CodeService {
 
-	private final AuthorizationCodeRepository authorizationCodeRepository;
-	private final AuthorizationCodeConvert authorizationCodeConvert;
+	private final OAuth2CodeRepository codeRepository;
+	private final OAuth2CodeConvert codeConvert;
 
 	/**
 	 * 创建授权码
@@ -30,8 +30,8 @@ public class AuthorizationCodeService {
 	 */
 	public AuthorizationCodeCreateResult create(AuthorizationCodeCreateParam param) {
 
-		AuthorizationCodeEntity entity = authorizationCodeConvert.buildEntity(param);
-		boolean hasSuccess = authorizationCodeRepository.save(entity);
+		OAuth2CodeEntity entity = codeConvert.buildEntity(param);
+		boolean hasSuccess = codeRepository.save(entity);
 		AuthorizationCodeError.CODE_SAVE_FAILED.isTrue(hasSuccess);
 		return AuthorizationCodeCreateResult.build(entity.getCode());
 	}
@@ -44,8 +44,8 @@ public class AuthorizationCodeService {
 	 * @author yang.lu
 	 */
 	public AuthorizationCodeDomain getDomainByCode(String code) {
-		AuthorizationCodeEntity entity = authorizationCodeRepository.getById(code);
-		return authorizationCodeConvert.buildDomain(entity);
+		OAuth2CodeEntity entity = codeRepository.getById(code);
+		return codeConvert.buildDomain(entity);
 	}
 
 	/**
@@ -55,6 +55,6 @@ public class AuthorizationCodeService {
 	 * @author yang.lu
 	 */
 	public void consumedCode(String code) {
-		authorizationCodeRepository.consumedCode(code);
+		codeRepository.consumedCode(code);
 	}
 }

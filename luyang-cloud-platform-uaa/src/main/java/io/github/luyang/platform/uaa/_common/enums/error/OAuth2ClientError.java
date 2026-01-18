@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum ClientError implements ExceptionAssert<String> {
+public enum OAuth2ClientError implements ExceptionAssert<String> {
 
 	EXISTS_CLIENT_NAME("oauth2_client:exists_client_name", "客户端名称已存在"),
 	CLIENT_SAVE_FAILED("oauth2_client:client_save_failed", "客户端信息入库保存失败"),

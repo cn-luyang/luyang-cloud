@@ -4,7 +4,7 @@ import io.github.luyang.platform.uaa._common.enums.TokenStyleEnum;
 import io.github.luyang.platform.uaa._common.util.TokenUtil;
 import io.github.luyang.platform.uaa.token.beans.bo.TokenCreateParam;
 import io.github.luyang.platform.uaa.token.beans.bo.TokenCreateResult;
-import io.github.luyang.platform.uaa.token.beans.entity.TokenEntity;
+import io.github.luyang.platform.uaa.token.beans.entity.OAuth2TokenEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 	componentModel = "spring",
 	imports = {LocalDateTime.class, TokenUtil.class, TokenStyleEnum.class}
 )
-public interface TokenConvert {
+public interface OAuth2TokenConvert {
 
 	@Mappings({
 		@Mapping(target = "accessTokenExpiresTime", expression = "java(LocalDateTime.now().plusSeconds(param.accessTokenValidity()))"),
@@ -29,7 +29,7 @@ public interface TokenConvert {
 		@Mapping(target = "refreshToken", expression = "java(TokenUtil.generateToken(TokenStyleEnum.REFRESH_TOKEN))"),
 		@Mapping(target = "attachedInfo", source = "attachedInfoMap")
 	})
-	TokenEntity buildEntity(TokenCreateParam param);
+	OAuth2TokenEntity buildEntity(TokenCreateParam param);
 
-	TokenCreateResult buildTokenCreateResult(TokenEntity entity);
+	TokenCreateResult buildTokenCreateResult(OAuth2TokenEntity entity);
 }

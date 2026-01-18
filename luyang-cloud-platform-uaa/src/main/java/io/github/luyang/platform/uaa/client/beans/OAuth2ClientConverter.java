@@ -1,8 +1,8 @@
 package io.github.luyang.platform.uaa.client.beans;
 
 import cn.hutool.core.util.IdUtil;
-import io.github.luyang.platform.uaa.client.beans.body.ClientCreateRequest;
-import io.github.luyang.platform.uaa.client.beans.entity.ClientEntity;
+import io.github.luyang.platform.uaa.client.beans.body.OAuth2ClientCreateRequest;
+import io.github.luyang.platform.uaa.client.beans.entity.OAuth2ClientEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,11 +12,11 @@ import org.mapstruct.Mapping;
  * @author yang.lu
  */
 @Mapper(componentModel = "spring", imports = {IdUtil.class})
-public interface ClientConverter {
+public interface OAuth2ClientConverter {
 
 	@Mapping(target = "clientId", expression = "java(\"cli_\" + IdUtil.nanoId(16))")
 	@Mapping(target = "clientSecret", expression = "java(IdUtil.simpleUUID())")
-	ClientEntity buildEntity(ClientCreateRequest clientCreateRequest);
+	OAuth2ClientEntity buildEntity(OAuth2ClientCreateRequest clientCreateRequest);
 
-	ClientDomain buildDomain(ClientEntity entity);
+	OAuth2ClientDomain buildDomain(OAuth2ClientEntity entity);
 }

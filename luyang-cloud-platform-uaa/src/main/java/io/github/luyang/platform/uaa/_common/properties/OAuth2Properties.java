@@ -14,10 +14,10 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties(prefix = AuthProperties.PREFIX)
-public class AuthProperties {
+@ConfigurationProperties(prefix = OAuth2Properties.PREFIX)
+public class OAuth2Properties {
 
-	public static final String PREFIX = "luyang.uaa.auth";
+	public static final String PREFIX = "luyang.uaa.oauth2";
 
 	/**
 	 * 登录页面地址

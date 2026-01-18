@@ -1,4 +1,4 @@
-CREATE TABLE `auth_client`
+CREATE TABLE `oauth2_client`
 (
     `client_id`                           VARCHAR(64)  NOT NULL COMMENT '客户端ID',
     `client_name`                         VARCHAR(64)  NOT NULL COMMENT '客户端名称',
@@ -9,8 +9,6 @@ CREATE TABLE `auth_client`
     `access_token_validity_seconds`       INT          DEFAULT 3600 COMMENT '访问令牌有效期 (默认1小时)',
     `refresh_token_validity_seconds`      INT          DEFAULT 86400 COMMENT '刷新令牌有效期 (默认24小时)',
     `authorization_code_validity_seconds` INT          DEFAULT 300 COMMENT '授权码有效期 (默认5分钟)',
-    `require_proof_key`                   BOOLEAN      DEFAULT NULL COMMENT '是否强制 PKCE: {[1:是:true] [0:否:false]}',
-    `require_authorization_consent`       BOOLEAN      DEFAULT NULL COMMENT '是否需要用户手动确认授权页: {[1:是:true] [0:否:false]}',
     `description`                         VARCHAR(256) DEFAULT NULL COMMENT '应用描述',
     `created_by`                          VARCHAR(64)  DEFAULT NULL COMMENT '创建人',
     `created_time`                        DATETIME(3)  DEFAULT NULL COMMENT '创建时间',
@@ -20,7 +18,7 @@ CREATE TABLE `auth_client`
     PRIMARY KEY (`client_id`) USING BTREE
 ) ENGINE = INNODB COMMENT = '客户端表';
 
-CREATE TABLE `auth_authorization_code`
+CREATE TABLE `oauth2_code`
 (
     `code`                  VARCHAR(64)  NOT NULL COMMENT '授权码',
     `client_id`             VARCHAR(64)  NOT NULL COMMENT '客户端ID',
@@ -42,7 +40,7 @@ CREATE TABLE `auth_authorization_code`
     PRIMARY KEY (`code`) USING BTREE
 ) ENGINE = INNODB COMMENT = '授权码表';
 
-CREATE TABLE `auth_token`
+CREATE TABLE `oauth2_token`
 (
     `id`                       VARCHAR(64) NOT NULL COMMENT '主键ID',
     `client_id`                VARCHAR(64) NOT NULL COMMENT '客户端ID',
@@ -53,7 +51,7 @@ CREATE TABLE `auth_token`
     `access_token_issued_at`   DATETIME(3) NOT NULL COMMENT 'Access Token 签发时间',
     `access_token_expires_at`  DATETIME(3) NOT NULL COMMENT 'Access Token 过期时间',
     `refresh_token_expires_at` DATETIME(3) DEFAULT NULL COMMENT 'Refresh Token 过期时间',
-    `scopes`                   JSON        DEFAULT NULL COMMENT '实际授权范围',
+    `scopes`                   JSON        DEFAULT NULL COMMENT '授权范围',
     `grant_type`               VARCHAR(32) NOT NULL COMMENT '授权类型',
     `attached_info`            JSON        DEFAULT NULL COMMENT '附带信息',
     `created_by`               VARCHAR(64) DEFAULT NULL COMMENT '创建人',
