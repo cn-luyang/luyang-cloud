@@ -2,7 +2,7 @@ package io.github.luyang.platform.uaa.auth.beans.body;
 
 import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.uaa._common.enums.CodeChallengeMethodEnum;
+import io.github.luyang.platform.uaa._common.enums.PkceMethodEnum;
 import io.github.luyang.starter.base.validation.InEnum;
 import io.github.luyang.starter.base.validation.InValues;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
  */
 public record AuthorizeRequest(
 
+	String loginTicket,
+
 	@NotBlank(message = "客户端 ID 不能为空")
 	String clientId,
 
@@ -43,10 +45,10 @@ public record AuthorizeRequest(
 	@NotBlank(message = "防重放随机值不能为空")
 	String nonce,
 
-	@NotBlank(message = "PKCE码不能为空")
+	@NotBlank(message = "PKCE 码不能为空")
 	String codeChallenge,
 
-	@InEnum(value = CodeChallengeMethodEnum.class, message = "PKCE编码方式类型不正确")
+	@InEnum(value = PkceMethodEnum.class, message = "PKCE 编码方式类型不正确")
 	String codeChallengeMethod
 ) {
 

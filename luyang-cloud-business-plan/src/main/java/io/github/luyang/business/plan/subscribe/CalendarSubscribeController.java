@@ -1,7 +1,7 @@
 package io.github.luyang.business.plan.subscribe;
 
 import io.github.luyang.business.plan.subscribe.beans.body.CalendarSubscribeRequest;
-import io.github.luyang.starter.base.common.model.Result;
+import io.github.luyang.starter.base.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -2,7 +2,7 @@ package io.github.luyang.business.plan.calendar;
 
 import io.github.luyang.business.plan.calendar.beans.body.CalendarCreateRequest;
 import io.github.luyang.business.plan.calendar.beans.body.CalendarCreateResponse;
-import io.github.luyang.starter.base.common.model.Result;
+import io.github.luyang.starter.base.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

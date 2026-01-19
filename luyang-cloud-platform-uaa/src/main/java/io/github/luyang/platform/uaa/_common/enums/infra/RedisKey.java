@@ -14,12 +14,8 @@ import java.time.Duration;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum RedisKey implements IRedisKeyEnum {
 
-	/**
-	 * 登录流程临时凭证
-	 * Key: platform-uaa:login_ticket:{ticketId}
-	 * TTL: 30秒
-	 */
-	LOGIN_TICKET("uaa:auth:ticket", Duration.ofSeconds(30), "登录流程临时凭证");
+	LOGIN_TICKET("login_ticket", Duration.ofSeconds(30), "登录流程临时凭证"),
+	SSO_SID("sso_sid", Duration.ofHours(2), "SSO 全局会话 ID");
 
 	private final String prefix;
 	private final Duration ttl;

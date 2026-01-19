@@ -7,15 +7,17 @@ import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.extra.validation.ValidationUtil;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
-import io.github.luyang.platform.uaa._common.enums.LoginMethod;
-import io.github.luyang.platform.uaa._common.enums.dict.OAuth2GrantType;
+import io.github.luyang.platform.uaa._common.enums.GrantTypeEnum;
+import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.platform.uaa._common.enums.infra.ErrorCode;
 import io.github.luyang.platform.uaa._common.enums.infra.RedisKey;
 import io.github.luyang.platform.uaa._common.properties.OAuth2Properties;
+import io.github.luyang.platform.uaa.auth.beans.AuthConvert;
 import io.github.luyang.platform.uaa.auth.beans.bo.LoginParam;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenResponse;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
+import io.github.luyang.platform.uaa.auth.beans.body.LoginResponse;
 import io.github.luyang.platform.uaa.auth.strategy.authenticator.AuthenticatorContext;
 import io.github.luyang.platform.uaa.auth.strategy.authenticator.AuthenticatorHandler;
 import io.github.luyang.platform.uaa.auth.strategy.grant.OAuth2GrantContext;
@@ -34,10 +36,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -55,6 +58,7 @@ public class AuthService {
 
 	private final OAuth2ClientService clientService;
 	private final OAuth2CodeService codeService;
+	private final AuthConvert authConvert;
 
 	private final OAuth2Properties oAuth2Properties;
 
@@ -64,7 +68,7 @@ public class AuthService {
 	private final HttpServletRequest httpServletRequest;
 
 	@SneakyThrows
-	public void login(Map<String, Object> maps) {
+	public LoginResponse login(Map<String, Object> maps) {
 
 		// 参数转换
 		LoginParam loginParam = BeanUtil.toBean(maps, LoginParam.class);
@@ -73,15 +77,17 @@ public class AuthService {
 		ValidationUtil.validate(loginParam);
 
 		// 获取认证处理器
-		LoginMethod loginMethod = IBaseEnum.getByCode(LoginMethod.class, loginParam.getLoginMethod());
-		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginMethod);
+		LoginMethodEnum loginMethodEnum = IBaseEnum.getByCode(LoginMethodEnum.class, loginParam.getLoginMethod());
+		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginMethodEnum);
 
 		// 执行认证逻辑
 		AccountAuthResponse authResult = authenticatorHandler.authenticate(maps);
 
 		// 生成登录凭证
 		String ticket = IdUtil.fastSimpleUUID();
-		redissonHelper.setString(RedisKey.LOGIN_TICKET.buildKey(ticket), authResult, Duration.ofSeconds(OAuth2Constant.LOGIN_TICKET_TTL.getSeconds()));
+		redissonHelper.setString(RedisKey.LOGIN_TICKET.buildKey(ticket), authResult, RedisKey.LOGIN_TICKET.getTtl());
+
+		return LoginResponse.build(ticket);
 	}
 
 	@SneakyThrows
@@ -98,18 +104,42 @@ public class AuthService {
 		boolean validRedirectUri = clientDomain.isValidRedirectUri(authorizeRequest.redirectUri());
 		ErrorCode.CLIENT_REDIRECT_URI_INVALID.isTrue(validRedirectUri);
 
-		// 获取登录凭证 Cookie
-		Cookie cookie = JakartaServletUtil.getCookie(httpServletRequest, OAuth2Constant.COOKIE_LOGIN_TICKET);
+		String userId = null;
 
-		// 过滤出Cookie值，从缓存中获取对应的UserId
-		String userId = Optional.ofNullable(cookie)
-			.map(Cookie::getValue)
-			.filter(StrUtil::isNotBlank)
-			.map(OAuth2Constant::buildLoginTicketRedisKey)
-			.map(redissonHelper::<String>getString)
-			.orElse(null);
+		// 优先查看是否已经登录过
+		Cookie sessionCookie = JakartaServletUtil.getCookie(httpServletRequest, OAuth2Constant.COOKIE_SSO_SID);
+		if (null != sessionCookie && StrUtil.isNotBlank(sessionCookie.getValue())) {
+			String sessionKey = RedisKey.SSO_SID.buildKey(sessionCookie.getValue());
+			userId = redissonHelper.getString(sessionKey);
+		}
 
-		// UserId 为空则跳转至前端登录界面
+		// 如果没有有效会话，尝试通过 Login Ticket 建立新会话
+		String loginTicket = authorizeRequest.loginTicket();
+		if (StrUtil.isBlank(userId) && StrUtil.isNotBlank(loginTicket)) {
+			String ticketKey = RedisKey.LOGIN_TICKET.buildKey(loginTicket);
+			userId = redissonHelper.getString(ticketKey);
+			if (StrUtil.isNotBlank(userId)) {
+				// 删除临时登陆凭证
+				redissonHelper.remove(ticketKey);
+				// 创建新的 SSO 会话
+				String sessionId = IdUtil.fastSimpleUUID();
+				String sessionKey = RedisKey.SSO_SID.buildKey(sessionId);
+				// Redis 缓存 SID 和 UserId 的映射
+				redissonHelper.setString(sessionKey, userId, RedisKey.SSO_SID.getTtl());
+
+				// 写 Session Cookie 到浏览器
+				ResponseCookie cookie = ResponseCookie.from(OAuth2Constant.COOKIE_SSO_SID, sessionId)
+					.httpOnly(true)
+					.secure(true)
+					.path("/")
+					.maxAge(Duration.ofHours(2))
+					.sameSite("Lax") // 允许从第三方站点跳转时携带 Cookie
+					.build();
+				httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+			}
+		}
+
+		// 若未获取到 UserId，说明用户未登录，重定向至登录页
 		if (StrUtil.isBlank(userId)) {
 			// 当前请求完整的 URL 路径
 			String currentRequestUrl = httpServletRequest.getRequestURL()
@@ -119,7 +149,9 @@ public class AuthService {
 
 			// 前端登陆界面地址拼接target，用于登陆完成后重定向到/authorize接口与当前请求参数保持一致
 			String loginUrl = UriComponentsBuilder.fromUriString(oAuth2Properties.getLoginPageUrl())
-				.queryParam(OAuth2Constant.PARAM_TARGET, URLEncoder.encode(currentRequestUrl, StandardCharsets.UTF_8))
+				.queryParam(OAuth2Constant.PARAM_TARGET, currentRequestUrl)
+				.replaceQueryParam(OAuth2Constant.PARAM_LOGIN_TICKET)
+				.encode(StandardCharsets.UTF_8)
 				.build()
 				.toUriString();
 
@@ -127,7 +159,7 @@ public class AuthService {
 			return;
 		}
 
-		// 已登录 → 下发授权码
+		// 已获授权，生成 Authorization Code
 		OAuth2CodeCreateParam codeParam = new OAuth2CodeCreateParam(
 			authorizeRequest.clientId(),
 			userId,
@@ -140,9 +172,11 @@ public class AuthService {
 		);
 
 		OAuth2CodeCreateResult createResult = codeService.create(codeParam);
+
+		// 回调客户端
 		String callbackUrl = UriComponentsBuilder.fromUriString(authorizeRequest.redirectUri())
 			.queryParam(OAuth2Constant.PARAM_CODE, createResult.code())
-			.queryParam(OAuth2Constant.PARAM_STATE, authorizeRequest.state())
+			.queryParamIfPresent(OAuth2Constant.PARAM_STATE, Optional.ofNullable(authorizeRequest.state()))
 			.build()
 			.toUriString();
 
@@ -154,8 +188,8 @@ public class AuthService {
 		// 校验参数
 		ValidationUtil.validate(applyTokenRequest);
 
-		OAuth2GrantType grantType = IBaseEnum.getByCode(OAuth2GrantType.class, applyTokenRequest.grantType());
-		OAuth2GrantHandler grantHandler = OAuth2GrantContext.getOAuth2GrantHandler(grantType);
+		GrantTypeEnum grantTypeEnum = IBaseEnum.getByCode(GrantTypeEnum.class, applyTokenRequest.grantType());
+		OAuth2GrantHandler grantHandler = OAuth2GrantContext.getOAuth2GrantHandler(grantTypeEnum);
 
 		return grantHandler.handle(applyTokenRequest);
 	}

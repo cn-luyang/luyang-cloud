@@ -14,4 +14,6 @@ public record AccountAuthResponse(
 ) implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 3319455781457716061L;
+
+
 }

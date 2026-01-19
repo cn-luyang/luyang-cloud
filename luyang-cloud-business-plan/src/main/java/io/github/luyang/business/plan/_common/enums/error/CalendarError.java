@@ -1,6 +1,6 @@
 package io.github.luyang.business.plan._common.enums.error;
 
-import io.github.luyang.starter.base.common.exception.ExceptionAssert;
+import io.github.luyang.starter.base.exception.ExceptionAssert;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

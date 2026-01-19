@@ -3,6 +3,7 @@ package io.github.luyang.platform.uaa.auth;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
 import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenResponse;
 import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
+import io.github.luyang.platform.uaa.auth.beans.body.LoginResponse;
 import io.github.luyang.starter.base.model.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -34,14 +35,14 @@ public class AuthController {
 	 * @author yang.lu
 	 */
 	@PostMapping("/login")
-	public void login(@RequestBody Map<String, Object> maps) {
-		authService.login(maps);
+	public Result<LoginResponse> login(@RequestBody Map<String, Object> maps) {
+		return Result.success(authService.login(maps));
 	}
 
 	/**
 	 * 授权端点
 	 *
-	 * @param clientId            客户端ID
+	 * @param clientId            客户端 ID
 	 * @param redirectUri         授权成功后的回调地址
 	 * @param responseType        响应类型，如"code"表示授权码流程
 	 * @param scope               请求的权限范围
@@ -53,6 +54,7 @@ public class AuthController {
 	 */
 	@GetMapping("/authorize")
 	public void authorize(
+		@RequestParam("login_ticket") String loginTicket,
 		@RequestParam("client_id") String clientId,
 		@RequestParam("redirect_uri") String redirectUri,
 		@RequestParam(value = "response_type") String responseType,
@@ -64,7 +66,7 @@ public class AuthController {
 	) {
 
 		AuthorizeRequest authorizeRequest = new AuthorizeRequest(
-			clientId, redirectUri, responseType, scope, state, nonce, codeChallenge, codeChallengeMethod
+			loginTicket, clientId, redirectUri, responseType, scope, state, nonce, codeChallenge, codeChallengeMethod
 		);
 
 		authService.authorize(authorizeRequest);

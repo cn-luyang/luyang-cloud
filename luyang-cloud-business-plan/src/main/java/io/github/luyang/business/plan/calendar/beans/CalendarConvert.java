@@ -6,7 +6,7 @@ import io.github.luyang.business.plan._common.util.ColorUtil;
 import io.github.luyang.business.plan.calendar.beans.body.CalendarCreateRequest;
 import io.github.luyang.business.plan.calendar.beans.entity.CalendarEntity;
 import io.github.luyang.business.plan.subscribe.beans.bo.InitSubscribeParam;
-import io.github.luyang.starter.base.common.enums.IBaseEnum;
+import io.github.luyang.starter.base.enums.IBaseEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

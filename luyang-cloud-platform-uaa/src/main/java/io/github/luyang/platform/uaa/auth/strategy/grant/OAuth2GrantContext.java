@@ -1,8 +1,8 @@
 package io.github.luyang.platform.uaa.auth.strategy.grant;
 
 import cn.hutool.extra.spring.SpringUtil;
-import io.github.luyang.platform.uaa._common.enums.dict.OAuth2GrantType;
-import io.github.luyang.platform.uaa._common.enums.error.OAuth2ClientError;
+import io.github.luyang.platform.uaa._common.enums.GrantTypeEnum;
+import io.github.luyang.platform.uaa._common.enums.infra.ErrorCode;
 import io.github.luyang.platform.uaa.auth.strategy.grant.handler.AuthorizationCodeGrantHandler;
 import lombok.experimental.UtilityClass;
 
@@ -17,22 +17,22 @@ import java.util.concurrent.ConcurrentHashMap;
 @UtilityClass
 public class OAuth2GrantContext {
 
-	private static final Map<OAuth2GrantType, OAuth2GrantHandler> GRANT_POOL = new ConcurrentHashMap<>();
+	private static final Map<GrantTypeEnum, OAuth2GrantHandler> GRANT_POOL = new ConcurrentHashMap<>();
 
 	static {
-		GRANT_POOL.put(OAuth2GrantType.AUTHORIZATION_CODE, SpringUtil.getBean(AuthorizationCodeGrantHandler.class));
+		GRANT_POOL.put(GrantTypeEnum.AUTHORIZATION_CODE, SpringUtil.getBean(AuthorizationCodeGrantHandler.class));
 	}
 
 	/**
 	 * 获取授权处理器
 	 *
-	 * @param grantType 授权类型
+	 * @param grantTypeEnum 授权类型
 	 * @return 授权处理器
 	 * @author yang.lu
 	 */
-	public static OAuth2GrantHandler getOAuth2GrantHandler(OAuth2GrantType grantType) {
-		OAuth2GrantHandler grantHandler = GRANT_POOL.get(grantType);
-		OAuth2ClientError.UNSUPPORTED_GRANT_TYPE.notNull(grantHandler);
+	public static OAuth2GrantHandler getOAuth2GrantHandler(GrantTypeEnum grantTypeEnum) {
+		OAuth2GrantHandler grantHandler = GRANT_POOL.get(grantTypeEnum);
+		ErrorCode.LOGIN_METHOD_UNSUPPORTED.notNull(grantHandler);
 		return grantHandler;
 	}
 }

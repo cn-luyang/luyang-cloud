@@ -1,10 +1,10 @@
 package io.github.luyang.platform.uaa.code;
 
-import io.github.luyang.platform.uaa._common.enums.error.AuthorizationCodeError;
+import io.github.luyang.platform.uaa._common.enums.infra.ErrorCode;
 import io.github.luyang.platform.uaa.code.beans.AuthorizationCodeDomain;
 import io.github.luyang.platform.uaa.code.beans.OAuth2CodeConvert;
-import io.github.luyang.platform.uaa.code.beans.bo.AuthorizationCodeCreateParam;
-import io.github.luyang.platform.uaa.code.beans.bo.AuthorizationCodeCreateResult;
+import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateParam;
+import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateResult;
 import io.github.luyang.platform.uaa.code.beans.entity.OAuth2CodeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,12 +28,12 @@ public class OAuth2CodeService {
 	 * @return 授权码创建响应
 	 * @author yang.lu
 	 */
-	public AuthorizationCodeCreateResult create(AuthorizationCodeCreateParam param) {
+	public OAuth2CodeCreateResult create(OAuth2CodeCreateParam param) {
 
 		OAuth2CodeEntity entity = codeConvert.buildEntity(param);
 		boolean hasSuccess = codeRepository.save(entity);
-		AuthorizationCodeError.CODE_SAVE_FAILED.isTrue(hasSuccess);
-		return AuthorizationCodeCreateResult.build(entity.getCode());
+		ErrorCode.CODE_SAVE_FAILED.isTrue(hasSuccess);
+		return OAuth2CodeCreateResult.build(entity.getCode());
 	}
 
 	/**
