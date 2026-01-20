@@ -8,12 +8,13 @@ import java.util.Set;
 /**
  * 客户端 Domain
  *
- * @param clientId             客户端 ID
- * @param clientName           客户端名称
- * @param accessTokenValidity  访问令牌有效期 (秒)
- * @param refreshTokenValidity 刷新令牌有效期 (秒)
- * @param redirectUris         授权回调地址列表
- * @param scopes               授权范围列表
+ * @param clientId                  客户端 ID
+ * @param clientName                客户端名称
+ * @param accessTokenValidity       访问令牌有效期 (秒)
+ * @param refreshTokenValidity      刷新令牌有效期 (秒)
+ * @param authorizationCodeValidity 授权码有效期(秒)
+ * @param redirectUris              授权回调地址列表
+ * @param scopes                    授权范围列表
  * @author yang.lu
  */
 public record OAuth2ClientDomain(
@@ -21,6 +22,7 @@ public record OAuth2ClientDomain(
 	String clientName,
 	Integer accessTokenValidity,
 	Integer refreshTokenValidity,
+	Integer authorizationCodeValidity,
 	Set<String> redirectUris,
 	Set<String> scopes
 ) {

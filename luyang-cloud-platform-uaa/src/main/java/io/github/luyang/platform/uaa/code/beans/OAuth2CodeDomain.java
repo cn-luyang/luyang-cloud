@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uaa.code.beans;
 
 import cn.hutool.core.util.StrUtil;
-import io.github.luyang.platform.uaa._common.enums.CodeChallengeMethodEnum;
+import io.github.luyang.platform.uaa._common.enums.PkceMethodEnum;
 import io.github.luyang.starter.base.enums.IBaseEnum;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author yang.lu
  */
-public record AuthorizationCodeDomain(
+public record OAuth2CodeDomain(
 	String code,
 	String clientId,
 	String userId,
@@ -39,8 +39,8 @@ public record AuthorizationCodeDomain(
 	public boolean validatePkce(String codeVerifier) {
 
 		// 获取 PKCE 编码方式枚举
-		CodeChallengeMethodEnum codeChallengeMethodEnum = IBaseEnum.getByCode(CodeChallengeMethodEnum.class, codeChallengeMethod);
-		return switch (codeChallengeMethodEnum) {
+		PkceMethodEnum pkceMethodEnum = IBaseEnum.getByCode(PkceMethodEnum.class, codeChallengeMethod);
+		return switch (pkceMethodEnum) {
 			case PLAIN -> StrUtil.equals(codeChallenge, codeVerifier);
 			case S256 -> {
 				// code_verifier 作为 ASCII 字符串处理

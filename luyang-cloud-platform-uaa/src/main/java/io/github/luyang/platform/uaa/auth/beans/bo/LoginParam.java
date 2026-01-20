@@ -1,6 +1,6 @@
 package io.github.luyang.platform.uaa.auth.beans.bo;
 
-import io.github.luyang.platform.uaa._common.enums.dict.LoginMethodEnum;
+import io.github.luyang.platform.uaa._common.enums.LoginMethodEnum;
 import io.github.luyang.starter.base.validation.InEnum;
 import lombok.Getter;
 import lombok.Setter;

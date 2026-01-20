@@ -57,17 +57,17 @@ public class OAuth2ClientEntity extends BaseEntity {
 	/**
 	 * 访问令牌有效期(秒)
 	 */
-	private Integer accessTokenValiditySeconds;
+	private Integer accessTokenValidity;
 
 	/**
 	 * 刷新令牌有效期(秒)
 	 */
-	private Integer refreshTokenValiditySeconds;
+	private Integer refreshTokenValidity;
 
 	/**
 	 * 授权码有效期(秒)
 	 */
-	private Integer authorizationCodeValiditySeconds;
+	private Integer authorizationCodeValidity;
 
 	/**
 	 * 客户端描述

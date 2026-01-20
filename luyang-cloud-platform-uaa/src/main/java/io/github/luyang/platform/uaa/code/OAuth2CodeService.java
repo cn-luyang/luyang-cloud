@@ -1,8 +1,9 @@
 package io.github.luyang.platform.uaa.code;
 
+import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uaa._common.enums.infra.ErrorCode;
-import io.github.luyang.platform.uaa.code.beans.AuthorizationCodeDomain;
 import io.github.luyang.platform.uaa.code.beans.OAuth2CodeConvert;
+import io.github.luyang.platform.uaa.code.beans.OAuth2CodeDomain;
 import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateParam;
 import io.github.luyang.platform.uaa.code.beans.bo.OAuth2CodeCreateResult;
 import io.github.luyang.platform.uaa.code.beans.entity.OAuth2CodeEntity;
@@ -31,8 +32,8 @@ public class OAuth2CodeService {
 	public OAuth2CodeCreateResult create(OAuth2CodeCreateParam param) {
 
 		OAuth2CodeEntity entity = codeConvert.buildEntity(param);
-		boolean hasSuccess = codeRepository.save(entity);
-		ErrorCode.CODE_SAVE_FAILED.isTrue(hasSuccess);
+		boolean saveSuccess = codeRepository.save(entity);
+		ErrorCode.CODE_SAVE_FAILED.isTrue(saveSuccess);
 		return OAuth2CodeCreateResult.build(entity.getCode());
 	}
 
@@ -43,7 +44,11 @@ public class OAuth2CodeService {
 	 * @return 领域模型
 	 * @author yang.lu
 	 */
-	public AuthorizationCodeDomain getDomainByCode(String code) {
+	public OAuth2CodeDomain getDomainByCode(String code) {
+		if (StrUtil.isBlank(code)) {
+			return null;
+		}
+
 		OAuth2CodeEntity entity = codeRepository.getById(code);
 		return codeConvert.buildDomain(entity);
 	}
@@ -54,7 +59,10 @@ public class OAuth2CodeService {
 	 * @param code 授权码
 	 * @author yang.lu
 	 */
-	public void consumedCode(String code) {
-		codeRepository.consumedCode(code);
+	public void consume(String code) {
+		if (StrUtil.isBlank(code)) {
+			return;
+		}
+		codeRepository.consumed(code);
 	}
 }

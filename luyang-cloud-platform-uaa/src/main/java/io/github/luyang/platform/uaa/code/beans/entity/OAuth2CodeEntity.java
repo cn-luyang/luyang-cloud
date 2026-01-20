@@ -67,12 +67,12 @@ public class OAuth2CodeEntity extends BaseEntity {
 	/**
 	 * 颁发时间
 	 */
-	private LocalDateTime issuedAt;
+	private LocalDateTime issuedTime;
 
 	/**
 	 * 过期时间
 	 */
-	private LocalDateTime expiresAt;
+	private LocalDateTime expiresTime;
 
 	/**
 	 * 是否已使用: {[1:已使用:true] [0:未使用:false]}
@@ -82,5 +82,5 @@ public class OAuth2CodeEntity extends BaseEntity {
 	/**
 	 * 使用时间
 	 */
-	private LocalDateTime usedAt;
+	private LocalDateTime usedTime;
 }

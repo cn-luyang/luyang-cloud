@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uaa.code;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
+import io.github.luyang.platform.uaa._common.enums.infra.RedisKey;
 import io.github.luyang.platform.uaa.code.beans.entity.OAuth2CodeEntity;
 import io.github.luyang.starter.redisson.helper.RedissonHelper;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ import java.util.Optional;
  *
  * @author yang.lu
  */
+
 @Repository
 @RequiredArgsConstructor
 public class OAuth2CodeRepository extends ServiceImpl<OAuth2CodeMapper, OAuth2CodeEntity> {
@@ -32,9 +33,9 @@ public class OAuth2CodeRepository extends ServiceImpl<OAuth2CodeMapper, OAuth2Co
 
 		boolean hasSuccess = super.save(entity);
 		if (hasSuccess) {
-			// 添加 Redis缓存，有效期3分钟
-			String redisKey = OAuth2Constant.buildAuthorizationCodeRedisKey(entity.getCode());
-			redissonHelper.setString(redisKey, entity, Duration.ofMinutes(3));
+			String key = RedisKey.AUTHORIZATION_CODE.buildKey(entity.getCode());
+			Duration ttl = Duration.between(LocalDateTime.now(), entity.getExpiresTime());
+			redissonHelper.setString(key, entity, ttl);
 		}
 
 		return hasSuccess;
@@ -42,23 +43,29 @@ public class OAuth2CodeRepository extends ServiceImpl<OAuth2CodeMapper, OAuth2Co
 
 	@Override
 	public OAuth2CodeEntity getById(Serializable code) {
-		String redisKey = OAuth2Constant.buildAuthorizationCodeRedisKey(code.toString());
-		OAuth2CodeEntity entity = redissonHelper.getString(redisKey);
+		String key = RedisKey.AUTHORIZATION_CODE.buildKey(code);
+		OAuth2CodeEntity entity = redissonHelper.getString(key);
 		return Optional.ofNullable(entity).orElseGet(() -> super.getById(code));
 	}
 
-	public void consumedCode(String code) {
+	/**
+	 * 消费授权码（标记为已使用并清理缓存）
+	 */
+	public void consumed(String code) {
 		boolean hasSuccess = this.lambdaUpdate()
 			.set(OAuth2CodeEntity::getUsed, true)
-			.set(OAuth2CodeEntity::getUsedAt, LocalDateTime.now())
+			.set(OAuth2CodeEntity::getUsedTime, LocalDateTime.now())
 			.eq(OAuth2CodeEntity::getCode, code)
+			.eq(OAuth2CodeEntity::getUsed, false)
 			.update();
+
 		if (hasSuccess) {
-			String redisKey = OAuth2Constant.buildAuthorizationCodeRedisKey(code);
+			String key = RedisKey.AUTHORIZATION_CODE.buildKey(code);
 			try {
-				redissonHelper.remove(redisKey);
+				redissonHelper.remove(key);
+				logger.debug("授权码已消费并清理缓存: {}", code);
 			} catch (Exception e) {
-				logger.error("Redis缓存删除授权码异常: {}", code, e);
+				logger.error("Redis缓存删除授权码异常 (Key: {}): {}", key, e.getMessage());
 			}
 		}
 	}

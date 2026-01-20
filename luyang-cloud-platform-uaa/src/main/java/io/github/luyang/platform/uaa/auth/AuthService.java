@@ -43,7 +43,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -168,7 +167,7 @@ public class AuthService {
 			authorizeRequest.nonce(),
 			authorizeRequest.codeChallenge(),
 			authorizeRequest.codeChallengeMethod(),
-			LocalDateTime.now().plusMinutes(3)
+			clientDomain.authorizationCodeValidity()
 		);
 
 		OAuth2CodeCreateResult createResult = codeService.create(codeParam);

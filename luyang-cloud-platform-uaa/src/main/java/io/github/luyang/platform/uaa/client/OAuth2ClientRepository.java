@@ -2,14 +2,13 @@ package io.github.luyang.platform.uaa.client;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uaa._common.constant.OAuth2Constant;
+import io.github.luyang.platform.uaa._common.enums.infra.RedisKey;
 import io.github.luyang.platform.uaa.client.beans.entity.OAuth2ClientEntity;
 import io.github.luyang.starter.redisson.helper.RedissonHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
-import java.time.Duration;
 
 /**
  * 客户端数据访问层
@@ -41,7 +40,7 @@ public class OAuth2ClientRepository extends ServiceImpl<OAuth2ClientMapper, OAut
 	@Override
 	public OAuth2ClientEntity getById(Serializable clientId) {
 
-		String redisKey = OAuth2Constant.buildClientRedisKey(clientId.toString());
+		String redisKey = RedisKey.CLIENT_DETAILS.buildKey(clientId.toString());
 		OAuth2ClientEntity cachedEntity = redissonHelper.getString(redisKey);
 		if (null != cachedEntity) {
 			return cachedEntity;
@@ -57,7 +56,7 @@ public class OAuth2ClientRepository extends ServiceImpl<OAuth2ClientMapper, OAut
 
 	private void cacheClient(OAuth2ClientEntity entity) {
 		// 添加 Redis缓存，有效期8小时
-		String redisKey = OAuth2Constant.buildClientRedisKey(entity.getClientId());
-		redissonHelper.setString(redisKey, entity, Duration.ofHours(8));
+		String redisKey = RedisKey.CLIENT_DETAILS.buildKey(entity.getClientId());
+		redissonHelper.setString(redisKey, entity, RedisKey.CLIENT_DETAILS.getTtl());
 	}
 }
