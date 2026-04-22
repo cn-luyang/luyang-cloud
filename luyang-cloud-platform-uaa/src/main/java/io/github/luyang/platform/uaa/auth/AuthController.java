@@ -1,0 +1,90 @@
+package io.github.luyang.platform.uaa.auth;
+
+import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenRequest;
+import io.github.luyang.platform.uaa.auth.beans.body.ApplyTokenResponse;
+import io.github.luyang.platform.uaa.auth.beans.body.AuthorizeRequest;
+import io.github.luyang.platform.uaa.auth.beans.body.LoginResponse;
+import io.github.luyang.starter.base.model.Result;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+/**
+ * 认证相关控制器
+ *
+ * @author yang.lu
+ */
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/auth")
+public class AuthController {
+
+	private final AuthService authService;
+
+	/**
+	 * 登录
+	 *
+	 * @param maps 请求参数映射
+	 * @author yang.lu
+	 */
+	@PostMapping("/login")
+	public Result<LoginResponse> login(@RequestBody Map<String, Object> maps) {
+		return Result.success(authService.login(maps));
+	}
+
+	/**
+	 * 授权端点
+	 *
+	 * @param clientId            客户端 ID
+	 * @param redirectUri         授权成功后的回调地址
+	 * @param responseType        响应类型，如"code"表示授权码流程
+	 * @param scope               请求的权限范围
+	 * @param state               防CSRF的随机字符串，由客户端生成
+	 * @param nonce               防重放攻击的随机值，用于OIDC协议
+	 * @param codeChallenge       PKCE码，code_verifier的哈希值
+	 * @param codeChallengeMethod PKCE哈希算法
+	 * @author yang.lu
+	 */
+	@GetMapping("/authorize")
+	public void authorize(
+		@RequestParam("login_ticket") String loginTicket,
+		@RequestParam("client_id") String clientId,
+		@RequestParam("redirect_uri") String redirectUri,
+		@RequestParam(value = "response_type") String responseType,
+		@RequestParam(value = "scope", required = false) String scope,
+		@RequestParam(value = "state", required = false) String state,
+		@RequestParam(value = "nonce", required = false) String nonce,
+		@RequestParam(value = "code_challenge") String codeChallenge,
+		@RequestParam(value = "code_challenge_method") String codeChallengeMethod
+	) {
+
+		AuthorizeRequest authorizeRequest = new AuthorizeRequest(
+			loginTicket, clientId, redirectUri, responseType, scope, state, nonce, codeChallenge, codeChallengeMethod
+		);
+
+		authService.authorize(authorizeRequest);
+	}
+
+	@PostMapping(value = "/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public Result<ApplyTokenResponse> token(
+		@RequestParam("grant_type") String grantType,
+		@RequestParam(value = "code", required = false) String code,
+		@RequestParam(value = "redirect_uri", required = false) String redirectUri,
+		@RequestParam(value = "client_id", required = false) String clientId,
+		@RequestParam(value = "code_verifier", required = false) String codeVerifier,
+		@RequestParam(value = "refresh_token", required = false) String refreshToken
+	) {
+		ApplyTokenRequest applyTokenRequest = new ApplyTokenRequest(
+			grantType, code, redirectUri, clientId, codeVerifier, refreshToken
+		);
+
+		return Result.success(authService.applyToken(applyTokenRequest));
+	}
+}

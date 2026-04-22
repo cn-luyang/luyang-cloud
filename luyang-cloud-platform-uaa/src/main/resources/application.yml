@@ -1,0 +1,55 @@
+server:
+  port: 8051
+spring:
+  application:
+    name: platform-uaa
+  cloud:
+    nacos:
+      discovery:
+        group: platform
+        server-addr: ${NACOS_HOST}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+      timeout: 10s
+      lettuce:
+        pool:
+          min-idle: 0
+          max-idle: 8
+          max-active: 8
+          max-wait: -1ms
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}/platform_uaa?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&&serverTimezone=Asia/Shanghai&useSSL=false # 数据库连接URL，配置主机地址和参数
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+dubbo:
+  registry:
+    address: nacos://${NACOS_HOST}
+    username: ${NACOS_USERNAME}
+    password: ${NACOS_PASSWORD}
+    register-mode: instance
+  protocol:
+    name: tri
+    port: -1
+  application:
+    name: ${spring.application.name}
+    qos-enable: false
+  consumer:
+    check: false
+
+luyang:
+  uaa:
+    oauth2:
+      login-page-url: http://localhost:8080/login-page
