@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
  */
 /*@EnableDubbo*/
 @SpringBootApplication
-@ConfigurationPropertiesScan("io.github.luyang.platform.uaa._common.properties")
+@ConfigurationPropertiesScan("io.github.luyang.platform.uaa.common.properties")
 public class UaaApplication {
 
 	public static void main(String[] args) {

@@ -30,14 +30,18 @@
             <groupId>io.github.cn-luyang</groupId>
             <artifactId>luyang-framework-starter-mybatis</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.github.cn-luyang</groupId>-->
-<!--            <artifactId>luyang-framework-starter-security</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.github.cn-luyang</groupId>
+            <artifactId>luyang-framework-starter-redisson</artifactId>
+        </dependency>
+        <!--<dependency>
+            <groupId>io.github.cn-luyang</groupId>
+            <artifactId>luyang-framework-starter-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.github.cn-luyang</groupId>
             <artifactId>luyang-framework-starter-dubbo</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
