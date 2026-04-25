@@ -1,9 +1,9 @@
 package io.github.luyang.platform.uac.beans.convert;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import io.github.luyang.platform.uac.beans.UserDO;
 import io.github.luyang.platform.uac.beans.payload.CreateUserDTO;
-import io.github.luyang.starter.base.util.SpringUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

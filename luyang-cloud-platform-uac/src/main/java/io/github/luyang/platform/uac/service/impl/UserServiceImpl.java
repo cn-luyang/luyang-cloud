@@ -1,6 +1,6 @@
 package io.github.luyang.platform.uac.service.impl;
 
-import io.github.luyang.base.util.StrUtil;
+import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uac.beans.UserDO;
 import io.github.luyang.platform.uac.beans.convert.UserConvert;
 import io.github.luyang.platform.uac.beans.payload.CreateUserDTO;

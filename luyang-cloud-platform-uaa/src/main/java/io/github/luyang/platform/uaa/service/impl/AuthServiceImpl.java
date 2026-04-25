@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public LoginVO login(LoginDTO loginDTO) {
 
-		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginDTO.loginMethod());
+		AuthenticatorHandler authenticatorHandler = AuthenticatorContext.getAuthenticator(loginDTO.loginType());
 
 		AccountAuthCMD accountAuthCMD = authConvert.buildAccountAuthCMD(loginDTO);
 		AccountAuthResult accountAuthResult = authenticatorHandler.authenticate(accountAuthCMD);
