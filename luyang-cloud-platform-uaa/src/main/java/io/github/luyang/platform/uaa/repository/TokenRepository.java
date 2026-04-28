@@ -22,7 +22,7 @@ public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 
 		boolean saveSuccess = super.save(tokenDO);
 		if (saveSuccess) {
-			String redisKey = CacheKey.ACCESS_TOKEN.getKey(tokenDO.getAccessToken());
+			String redisKey = CacheKey.ACCESS_TOKEN.of(tokenDO.getAccessToken());
 			redissonHelper.setString(redisKey, tokenDO);
 		}
 
@@ -30,7 +30,7 @@ public class TokenRepository extends ServiceImpl<TokenMapper, TokenDO> {
 	}
 
 	public TokenDO findByAccessToken(String accessToken) {
-		String redisKey = CacheKey.ACCESS_TOKEN.getKey(accessToken);
+		String redisKey = CacheKey.ACCESS_TOKEN.of(accessToken);
 		TokenDO tokenDO = redissonHelper.getString(redisKey);
 		if (null == tokenDO) {
 			tokenDO = super.lambdaQuery().eq(TokenDO::getAccessToken, accessToken).one();
