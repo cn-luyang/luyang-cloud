@@ -1,7 +1,6 @@
 package io.github.luyang.platform.uac.controller;
 
-import io.github.luyang.platform.uac.beans.payload.CreateUserDTO;
-import io.github.luyang.platform.uac.beans.payload.CreateUserVO;
+import io.github.luyang.platform.uac.beans.payload.command.UserCreateCommand;
 import io.github.luyang.platform.uac.service.UserService;
 import io.github.luyang.starter.base.model.Result;
 import jakarta.validation.Valid;
@@ -22,7 +21,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping
-	public Result<CreateUserVO> create(@Valid @RequestBody CreateUserDTO createUserDTO) {
-		return Result.success(userService.create(createUserDTO));
+	public Result<String> create(@Valid @RequestBody UserCreateCommand command) {
+		return Result.success(userService.create(command));
 	}
 }

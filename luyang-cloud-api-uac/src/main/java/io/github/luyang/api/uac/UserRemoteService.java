@@ -10,4 +10,6 @@ import io.github.luyang.starter.base.model.Result;
 public interface UserRemoteService {
 
 	Result<AccountAuthResponse> accountAuth(AccountAuthRequest accountAuthRequest);
+
+
 }

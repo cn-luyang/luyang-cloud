@@ -1,8 +1,8 @@
-package io.github.luyang.platform.uaa.beans.payload;
+package io.github.luyang.platform.uaa.beans.payload.command;
 
 import java.util.Set;
 
-public record CreateClientDTO(
+public record ClientCreateCommand(
 	String clientName,
 	Set<String> redirectUris,
 	int accessTokenValidity,

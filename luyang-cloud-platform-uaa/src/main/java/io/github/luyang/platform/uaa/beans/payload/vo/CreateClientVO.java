@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uaa.beans.payload;
+package io.github.luyang.platform.uaa.beans.payload.vo;
 
 public record CreateClientVO(
 	String clientId,

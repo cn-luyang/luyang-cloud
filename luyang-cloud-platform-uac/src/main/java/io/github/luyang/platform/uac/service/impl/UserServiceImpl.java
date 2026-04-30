@@ -3,8 +3,7 @@ package io.github.luyang.platform.uac.service.impl;
 import cn.hutool.core.util.StrUtil;
 import io.github.luyang.platform.uac.beans.UserDO;
 import io.github.luyang.platform.uac.beans.convert.UserConvert;
-import io.github.luyang.platform.uac.beans.payload.CreateUserDTO;
-import io.github.luyang.platform.uac.beans.payload.CreateUserVO;
+import io.github.luyang.platform.uac.beans.payload.command.UserCreateCommand;
 import io.github.luyang.platform.uac.common.enums.ErrorCode;
 import io.github.luyang.platform.uac.repository.UserRepository;
 import io.github.luyang.platform.uac.service.UserService;
@@ -26,17 +25,17 @@ public class UserServiceImpl implements UserService {
 	private final UserConvert userConvert;
 
 	@Override
-	public CreateUserVO create(CreateUserDTO createUserDTO) {
-		boolean hasEmail = userRepository.emailUnique(createUserDTO.email());
+	public String create(UserCreateCommand command) {
+		boolean hasEmail = userRepository.emailUnique(command.email());
 		ErrorCode.USER_EXISTS_EMAIL.isFalse(hasEmail);
 
-		String password = createUserDTO.password();
-		String confirmPassword = createUserDTO.confirmPassword();
+		String password = command.password();
+		String confirmPassword = command.confirmPassword();
 		ErrorCode.USER_PASSWORD_MISMATCH.isTrue(StrUtil.equals(password, confirmPassword));
 
-		UserDO userDO = userConvert.buildEntity(createUserDTO);
+		UserDO userDO = userConvert.buildEntity(command);
 		userRepository.save(userDO);
 
-		return CreateUserVO.build(userDO.getUserId());
+		return userDO.getUserId();
 	}
 }

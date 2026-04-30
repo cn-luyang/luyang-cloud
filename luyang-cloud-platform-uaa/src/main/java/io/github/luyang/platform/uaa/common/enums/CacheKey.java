@@ -8,18 +8,21 @@ import java.time.Duration;
 
 /**
  * 缓存 Key 定义
+ *
+ * @author yang.lu
  */
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum CacheKey {
 
-	AUTH_TGC("auth:tgc:", Duration.ofHours(2), "SSO全局登录态TGC"),
-	AUTHORIZE_REQUEST_PARAMS("auth:authorize_request_params:", Duration.ofMinutes(5), "授权接口请求参数缓存"),
+	AUTH_SSO_TGC("auth:sso:tgc:", Duration.ofHours(2), "SSO 全局登录态票据，值为userId"),
+	AUTH_SSO_ST("auth:sso:st:", Duration.ofSeconds(30), "SSO 临时票据授权码，一次性使用"),
+	AUTH_REQ_PARAMS("auth:authorize_request_params:", Duration.ofMinutes(2), "授权接口请求参数缓存"),
 
 	ACCESS_TOKEN("access_token:", Duration.ofSeconds(3600), "Access Token信息缓存"),
 	REFRESH_TOKEN("refresh_token", Duration.ofDays(7), "刷新令牌"),
 
-	CLIENT_INFO("client:info:", Duration.ofSeconds(3600), "客户端信息缓存，后缀为 clientId"),
+	CLIENT_INFO("client:info:", Duration.ofHours(2), "客户端信息缓存"),
 	;
 
 	private final String prefix;

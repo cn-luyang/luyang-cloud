@@ -1,9 +1,9 @@
-package io.github.luyang.platform.uac.beans.payload;
+package io.github.luyang.platform.uac.beans.payload.command;
 
 /**
  * @author yang.lu
  */
-public record CreateUserDTO(
+public record UserCreateCommand(
 	String cnName,
 	String email,
 	String password,

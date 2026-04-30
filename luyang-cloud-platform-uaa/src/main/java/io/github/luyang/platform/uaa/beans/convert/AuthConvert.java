@@ -1,11 +1,9 @@
 package io.github.luyang.platform.uaa.beans.convert;
 
-import io.github.luyang.platform.uaa.beans.contract.AccountAuthCMD;
 import io.github.luyang.platform.uaa.beans.contract.AccountAuthResult;
 import io.github.luyang.platform.uaa.beans.contract.TokenCreateCMD;
-import io.github.luyang.platform.uaa.beans.contract.TokenCreateResult;
-import io.github.luyang.platform.uaa.beans.payload.LoginDTO;
-import io.github.luyang.platform.uaa.beans.payload.LoginVO;
+import io.github.luyang.platform.uaa.beans.dto.TempTicketDTO;
+import io.github.luyang.platform.uaa.beans.payload.command.AuthorizeCommand;
 import org.mapstruct.Mapper;
 
 /**
@@ -14,9 +12,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AuthConvert {
 
-	AccountAuthCMD buildAccountAuthCMD(LoginDTO loginDTO);
-
 	TokenCreateCMD buildTokenCreateCMD(AccountAuthResult authenticate);
 
-	LoginVO buildLoginVO(TokenCreateResult tokenCreateResult, AccountAuthResult accountAuthResult);
+	TempTicketDTO buildTempTicketDTO(String userId, AuthorizeCommand command);
 }
