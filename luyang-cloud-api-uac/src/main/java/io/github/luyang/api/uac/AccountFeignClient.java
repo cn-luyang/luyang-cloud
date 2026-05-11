@@ -4,12 +4,7 @@ import io.github.luyang.api.uac.request.AccountAuthRequest;
 import io.github.luyang.api.uac.response.AccountAuthResponse;
 import io.github.luyang.starter.base.model.Result;
 
-/**
- * @author yang.lu
- */
-public interface UserRemoteService {
+public interface AccountFeignClient {
 
 	Result<AccountAuthResponse> accountAuth(AccountAuthRequest accountAuthRequest);
-
-
 }

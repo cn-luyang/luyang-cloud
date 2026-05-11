@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserRepository extends ServiceImpl<UserMapper, UserDO> {
 
+	public boolean phoneUnique(String phone) {
+		return this.lambdaQuery().eq(UserDO::getPhone, phone).exists();
+	}
+
 	public boolean emailUnique(String email) {
-		return this.lambdaQuery()
-			.eq(UserDO::getEmail, email)
-			.exists();
+		return this.lambdaQuery().eq(UserDO::getEmail, email).exists();
 	}
 }

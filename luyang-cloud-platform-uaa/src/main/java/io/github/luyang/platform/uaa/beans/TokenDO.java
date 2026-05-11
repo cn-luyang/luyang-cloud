@@ -19,29 +19,14 @@ import java.util.Map;
 @TableName(value = "t_token", autoResultMap = true)
 public class TokenDO extends BaseEntity {
 
-	/** 主键 ID */
 	@TableId
 	private String id;
-
-	/** 用户 ID */
 	private String userId;
-
-	/** 访问令牌 */
 	private String accessToken;
-
-	/** 刷新令牌 */
 	private String refreshToken;
-
-	/** Token 签发时间 */
 	private LocalDateTime tokenIssuedTime;
-
-	/** Access Token 过期时间 */
 	private LocalDateTime accessTokenExpiresTime;
-
-	/** Refresh Token 过期时间 */
 	private LocalDateTime refreshTokenExpiresTime;
-
-	/** 附加信息 */
 	@TableField(typeHandler = JacksonTypeHandler.class)
 	private Map<String, Object> extraInfo;
 }

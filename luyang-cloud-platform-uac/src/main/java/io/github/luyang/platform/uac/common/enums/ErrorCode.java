@@ -17,6 +17,7 @@ public enum ErrorCode implements ExceptionAssert<String> {
 
 	// --- 用户模块 (User) ---
 	USER_NOT_FOUND("user:not_found", "用户不存在"),
+	USER_EXISTS_PHONE("user:exists_phone", "手机号已被占用"),
 	USER_EXISTS_EMAIL("user:exists_email", "邮箱已被占用"),
 	USER_EXISTS_USERNAME("user:exists_username", "用户名已被占用"),
 	USER_PASSWORD_ERROR("user:password_error", "密码错误"),
