@@ -4,6 +4,7 @@ import io.github.luyang.platform.uac.beans.UserDO;
 import io.github.luyang.platform.uac.beans.convert.UserConvert;
 import io.github.luyang.platform.uac.beans.payload.command.UserCreateCommand;
 import io.github.luyang.platform.uac.common.enums.ErrorCode;
+import io.github.luyang.platform.uac.common.enums.business.AccountType;
 import io.github.luyang.platform.uac.repository.UserRepository;
 import io.github.luyang.platform.uac.service.AccountService;
 import io.github.luyang.platform.uac.service.PasswordService;
@@ -31,12 +32,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String create(UserCreateCommand command) {
 
-		// 手机号唯一校验
-		boolean hasPhone = userRepository.phoneUnique(command.phone());
-		ErrorCode.USER_EXISTS_EMAIL.isFalse(hasPhone);
-
 		// 邮箱号唯一校验
-		boolean hasEmail = userRepository.emailUnique(command.email());
+		boolean hasEmail = accountService.checkAccountUnique(command.email(), AccountType.EMAIL);
 		ErrorCode.USER_EXISTS_EMAIL.isFalse(hasEmail);
 
 		UserDO userDO = userConvert.buildEntity(command);

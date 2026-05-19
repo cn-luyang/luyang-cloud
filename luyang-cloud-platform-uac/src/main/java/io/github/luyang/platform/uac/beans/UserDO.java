@@ -15,6 +15,7 @@ import lombok.Setter;
 public class UserDO extends BaseEntity {
 
 	@TableId
+	private Long id;
 	private String userId;
 	private String cnName;
 	private String phone;

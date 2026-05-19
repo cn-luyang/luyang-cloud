@@ -1,5 +1,6 @@
 package io.github.luyang.platform.uac.beans;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,8 @@ import java.time.LocalDateTime;
 @TableName(value = "t_password", autoResultMap = true)
 public class PasswordDO {
 
-	private String id;
+	@TableId
+	private Long id;
 	private String accountId;
 	private String passwordHash;
 	private String salt;
