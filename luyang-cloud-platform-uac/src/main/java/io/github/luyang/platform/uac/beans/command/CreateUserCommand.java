@@ -1,4 +1,4 @@
-package io.github.luyang.platform.uac.beans.payload.command;
+package io.github.luyang.platform.uac.beans.command;
 
 /**
  * 用户创建请求参数
@@ -7,7 +7,7 @@ package io.github.luyang.platform.uac.beans.payload.command;
  * @param email  邮箱号
  * @author yang.lu
  */
-public record UserCreateCommand(
+public record CreateUserCommand(
 	String cnName,
 	String email
 ) {

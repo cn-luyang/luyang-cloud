@@ -1,10 +1,10 @@
 package io.github.luyang.platform.uac.service.impl;
 
-import io.github.luyang.platform.uac.beans.UserDO;
+import cn.hutool.core.util.IdUtil;
+import io.github.luyang.platform.uac.beans.UserEntity;
+import io.github.luyang.platform.uac.beans.command.CreateAccountCommand;
+import io.github.luyang.platform.uac.beans.command.CreateUserCommand;
 import io.github.luyang.platform.uac.beans.convert.UserConvert;
-import io.github.luyang.platform.uac.beans.payload.command.UserCreateCommand;
-import io.github.luyang.platform.uac.common.enums.ErrorCode;
-import io.github.luyang.platform.uac.common.enums.business.AccountType;
 import io.github.luyang.platform.uac.repository.UserRepository;
 import io.github.luyang.platform.uac.service.AccountService;
 import io.github.luyang.platform.uac.service.PasswordService;
@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author yang.lu
@@ -30,15 +33,19 @@ public class UserServiceImpl implements UserService {
 	private final UserConvert userConvert;
 
 	@Override
-	public String create(UserCreateCommand command) {
+	@Transactional(rollbackFor = Exception.class)
+	public String createUser(CreateUserCommand command) {
 
-		// 邮箱号唯一校验
-		boolean hasEmail = accountService.checkAccountUnique(command.email(), AccountType.EMAIL);
-		ErrorCode.USER_EXISTS_EMAIL.isFalse(hasEmail);
+		String userId = "u_" + IdUtil.nanoId();
 
-		UserDO userDO = userConvert.buildEntity(command);
-		userRepository.save(userDO);
+		// 创建账号信息
+		List<CreateAccountCommand> createAccountCommands = userConvert.buildCreateAccountCommand(userId, command);
+		accountService.createAccount(createAccountCommands);
 
-		return userDO.getUserId();
+		// 创建用户信息
+		UserEntity userEntity = userConvert.buildEntity(userId, command);
+		userRepository.save(userEntity);
+
+		return userId;
 	}
 }

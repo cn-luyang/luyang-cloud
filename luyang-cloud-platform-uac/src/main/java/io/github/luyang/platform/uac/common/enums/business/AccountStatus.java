@@ -8,11 +8,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum AccountType implements IBaseEnum<Integer> {
+public enum AccountStatus implements IBaseEnum<Integer> {
 
-	USERNAME(1, "用户名"),
-	MOBILE(2, "手机号"),
-	EMAIL(3, "邮箱号"),
+	UNACTIVATED(1, "未激活"),
+	NORMAL(2, "激活"),
 	;
 
 	@EnumValue

@@ -1,28 +1,33 @@
 package io.github.luyang.platform.uac.beans.convert;
 
-import cn.hutool.core.util.IdUtil;
-import io.github.luyang.platform.uac.beans.UserDO;
-import io.github.luyang.platform.uac.beans.payload.command.UserCreateCommand;
+import cn.hutool.core.util.StrUtil;
+import io.github.luyang.platform.uac.beans.UserEntity;
+import io.github.luyang.platform.uac.beans.command.CreateAccountCommand;
+import io.github.luyang.platform.uac.beans.command.CreateUserCommand;
+import io.github.luyang.platform.uac.common.enums.business.AccountType;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 用户 对象转换器
  *
  * @author yang.lu
  */
-@Mapper(
-	componentModel = "spring",
-	imports = {IdUtil.class}
-)
+@Mapper(componentModel = "spring")
 public interface UserConvert {
 
-	@Mapping(target = "userId", expression = "java(\"u_\" + IdUtil.nanoId(32))")
-//	@Mapping(target = "password", source = "password", qualifiedByName = "encode")
-	UserDO buildEntity(UserCreateCommand command);
+	UserEntity buildEntity(String userId, CreateUserCommand command);
 
-//	@Named("encode")
-//	default String encodePassword(String rawPassword) {
-//		return SpringUtil.getBean(PasswordEncoder.class).encode(rawPassword);
-//	}
+	default List<CreateAccountCommand> buildCreateAccountCommand(String userId, CreateUserCommand command) {
+
+		List<CreateAccountCommand> commands = new ArrayList<>();
+
+		if (StrUtil.isNotBlank(command.email())) {
+			commands.add(CreateAccountCommand.build(userId, command.email(), AccountType.EMAIL));
+		}
+
+		return commands;
+	}
 }

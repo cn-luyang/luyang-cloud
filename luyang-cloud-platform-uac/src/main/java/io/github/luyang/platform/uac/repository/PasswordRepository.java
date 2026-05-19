@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uac.beans.PasswordDO;
+import io.github.luyang.platform.uac.beans.PasswordEntity;
 import io.github.luyang.platform.uac.mapper.PasswordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class PasswordRepository extends ServiceImpl<PasswordMapper, PasswordDO> {
+public class PasswordRepository extends ServiceImpl<PasswordMapper, PasswordEntity> {
 }

@@ -1,8 +1,10 @@
 package io.github.luyang.platform.uac.service;
 
-import io.github.luyang.platform.uac.common.enums.business.AccountType;
+import io.github.luyang.platform.uac.beans.command.CreateAccountCommand;
+
+import java.util.List;
 
 public interface AccountService {
 
-	boolean checkAccountUnique(String account, AccountType accountType);
+	void createAccount(List<CreateAccountCommand> createAccountCommands);
 }

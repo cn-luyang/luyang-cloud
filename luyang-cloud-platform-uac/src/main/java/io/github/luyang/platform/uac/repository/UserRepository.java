@@ -1,7 +1,7 @@
 package io.github.luyang.platform.uac.repository;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.github.luyang.platform.uac.beans.UserDO;
+import io.github.luyang.platform.uac.beans.UserEntity;
 import io.github.luyang.platform.uac.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,13 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @RequiredArgsConstructor
-public class UserRepository extends ServiceImpl<UserMapper, UserDO> {
+public class UserRepository extends ServiceImpl<UserMapper, UserEntity> {
 
-	public boolean phoneUnique(String phone) {
-		return this.lambdaQuery().eq(UserDO::getPhone, phone).exists();
-	}
-
-	public boolean emailUnique(String email) {
-		return this.lambdaQuery().eq(UserDO::getEmail, email).exists();
-	}
 }

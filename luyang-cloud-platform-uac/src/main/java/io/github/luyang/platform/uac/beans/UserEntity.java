@@ -12,12 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @TableName(value = "t_user", autoResultMap = true)
-public class UserDO extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
 	@TableId
 	private Long id;
 	private String userId;
 	private String cnName;
-	private String phone;
 	private String email;
 }

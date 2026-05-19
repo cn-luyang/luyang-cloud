@@ -1,8 +1,8 @@
 package io.github.luyang.platform.uac.service;
 
-import io.github.luyang.platform.uac.beans.payload.command.UserCreateCommand;
+import io.github.luyang.platform.uac.beans.command.CreateUserCommand;
 
 public interface UserService {
 
-	String create(UserCreateCommand command);
+	String createUser(CreateUserCommand command);
 }
