@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author yang.lu
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AccountConvert {
 
 	List<AccountEntity> buildAccountEntities(List<CreateAccountCommand> createAccountCommands);
